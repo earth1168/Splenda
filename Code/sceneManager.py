@@ -41,8 +41,9 @@ pygame.init()
 game_state = GameState()
 FPS = 60
 
-# Game Screen
-res = (800, 400)
+# Screen Setup
+# game resolution (width, height)
+res = (1280, 720)
 screen = pygame.display.set_mode(res)
 
 # In-game variables

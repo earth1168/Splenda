@@ -16,6 +16,10 @@ def menu_screen(screen, res, FPS):
     message1 = font1.render('Select Character: press ENTER', False, 'white')
     msg1_rect = message1.get_rect(midtop = (res[0]/2, res[1]/10*8))
 
+    font2 = pygame.font.Font(None, 80)
+    message2 = font2.render('SPLENDA', False, 'white')
+    msg2_rect = message2.get_rect(midtop = (res[0]/2, res[1]/10*3))
+
     while True:
         # Event loop
         for event in pygame.event.get():
@@ -29,8 +33,10 @@ def menu_screen(screen, res, FPS):
                     # go to select character scene
                     return "select_character"
 
+        # Display text
         screen.fill("grey")
-        screen.blit(message1, msg1_rect)
+        screen.blit(message2, msg2_rect)
+        screen.blit(message1, msg1_rect)        
 
         # Update the screen
         pygame.display.update()
@@ -53,6 +59,10 @@ def menu_screen(screen, res, FPS):
 # message1 = font1.render('Select Character: press ENTER', False, 'white')
 # msg1_rect = message1.get_rect(midtop = (res[0]/2, res[1]/10*8))
 
+# font2 = pygame.font.Font(None, 80)
+# message2 = font2.render('SPLENDA', False, 'white')
+# msg2_rect = message2.get_rect(midtop = (res[0]/2, res[1]/10*3))
+
 # while True:
 #     # Event loop
 #     for event in pygame.event.get():
@@ -64,6 +74,7 @@ def menu_screen(screen, res, FPS):
 #                 print("you pressed ENTER")
 
 #     screen.fill("grey")
+#     screen.blit(message2, msg2_rect)
 #     screen.blit(message1, msg1_rect)
 
 #     # Update the screen

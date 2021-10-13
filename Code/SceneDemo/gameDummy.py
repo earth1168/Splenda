@@ -52,6 +52,7 @@ def game_screen(screen, res, FPS, chr_list):
                     # go to menu scene
                     return "menu"
 
+        # Display text
         screen.fill("lightcyan4")
         screen.blit(message1, msg1_rect)
         show_players(screen, res, chr_list)
