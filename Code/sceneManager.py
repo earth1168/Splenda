@@ -1,0 +1,54 @@
+# Written by Walan 1057
+# This script handles scene management.
+# Run code at this script.
+
+import pygame
+
+# import scene
+from SceneDemo import selectDummy
+from SceneDemo import menuDummy
+from SceneDemo import gameDummy
+
+# This class will call scene that should run next when current scene end.
+# variables:
+#   self.scene -> tell what scene that running now.
+class GameState():
+    def __init__(self):
+        # start at menu scene
+        self.scene = 'menu'
+
+    def menu(self):
+        self.scene = menuDummy.menu_screen(screen, res, FPS)
+
+    def select_character(self):
+        self.scene = selectDummy.select_screen(screen, res, FPS, chr_list)
+
+    def game(self):
+        self.scene = gameDummy.game_screen(screen, res, FPS, chr_list)
+    
+    def scene_manager(self):
+        if self.scene == 'menu':
+            self.menu()
+        
+        if self.scene == 'select_character':
+            self.select_character()
+
+        if self.scene == 'game':
+            self.game()
+
+# General Setup
+pygame.init()
+game_state = GameState()
+FPS = 60
+
+# Game Screen
+res = (800, 400)
+screen = pygame.display.set_mode(res)
+
+# In-game variables
+# I don't know if this is appropiate or not
+# contain character ID that selected by players
+chr_list = []
+
+while True:
+    game_state.scene_manager()
