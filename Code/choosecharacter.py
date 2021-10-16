@@ -3,8 +3,8 @@ pygame.init()
 
 WIDTH, HEIGHT = 1280,720
 FPS = 60
-color = (191,209,229)
-
+color = ['White']
+text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SPLENDA")
 icon = pygame.image.load('choose/splenda.png')
@@ -16,8 +16,7 @@ act_id = -1
 profile_width, profile_height = 400,225
 bg = pygame.image.load('choose/bg.png')
 bg = pygame.transform.scale(bg, (1280,720))
-# player = pygame.image.load('choose/player.png')
-# play = pygame.transform.scale(player,(300,200))
+text_player = text_font.render('CHOOSE YOUR CHARACTER',True,color[0]).convert_alpha()
 profile1 = pygame.image.load('choose/character/character1.png')
 profile1 = pygame.transform.scale(profile1,(200,242))
 profile1_rect = profile1.get_rect(midbottom= (160,350))
@@ -49,35 +48,93 @@ fullacter5 = pygame.image.load('choose/characterfull/fullacter5.png')
 fullacter5 = pygame.transform.scale(fullacter5,(403,500))
 fullacter6 = pygame.image.load('choose/characterfull/fullacter6.png')
 fullacter6 = pygame.transform.scale(fullacter6,(335,450))
+#load bg character
+bgacter1 = pygame.image.load('choose/backgroundacter/bgact1.png')
+bgacter1 = pygame.transform.scale(bgacter1,(1280,720))
+bgacter2 = pygame.image.load('choose/backgroundacter/bgact2.png')
+bgacter2 = pygame.transform.scale(bgacter2,(1280,720))
+bgacter3 = pygame.image.load('choose/backgroundacter/bgact3.png')
+bgacter3 = pygame.transform.scale(bgacter3,(1280,720))
+bgacter4 = pygame.image.load('choose/backgroundacter/bgact4.png')
+bgacter4 = pygame.transform.scale(bgacter4,(1280,720))
+bgacter5 = pygame.image.load('choose/backgroundacter/bgact5.png')
+bgacter5 = pygame.transform.scale(bgacter5,(1280,720))
+bgacter6 = pygame.image.load('choose/backgroundacter/bgact6.png')
+bgacter6 = pygame.transform.scale(bgacter6,(1280,720))
 
 
 def character():
-    screen.fill(color)
     screen.blit(bg,(0,0))
-    # screen.blit(player, (-75,-110))
+    screen.blit(text_player, (100,30))
     screen.blit(profile1, profile1_rect)
     screen.blit(profile2, profile2_rect)
     screen.blit(profile3, profile3_rect)
     screen.blit(profile4, profile4_rect)
     screen.blit(profile5, profile5_rect)
     screen.blit(profile6, profile6_rect)
-    # pygame.display.update()
 
 def showFullActer(acter_id):
     if acter_id == 1:
+        screen.blit(bgacter1, (0, 0))
         screen.blit(fullacter1,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     if acter_id == 2:
+        screen.blit(bgacter2, (0, 0))
         screen.blit(fullacter2,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     if acter_id == 3:
+        screen.blit(bgacter3, (0, 0))
         screen.blit(fullacter3,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     if acter_id == 4:
+        screen.blit(bgacter4, (0, 0))
         screen.blit(fullacter4,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     if acter_id == 5:
+        screen.blit(bgacter5, (0, 0))
         screen.blit(fullacter5,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     if acter_id == 6:
+        screen.blit(bgacter6, (0, 0))
         screen.blit(fullacter6,(830,140))
+        screen.blit(text_player, (100, 30))
+        screen.blit(profile1, profile1_rect)
+        screen.blit(profile2, profile2_rect)
+        screen.blit(profile3, profile3_rect)
+        screen.blit(profile4, profile4_rect)
+        screen.blit(profile5, profile5_rect)
+        screen.blit(profile6, profile6_rect)
     
-
 
 def main(act_id):
     clock = pygame.time.Clock()
@@ -91,26 +148,12 @@ def main(act_id):
         character()
 
         mouse_pos = pygame.mouse.get_pos()
-
-        # if event.type == pygame.MOUSEBUTTONDOWN:
-        #     mouse_presses = pygame.mouse.get_pressed()
-        #     if mouse_presses[0]:
-        #         if profile1_rect.collidepoint(mouse_pos):
-        #             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-        #             print(pygame.mouse.get_pressed())
-        #             screen.blit(fullacter1,(830,140))
-        #             pygame.display.update()
-        #         else:
-        #             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-
         if profile1_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter1,(830,140))
-                    # pygame.display.update()
                     act_id = 1
                 
         else:
@@ -118,61 +161,42 @@ def main(act_id):
 
         if profile2_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter2, (830, 140))
-                    # pygame.display.update()
                     act_id = 2
 
         if profile3_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter3,(800,140))
-                    # pygame.display.update()
                     act_id = 3
 
         if profile4_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
-                # mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter4,(830,140))
-                    # pygame.display.update()
                     act_id = 4
 
         if profile5_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter5,(830,140))
-                    # pygame.display.update()
                     act_id = 5
 
         if profile6_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    # screen.blit(fullacter6,(850,140))
-                    # pygame.display.update()
                     act_id = 6
         
         print(act_id)
         showFullActer(act_id)
         pygame.display.update()
-    
-
-
-
 
 if __name__ == "__main__":
     main(act_id)
