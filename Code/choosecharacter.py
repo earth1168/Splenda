@@ -10,6 +10,8 @@ pygame.display.set_caption("SPLENDA")
 icon = pygame.image.load('choose/splenda.png')
 pygame.display.set_icon(icon)
 
+act_id = -1
+
 #load image
 profile_width, profile_height = 400,225
 bg = pygame.image.load('choose/bg.png')
@@ -59,10 +61,25 @@ def character():
     screen.blit(profile4, profile4_rect)
     screen.blit(profile5, profile5_rect)
     screen.blit(profile6, profile6_rect)
-    pygame.display.update()
+    # pygame.display.update()
+
+def showFullActer(acter_id):
+    if acter_id == 1:
+        screen.blit(fullacter1,(830,140))
+    if acter_id == 2:
+        screen.blit(fullacter2,(830,140))
+    if acter_id == 3:
+        screen.blit(fullacter3,(830,140))
+    if acter_id == 4:
+        screen.blit(fullacter4,(830,140))
+    if acter_id == 5:
+        screen.blit(fullacter5,(830,140))
+    if acter_id == 6:
+        screen.blit(fullacter6,(830,140))
+    
 
 
-def main():
+def main(act_id):
     clock = pygame.time.Clock()
     run = True
     while run:
@@ -74,64 +91,88 @@ def main():
         character()
 
         mouse_pos = pygame.mouse.get_pos()
+
+        # if event.type == pygame.MOUSEBUTTONDOWN:
+        #     mouse_presses = pygame.mouse.get_pressed()
+        #     if mouse_presses[0]:
+        #         if profile1_rect.collidepoint(mouse_pos):
+        #             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        #             print(pygame.mouse.get_pressed())
+        #             screen.blit(fullacter1,(830,140))
+        #             pygame.display.update()
+        #         else:
+        #             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
         if profile1_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
+            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter1,(830,140))
-                    pygame.display.update()
+                    # screen.blit(fullacter1,(830,140))
+                    # pygame.display.update()
+                    act_id = 1
+                
         else:
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         if profile2_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
+            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter2, (830, 140))
-                    pygame.display.update()
+                    # screen.blit(fullacter2, (830, 140))
+                    # pygame.display.update()
+                    act_id = 2
 
         if profile3_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
+            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter3,(800,140))
-                    pygame.display.update()
+                    # screen.blit(fullacter3,(800,140))
+                    # pygame.display.update()
+                    act_id = 3
 
         if profile4_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_presses = pygame.mouse.get_pressed()
+                # mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter4,(830,140))
-                    pygame.display.update()
+                    # screen.blit(fullacter4,(830,140))
+                    # pygame.display.update()
+                    act_id = 4
 
         if profile5_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
+            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter5,(830,140))
-                    pygame.display.update()
+                    # screen.blit(fullacter5,(830,140))
+                    # pygame.display.update()
+                    act_id = 5
 
         if profile6_rect.collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
+            # print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
-                    screen.blit(fullacter6,(850,140))
-                    pygame.display.update()
+                    # screen.blit(fullacter6,(850,140))
+                    # pygame.display.update()
+                    act_id = 6
+        
+        print(act_id)
+        showFullActer(act_id)
+        pygame.display.update()
+    
 
 
 
 
 if __name__ == "__main__":
-    main()
+    main(act_id)
