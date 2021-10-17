@@ -1,23 +1,22 @@
 import pygame
+from sys import exit
 pygame.init()
-#Set name of screen caption
-pygame.display.set_caption("MainMenu")
 #Set variable for window size
 WIDTH, HEIGHT = 1280,720
-SCREEN = pygame.display.set_mode((WIDTH,HEIGHT))
-
+screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
 FPS = 60
-#Text setting
-text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
-#Set path of background image file
-BACKGROUND = pygame.image.load("Image\Background\MainMenu720p.png").convert()
 
-
-def mainmenu() :
+def mainmenu(screen, FPS) :
     clock = pygame.time.Clock()
+    #Set name of screen caption
+    pygame.display.set_caption("MainMenu")
     #Define color of text
     Color = ['White','White','White','White']
+    #Text setting
+    text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
+    #Set path of background image file
+    BACKGROUND = pygame.image.load("Image\Background\MainMenu720p.png").convert()
     #Frist time define text and create rectangle of all texts
     Text_StartGame_surface = text_font.render('StartGame',True,Color[0]).convert_alpha()
     Text_StartGame_rect = Text_StartGame_surface.get_rect(topleft = (50,250))
@@ -40,6 +39,7 @@ def mainmenu() :
                 if event.button == 1 :
                     if Text_StartGame_rect.collidepoint(pygame.mouse.get_pos()):
                         print('1')
+                        return "select_character"
                     if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()) :
                         print('2')
                     if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()) :
@@ -68,21 +68,22 @@ def mainmenu() :
         #FPS of the game
         clock.tick(FPS)
         #Background image
-        SCREEN.blit(BACKGROUND,(0,0))
+        screen.blit(BACKGROUND,(0,0))
         #Setting Text in loop because they need to change color when hover
         Text_StartGame_surface = text_font.render('StartGame',True,Color[0]).convert_alpha()
         Text_Rule_surface = text_font.render('Rule',True,Color[1]).convert_alpha()
         Text_Setting_surface = text_font.render('Setting',True,Color[2]).convert_alpha()
         Text_Exit_surface = text_font.render('Exit',True,Color[3]).convert_alpha()
         #Render Text
-        SCREEN.blit(Text_StartGame_surface,Text_StartGame_rect)
-        SCREEN.blit(Text_Rule_surface,Text_Rule_rect)
-        SCREEN.blit(Text_Setting_surface,Text_Setting_rect)
-        SCREEN.blit(Text_Exit_surface,Text_Exit_rect)
+        screen.blit(Text_StartGame_surface,Text_StartGame_rect)
+        screen.blit(Text_Rule_surface,Text_Rule_rect)
+        screen.blit(Text_Setting_surface,Text_Setting_rect)
+        screen.blit(Text_Exit_surface,Text_Exit_rect)
         #Update screen
         pygame.display.update()
 
     pygame.quit()
+    exit()
 
 if __name__ == "__main__":
-   mainmenu()
+   mainmenu(screen, FPS)
