@@ -6,9 +6,9 @@ from sys import exit
 
 # show_players: shows character choosen by each player
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# chr_list -> list of the selected characters
+# screen -- screen to draw component onto
+# res -- game resolution
+# chr_list -- list of the selected characters
 def show_players(screen, res, chr_list):
     font = pygame.font.Font(None, 30)
     i = 0
@@ -22,10 +22,10 @@ def show_players(screen, res, chr_list):
 
 # game_screen: called by scene manager to display game screen
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# FPS -> FPS capped
-# chr_list -> list of the selected characters
+# screen -- screen to draw component onto
+# res -- game resolution
+# FPS -- FPS capped
+# chr_list -- list of the selected characters
 def game_screen(screen, res, FPS, chr_list):
     clock = pygame.time.Clock()
     player_num = len(chr_list)

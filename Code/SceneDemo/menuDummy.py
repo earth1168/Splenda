@@ -6,9 +6,9 @@ from sys import exit
 
 # menu_screen: called by scene manager to display menu screen
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# FPS -> FPS capped
+# screen -- screen to draw component onto
+# res -- game resolution
+# FPS -- FPS capped
 def menu_screen(screen, res, FPS):
     clock = pygame.time.Clock()
 

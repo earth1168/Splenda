@@ -1,39 +1,10 @@
 # Written by Walan 1057
-# This script shows click button on the screen, 
+# This script shows clickable buttons on the screen, 
 # can run at this script
 
 import pygame
 from sys import exit
-from classButton import Button
-
-# class Button(pygame.sprite.Sprite):
-#     def __init__(self, position, btn_size, text, t_size, bg_path, colors=''):
-#         super().__init__()
-#         self.font = pygame.font.Font(None, t_size)
-#         if colors == '':
-#             self.colors = 'white'
-#         else:
-#             self.colors = colors
-
-#         # Create surface to draw button on
-#         self.image = pygame.Surface(btn_size, pygame.SRCALPHA)
-#         self.rect = self.image.get_rect(center = position)
-#         # Text on the button
-#         self.text = self.font.render(text, False, self.colors)
-#         self.t_rect = self.text.get_rect(center = self.image.get_rect().center)
-#         # Button image
-#         self.bg = pygame.image.load(bg_path).convert_alpha()
-#         self.bg = pygame.transform.scale(self.bg, btn_size)
-#         self.bg_rect = self.bg.get_rect(center = self.image.get_rect().center)
-#         # Draw text and image on the surface
-#         self.image.blit(self.bg, self.bg_rect)
-#         self.image.blit(self.text, self.t_rect)        
-
-
-# Code below:
-# work like select_screen module
-# used for test the scene before put to module 
-# can uncomment (ctrl+/) to run from this file
+from classButton import Button    
 
 pygame.init()
 
@@ -47,11 +18,11 @@ button_group = pygame.sprite.Group()
 # button with 'start' text, button's background image, set colors, and set font 
 b0 = Button((res[0]/2, res[1]/2), (128, 64), 'start', 25, 'Image/Button/testButton-01.png', 'darkorange1', 'Font/Roboto/Roboto-Black.ttf')
 # button with 'exit' text, button's background image, set colors, and default font 
-b1 = Button((res[0]/2, res[1]/2+res[1]/10), (128, 64), 'exit', 25, 'Image/Button/testButton-01.png', 'firebrick1')
+b1 = Button((res[0]/2, res[1]/2+res[1]/5), (128, 64), 'exit', 25, 'Image/Button/testButton-01.png', 'firebrick1')
 # button with no text, only button's background image 
 b2 = Button((res[0]/2, res[1]/3), (48, 48), '', 25, 'Image/Button/game icon.png')
 # button with 'test' text, no background image, set colors using (r, g, b), and default font 
-b4 = Button((res[0]/2, res[1]/2+res[1]/5), (128, 64), 'test', 25, '', (0,0,225))
+b4 = Button((res[0]/2, res[1]/2+res[1]/5*2), (128, 64), 'test', 25, '', (0,0,225))
 
 while True:
     # Event loop
@@ -63,7 +34,22 @@ while True:
         if event.type == pygame.MOUSEMOTION:
             # if mouse is hovering on b0
             if b0.rect.collidepoint(pygame.mouse.get_pos()):
-                b0.hover()                
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                # change text color and button's image
+                b0.hover('red', 'Image/Button/game icon.png')
+
+            # if mouse is hovering on b1
+            elif b1.rect.collidepoint(pygame.mouse.get_pos()):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                # change text color
+                b1.hover('yellow')
+            
+            # if not hovering on b0 and b1
+            else:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                # change text color and button's image back to normal
+                b0.hover('darkorange', 'Image/Button/testButton-01.png')
+                b1.hover('firebrick1')                
         
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:
@@ -79,7 +65,8 @@ while True:
     # Display
     screen.fill("dimgrey")
     # draw all button on the screen
-    button_group.draw(screen)    
+    button_group.draw(screen)
+    button_group.update()    
 
     # Update the screen
     pygame.display.update()

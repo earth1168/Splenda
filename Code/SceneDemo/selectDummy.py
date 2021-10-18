@@ -11,9 +11,9 @@ from sys import exit
 
 # display_chr: display text to show what character that player currently choose before confirm
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# chr_id -> ID of the choosen character
+# screen -- screen to draw component onto
+# res -- game resolution
+# chr_id -- ID of the choosen character
 def display_chr(screen, res, chr_id):
     font = pygame.font.Font(None, 50)
     chr_message = font.render(f'select: {chr_id}', False, 'white')
@@ -22,9 +22,9 @@ def display_chr(screen, res, chr_id):
 
 # display_list: display text to show list of selected characters
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# chr_list -> list of the selected characters
+# screen -- screen to draw component onto
+# res -- game resolution
+# chr_list -- list of the selected characters
 def display_list(screen, res, chr_list):
     font = pygame.font.Font(None, 30)
     message2 = font.render(f'Selected character:{chr_list}', False, 'white')
@@ -33,8 +33,8 @@ def display_list(screen, res, chr_list):
 
 # check_select: check if choosen character is valid and can be selected. if valid, then add to character list
 # parameters:
-# chr_id -> ID of the choosen character
-# chr_list -> list of the selected characters
+# chr_id -- ID of the choosen character
+# chr_list -- list of the selected characters
 def check_select(chr_id, chr_list):
     # if player has chose character and the choosen character not it the list yet
     if chr_id != -1 and chr_id not in chr_list and len(chr_list) < 4:
@@ -44,9 +44,9 @@ def check_select(chr_id, chr_list):
 
 # check_player_number: check if there are at least 2 players. if true, then display start game text
 # parameters:
-# screen -> screen to draw component onto
-# res -> game resolution
-# num -> number of players that have selected a chaaracter
+# screen -- screen to draw component onto
+# res -- game resolution
+# num -- number of players that have selected a chaaracter
 def check_player_number(screen, res, num):
     font = pygame.font.Font(None, 50)
     message3 = font.render('press ENTER to continue', False, 'white')
@@ -58,9 +58,9 @@ def check_player_number(screen, res, num):
 # select_screen: called by scene manager to display select character screen
 # parameters:
 # screen -> screen to draw component onto
-# res -> game resolution
-# FPS -> FPS capped
-# chr_list -> list of the selected characters
+# res -- game resolution
+# FPS -- FPS capped
+# chr_list -- list of the selected characters
 def select_screen(screen, res, FPS, chr_list):
     clock = pygame.time.Clock()
 
