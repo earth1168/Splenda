@@ -9,6 +9,7 @@ from SceneDemo import selectDummy
 from SceneDemo import menuDummy
 from SceneDemo import gameDummy
 import MainMenu
+import Rule
 
 # This class will call scene that should run next when current scene end.
 # variables:
@@ -28,6 +29,9 @@ class GameState():
     def game(self):
         self.scene = gameDummy.game_screen(screen, res, FPS, chr_list)
     
+    def rule_book(self):
+        self.scene = Rule.rulebook(screen, FPS)
+    
     def scene_manager(self):
         if self.scene == 'menu':
             self.menu()
@@ -37,6 +41,9 @@ class GameState():
 
         if self.scene == 'game':
             self.game()
+
+        if self.scene == 'rule_book':
+            self.rule_book()
 
 # General Setup
 pygame.init()

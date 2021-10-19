@@ -7,10 +7,10 @@ screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
 FPS = 60
 
-def mainmenu(screen, FPS) :
+def setting(screen, FPS) :
     clock = pygame.time.Clock()
     #Set name of screen caption
-    pygame.display.set_caption("MainMenu")
+    pygame.display.set_caption("Game setting")
     #Define color of text
     Color = ['White','White','White','White','White','White','White']
     #Text setting
@@ -55,7 +55,6 @@ def mainmenu(screen, FPS) :
                             return "select_character"
                         if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()):
                             print('2')
-                            return "rule_book"
                         if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()):
                             print('3')
                         if Text_Exit_rect.collidepoint(pygame.mouse.get_pos()) :
@@ -124,4 +123,4 @@ def mainmenu(screen, FPS) :
     exit()
 
 if __name__ == "__main__":
-   mainmenu(screen, FPS)
+   setting(screen, FPS)
