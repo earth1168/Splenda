@@ -37,12 +37,16 @@ while True:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 # change text color and button's image
                 b0.hover('red', 'Image/Button/game icon.png')
+                # keep other button normal
+                b1.hover('firebrick1') 
 
             # if mouse is hovering on b1
             elif b1.rect.collidepoint(pygame.mouse.get_pos()):
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 # change text color
                 b1.hover('yellow')
+                # keep other button normal
+                b0.hover('darkorange', 'Image/Button/testButton-01.png')
             
             # if not hovering on b0 and b1
             else:

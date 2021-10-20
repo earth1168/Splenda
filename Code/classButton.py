@@ -1,8 +1,14 @@
 # Written by Walan 1057
+# This script contains 1 class:
+#   - Button
+
+from typing import Optional, Tuple, Union
+import pygame
+
 # Button class:
-# create button with customizable background, size, and text
-# inherit form Sprite class in pygame
-# To create a button instance, you must have these attributes:
+# create button object with customizable background, size, and text
+# inherit from Sprite class in pygame
+#  attributes:
 #   - position: tuple(x, y) -- position of the button
 #   - btn_size: tuple(height, width) -- size of the button
 #   - text: text -- text on the button
@@ -13,10 +19,6 @@
 #       default - white color
 #   - t_font: text -- text's font
 #       default: pygame default font
-
-from typing import Optional, Tuple, Union
-import pygame
-
 class Button(pygame.sprite.Sprite):
     def __init__(self, 
                 position: Tuple[int, int], 
@@ -68,7 +70,7 @@ class Button(pygame.sprite.Sprite):
     #   - bg_new: text --  path of button's background image when hovering
     #       default: button's background image is not changed
     def hover(self, 
-                colors_new: str | Tuple[int, int, int] ='', 
+                colors_new: Union[str, Tuple[int, int, int]]='', 
                 bg_new: str=''):
         if colors_new != '':
             self.colors = colors_new
