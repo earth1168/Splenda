@@ -48,13 +48,10 @@ def mainmenu(screen, FPS) :
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 :
-                    print(event.pos)
                     if Pause == 0 :
                         if Text_StartGame_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('1')
                             return "select_character"
                         if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('2')
                             return "rule_book"
                         if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()):
                             print('3')
@@ -62,11 +59,9 @@ def mainmenu(screen, FPS) :
                             Pause = 1
                     else :
                         if Text_Yes_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('Yes')
                             run = False
                         if Text_No_rect.collidepoint(pygame.mouse.get_pos()):
                             Pause = 0
-                            print('No')
 
         #Change the color of text when mouse cusor hover above the text
         if Pause == 0 :
