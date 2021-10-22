@@ -4,8 +4,7 @@
 
 import pygame
 from sys import exit
-from classButton import Button    
-
+from classButton import Button   
 pygame.init()
 
 res = (800, 400)

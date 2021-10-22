@@ -1,7 +1,6 @@
 #Written by Pojnarin 62070501041
 import pygame
 from sys import exit
-from classButton import Button 
 pygame.init()
 #Set variable for window size
 WIDTH, HEIGHT = 1280,720
@@ -257,20 +256,19 @@ def rulebook(screen, FPS) :
     Color = ['White','White','White']
     #Define variable to monitor if mouse hover over button
     Bhover = [0,0,0]
-    # group of buttons. work with sprite (Button class in this context)
-    button_group = pygame.sprite.Group()
-    # button with 'start' text, button's background image, set colors, and set font 
-    Next = Button((1180,140), (150, 120), 'Next', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    # button with 'exit' text, button's background image, set colors, and default font 
-    Prev = Button((85,140), (200, 120), 'Previous', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    # button with no text, only button's background image 
-    Back = Button((1180,640), (150, 120), 'Menu', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\Rule720p.png").convert()
     #Text setting
     text_font_bold = pygame.font.Font("Font\Roboto\Roboto-Bold.ttf",40)
     text_font_regular = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",30)
     text_font_Button = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",20)
+    #Text Button set up
+    Next_surface = text_font_regular.render('Next',True,Color[0]).convert_alpha()
+    Next_rect = Next_surface.get_rect(topleft = (1150,140))
+    Prev_surface = text_font_regular.render('Previous',True,Color[1]).convert_alpha()
+    Prev_rect = Prev_surface.get_rect(topleft = (30,140))
+    Back_surface = text_font_regular.render('Menu',True,Color[2]).convert_alpha()
+    Back_rect = Back_surface.get_rect(topleft = (1150,640))
     #Set page of text. Default is page 1
     page = 1
     allpage = 20
@@ -286,43 +284,42 @@ def rulebook(screen, FPS) :
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 :
                     print(event.pos)
-                    if Next.rect.collidepoint(pygame.mouse.get_pos()):
+                    if Next_rect.collidepoint(pygame.mouse.get_pos()):
                         if page != allpage :
                             page += 1
-                    if Prev.rect.collidepoint(pygame.mouse.get_pos()):
+                    if Prev_rect.collidepoint(pygame.mouse.get_pos()):
                         if page != 1 :
                             page -= 1
-                    if Back.rect.collidepoint(pygame.mouse.get_pos()):
+                    if Back_rect.collidepoint(pygame.mouse.get_pos()):
                        return "menu"
 
         #Change the color of Button when mouse cusor hover above the text
-        if Next.rect.collidepoint(pygame.mouse.get_pos()) and page != allpage :
-            Next.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+        if Next_rect.collidepoint(pygame.mouse.get_pos()) and page != allpage :
             Bhover[0] = 1
+            Color[0] = 'Gold'
         elif page == allpage :
-            Next.hover((68,68,68), 'Image\Button\ButtonGray.png')
             Bhover[0] = 0
+            Color[0] = 'Gray'
         else :
-            Next.hover('black', 'Image\Button\ButtonUnhover2.png')
             Bhover[0] = 0
+            Color[0] = 'White'
 
-        if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
-            Prev.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+        if Prev_rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
             Bhover[1] = 1
+            Color[1] = 'Gold'
         elif page == 1 : 
-            Prev.hover((68,68,68), 'Image\Button\ButtonGray.png')
             Bhover[1] = 0
+            Color[1] = 'Gray'
         else :
-            Prev.hover('black', 'Image\Button\ButtonUnhover2.png')
             Bhover[1] = 0
+            Color[1] = 'White'
 
-
-        if Back.rect.collidepoint(pygame.mouse.get_pos()):
-            Back.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+        if Back_rect.collidepoint(pygame.mouse.get_pos()):
             Bhover[2] = 1
+            Color[2] = 'Gold'
         else : 
-            Back.hover('black', 'Image\Button\ButtonUnhover2.png')
             Bhover[2] = 0
+            Color[2] = 'White'
 
         #if any button are hover, mouse cursor will turn to hand 
         if 1 in Bhover :
@@ -337,11 +334,14 @@ def rulebook(screen, FPS) :
         #Text page set up and render
         Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'White')
         screen.blit(Page_surface,(25,640))
-        # add button to group
-        button_group.add(Next, Prev,Back)
-        # draw all button on the screen
-        button_group.draw(screen)
-        button_group.update() 
+        #Setting Button Text in loop because they need to change color when hover
+        Next_surface = text_font_regular.render('Next',True,Color[0]).convert_alpha()
+        Prev_surface = text_font_regular.render('Previous',True,Color[1]).convert_alpha()
+        Back_surface = text_font_regular.render('Menu',True,Color[2]).convert_alpha()
+        #Button render
+        screen.blit(Next_surface,Next_rect)
+        screen.blit(Prev_surface,Prev_rect)
+        screen.blit(Back_surface,Back_rect)
         #render text body
         ruletext (page,text_font_bold,text_font_regular)
         #Update screen

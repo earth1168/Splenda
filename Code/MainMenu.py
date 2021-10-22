@@ -1,3 +1,4 @@
+#Written by Pojnarin 62070501041
 import pygame
 from sys import exit
 pygame.init()
@@ -21,6 +22,8 @@ def mainmenu(screen, FPS) :
     PAUSEBG = pygame.image.load("Image\Popup\Popup720p.png").convert_alpha()
     #define variable for state of the game 
     Pause = 0
+    #Define variable to monitor if mouse hover over button
+    Bhover = [0,0,0,0,0,0]
     #Frist time define text and create rectangle of all texts
     Text_StartGame_surface = text_font.render('StartGame',True,Color[0]).convert_alpha()
     Text_StartGame_rect = Text_StartGame_surface.get_rect(topleft = (50,250))
@@ -65,30 +68,56 @@ def mainmenu(screen, FPS) :
 
         #Change the color of text when mouse cusor hover above the text
         if Pause == 0 :
+            Bhover[4] = 0
+            Bhover[5] = 0
             if Text_StartGame_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[0] = 'Gold'
-            else : Color[0] = 'White'
+                Bhover[0] = 1
+                Color[0] = 'Gold'
+            else : 
+                Bhover[0] = 0
+                Color[0] = 'White'
 
             if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[1] = 'Gold'
-            else : Color[1] = 'White'
+                Bhover[1] = 1
+                Color[1] = 'Gold'
+            else : 
+                Bhover[1] = 0
+                Color[1] = 'White'
 
             if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[2] = 'Gold'
-            else : Color[2] = 'White'
+                Bhover[2] = 1
+                Color[2] = 'Gold'
+            else : 
+                Bhover[2] = 0
+                Color[2] = 'White'
 
             if Text_Exit_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[3] = 'Gold'
-            else : Color[3] = 'White'
+                Bhover[3] = 1    
+                Color[3] = 'Gold'
+            else :
+                Bhover[3] = 0
+                Color[3] = 'White'
         else :
+            Bhover[3] = 0
             Color[3] = 'White'
             if Text_Yes_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[5] = 'Gold'
-            else : Color[5] = 'White'
+                Bhover[4] = 1
+                Color[5] = 'Gold'
+            else : 
+                Bhover[4] = 0
+                Color[5] = 'White'
             if Text_No_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[6] = 'Gold'
-            else : Color[6] = 'White'
+                Bhover[5] = 1
+                Color[6] = 'Gold'
+            else : 
+                Bhover[5] = 0
+                Color[6] = 'White'
 
+        #if any button are hover, mouse cursor will turn to hand 
+        if 1 in Bhover :
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else :
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         #FPS of the game
         clock.tick(FPS)
