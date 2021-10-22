@@ -69,8 +69,8 @@ class Button(pygame.sprite.Sprite):
     #       default: text's color is not changed
     #   - bg_new: text --  path of button's background image when hovering
     #       default: button's background image is not changed
-    def hover(self, 
-                colors_new: Union[str, Tuple[int, int, int]]='', 
+    def hover(self,
+                colors_new: Union[str, Tuple[int, int, int]]='',
                 bg_new: str=''):
         if colors_new != '':
             self.colors = colors_new
