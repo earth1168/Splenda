@@ -15,8 +15,8 @@ FPS = 60
 
 # set requirements for all cards on screen
 def set_show_card_req(cards_list, req_list):
-    for i in range(len(cards_list)):
-        cards_list[i].set_req(req_list[i])
+    for i, card in enumerate(cards_list):
+        card.set_req(req_list[i])
 
 # reduce required tokens from player
 def pay_tokens(card_group: pygame.sprite.Group, card: Card, player: Player):
@@ -58,8 +58,8 @@ def showCard(screen, FPS):
     for i in range(3):
         card_group.add(Card(i, card_points[i], (110, 175), 'Image/Card/Potion.png', card_colors[i]))
     # set cards' position
-    for i in range(3):
-        card_group.sprites()[i].set_pos(res[0]/4*(i+1), res[1]/2)
+    for i, card in enumerate(card_group.sprites(), start=1):
+        card.set_pos(res[0]/4*i, res[1]/2)
     # set cards' requirements
     set_show_card_req(card_group.sprites(), card_req)    
     c0 = card_group.sprites()[0]
