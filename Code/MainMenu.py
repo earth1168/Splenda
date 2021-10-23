@@ -51,7 +51,7 @@ def mainmenu(screen, FPS) :
                         if Rule.rect.collidepoint(pygame.mouse.get_pos()):
                             return "rule_book"
                         if Setting.rect.collidepoint(pygame.mouse.get_pos()):
-                            print('3')
+                            return "setting"
                         if Exit.rect.collidepoint(pygame.mouse.get_pos()) :
                             Pause = 1
                     else :

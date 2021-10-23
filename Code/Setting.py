@@ -1,47 +1,61 @@
 import pygame
-from sys import exit
+import sys
+import os
+
+path = os.getcwd()
+sys.path.insert(0, path)
+
+from Code.classButton import Button
+from Code.classText import TButton
+
 pygame.init()
 #Set variable for window size
 WIDTH, HEIGHT = 1280,720
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
+res = (1280,720)
+infoObj = pygame.display.Info()
+screen = pygame.display.set_mode(res)
+isFullscreen = False
 #Set FPS of the game
 FPS = 60
 
-def setting(screen, FPS) :
+# change screen resolution. return new resolution
+def change_resolution(screen, res_new, isFullscreen):
+    if isFullscreen:
+        # flags = pygame.FULLSCREEN | pygame.SCALED
+        flags = pygame.FULLSCREEN
+    else:
+        flags = 0
+    screen = pygame.display.set_mode(res_new, flags)
+    return res_new
+
+def setting(screen, FPS, res , isFullscreen) :
     clock = pygame.time.Clock()
     #Set name of screen caption
     pygame.display.set_caption("Game setting")
-    #Define color of text
-    Color = ['White','White','White','White','White','White','White']
+    BACKGROUND = pygame.image.load("Image\Background\Setting720p.png").convert()
     #Text setting
     text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
-    #Set path of background image file
-    BACKGROUND = pygame.image.load("Image\Background\MainMenu720p.png").convert()
-    #Set path of pause background image file
-    PAUSEBG = pygame.image.load("Image\Popup\Popup720p.png").convert_alpha()
-    #define variable for state of the game 
-    Pause = 0
-    #Frist time define text and create rectangle of all texts
-    Text_StartGame_surface = text_font.render('StartGame',True,Color[0]).convert_alpha()
-    Text_StartGame_rect = Text_StartGame_surface.get_rect(topleft = (50,250))
-    Text_Rule_surface = text_font.render('Rule',True,Color[1]).convert_alpha()
-    Text_Rule_rect = Text_StartGame_surface.get_rect(topleft = (50,320))
-    Text_Setting_surface = text_font.render('Setting',True,Color[2]).convert_alpha()
-    Text_Setting_rect = Text_StartGame_surface.get_rect(topleft = (50,390))
-    Text_Exit_surface = text_font.render('Exit',True,Color[3]).convert_alpha()
-    Text_Exit_rect = Text_Exit_surface.get_rect(topleft = (50,460))
-    #Text for popup in exit
-    Text_QExit_surface = text_font.render('Are you sure you want to exit?',True,Color[4]).convert_alpha()
-    Text_QExit_rect = Text_Exit_surface.get_rect(topleft = (326,244))
-    Text_Yes_surface = text_font.render('Yes',True,Color[5]).convert_alpha()
-    Text_Yes_rect = Text_Exit_surface.get_rect(topleft = (436,420))
-    Text_No_surface = text_font.render('No',True,Color[6]).convert_alpha()
-    Text_No_rect = Text_Exit_surface.get_rect(topleft = (818,420))
+    isFullscreen = isFullscreen
+    old_option = -1
+    window_mode = ['Window', 'Fullscreen']
+
+    # Define buttons and their group (only use fullscreen/window button(b3))
+    button_group = pygame.sprite.Group()
+    #Setting Text
+    ScreenMode = TButton((275,235),'Screen Mode : ',30,'Black',"Font\Roboto\Roboto-Regular.ttf")    
+    # button for changing window mode
+    Mode = Button((570, 255), (256, 128), window_mode[1], 30, 'Image\Button\ButtonUnhover2.png', 'black')
+    # button for going back to mainmenu
+    Back = Button((1180,640), (150, 120), 'Menu', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    button_group.add(ScreenMode,Mode,Back)
+    Bhover = [0,0]
+
     #Game loop
     run = True
     while run:
+        event_list = pygame.event.get()
         #Handle user-input
-        for event in pygame.event.get():
+        for event in event_list :
             #Exit game when press X button on window
             if event.type == pygame.QUIT :
                 run = False
@@ -49,73 +63,43 @@ def setting(screen, FPS) :
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 :
                     print(event.pos)
-                    if Pause == 0 :
-                        if Text_StartGame_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('1')
-                            return "select_character"
-                        if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('2')
-                        if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('3')
-                        if Text_Exit_rect.collidepoint(pygame.mouse.get_pos()) :
-                            Pause = 1
-                    else :
-                        if Text_Yes_rect.collidepoint(pygame.mouse.get_pos()):
-                            print('Yes')
-                            run = False
-                        if Text_No_rect.collidepoint(pygame.mouse.get_pos()):
-                            Pause = 0
-                            print('No')
+                    if Mode.rect.collidepoint(pygame.mouse.get_pos()):
+                        isFullscreen = not isFullscreen
+                        # change text on the button
+                        if isFullscreen:
+                            Mode.text = window_mode[0]
+                        else:
+                            Mode.text = window_mode[1]
+                        res = change_resolution(screen, res, isFullscreen)  
+                    if Back.rect.collidepoint(pygame.mouse.get_pos()):
+                        return "menu"
 
-        #Change the color of text when mouse cusor hover above the text
-        if Pause == 0 :
-            if Text_StartGame_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[0] = 'Gold'
-            else : Color[0] = 'White'
-
-            if Text_Rule_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[1] = 'Gold'
-            else : Color[1] = 'White'
-
-            if Text_Setting_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[2] = 'Gold'
-            else : Color[2] = 'White'
-
-            if Text_Exit_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[3] = 'Gold'
-            else : Color[3] = 'White'
+        if Mode.rect.collidepoint(pygame.mouse.get_pos()):
+            Mode.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Bhover[0] = 1
+        else : 
+            Mode.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Bhover[0] = 0
+        
+        if Back.rect.collidepoint(pygame.mouse.get_pos()):
+            Back.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Bhover[1] = 1
+        else : 
+            Back.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Bhover[1] = 0
+        
+        #if any button are hover, mouse cursor will turn to hand 
+        if 1 in Bhover :
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
         else :
-            Color[3] = 'White'
-            if Text_Yes_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[5] = 'Gold'
-            else : Color[5] = 'White'
-            if Text_No_rect.collidepoint(pygame.mouse.get_pos()):
-                    Color[6] = 'Gold'
-            else : Color[6] = 'White'
-
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         #FPS of the game
         clock.tick(FPS)
-        #Background image
         screen.blit(BACKGROUND,(0,0))
-        #Setting Text in loop because they need to change color when hover
-        Text_StartGame_surface = text_font.render('StartGame',True,Color[0]).convert_alpha()
-        Text_Rule_surface = text_font.render('Rule',True,Color[1]).convert_alpha()
-        Text_Setting_surface = text_font.render('Setting',True,Color[2]).convert_alpha()
-        Text_Exit_surface = text_font.render('Exit',True,Color[3]).convert_alpha()
-        Text_Yes_surface = text_font.render('Yes',True,Color[5]).convert_alpha()
-        Text_No_surface = text_font.render('No',True,Color[6]).convert_alpha()
-        #Render Text on mainmenu
-        screen.blit(Text_StartGame_surface,Text_StartGame_rect)
-        screen.blit(Text_Rule_surface,Text_Rule_rect)
-        screen.blit(Text_Setting_surface,Text_Setting_rect)
-        screen.blit(Text_Exit_surface,Text_Exit_rect)
-        if Pause == 1 :
-            #Render when popup
-            screen.blit(PAUSEBG,(0,0))
-            screen.blit(Text_QExit_surface,Text_QExit_rect)
-            screen.blit(Text_Yes_surface,Text_Yes_rect)
-            screen.blit(Text_No_surface,Text_No_rect)
+        # draw button
+        button_group.draw(screen)
+        button_group.update()
         #Update screen
         pygame.display.update()
 
@@ -123,4 +107,4 @@ def setting(screen, FPS) :
     exit()
 
 if __name__ == "__main__":
-   setting(screen, FPS)
+   setting(screen, FPS, res, isFullscreen)

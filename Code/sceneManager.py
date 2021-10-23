@@ -10,6 +10,7 @@ from SceneDemo import menuDummy
 from SceneDemo import gameDummy
 import MainMenu
 import Rule
+import Setting
 
 # This class will call scene that should run next when current scene end.
 # variables:
@@ -31,6 +32,9 @@ class GameState():
     
     def rule_book(self):
         self.scene = Rule.rulebook(screen, FPS)
+
+    def setting(self):
+        self.scene = Setting.setting(screen, FPS, res, isFullscreen)
     
     def scene_manager(self):
         if self.scene == 'menu':
@@ -45,12 +49,16 @@ class GameState():
         if self.scene == 'rule_book':
             self.rule_book()
 
+        if self.scene == 'setting':
+            self.setting()
+
 # General Setup
 pygame.init()
 game_state = GameState()
 FPS = 60
 
 # Screen Setup
+isFullscreen = False
 # game resolution (width, height)
 res = (1280, 720)
 screen = pygame.display.set_mode(res)

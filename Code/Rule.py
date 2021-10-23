@@ -263,7 +263,7 @@ def rulebook(screen, FPS) :
     Next = Button((1180,140), (150, 120), 'Next', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'exit' text, button's background image, set colors, and default font 
     Prev = Button((85,140), (200, 120), 'Previous', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    # button with no text, only button's background image 
+    # button with 'Menu' text, button's background image, set colors, and default font 
     Back = Button((1180,640), (150, 120), 'Menu', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\Rule720p.png").convert()
