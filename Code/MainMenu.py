@@ -13,8 +13,6 @@ def mainmenu(screen, FPS) :
     clock = pygame.time.Clock()
     #Set name of screen caption
     pygame.display.set_caption("MainMenu")
-    #Text setting
-    text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\MainMenu720p.png").convert()
     #Set path of pause background image file
@@ -31,12 +29,11 @@ def mainmenu(screen, FPS) :
     Exit = TButton((50,460),'Exit',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     #Create Text button objects and Text rectangle for when the game is pause
     pause_button_group = pygame.sprite.Group()
-    Text_QExit_surface = text_font.render('Are you sure you want to exit?',True,'White').convert_alpha()
-    Text_QExit_rect = Text_QExit_surface.get_rect(topleft = (326,244))
+    QExit = TButton((326,244),'Are you sure you want to exit?',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     Yes = TButton((436,420),'Yes',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     No = TButton((818,420),'No',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     button_group.add(StartGame,Rule,Setting,Exit)
-    pause_button_group.add(Yes,No)
+    pause_button_group.add(QExit,Yes,No)
     #Game loop
     run = True
     while run:
@@ -125,7 +122,6 @@ def mainmenu(screen, FPS) :
         if Pause == 1 :
             #Render when popup
             screen.blit(PAUSEBG,(0,0))
-            screen.blit(Text_QExit_surface,Text_QExit_rect)
             pause_button_group.draw(screen)
             pause_button_group.update()
         #Update screen
