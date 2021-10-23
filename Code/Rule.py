@@ -260,11 +260,11 @@ def rulebook(screen, FPS) :
     # group of buttons. work with sprite (Button class in this context)
     button_group = pygame.sprite.Group()
     # button with 'start' text, button's background image, set colors, and set font 
-    Next = Button((1180,140), (150, 120), 'Next', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Next = Button((1180,140), (130, 50), 'Next', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'exit' text, button's background image, set colors, and default font 
-    Prev = Button((85,140), (200, 120), 'Previous', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Prev = Button((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'Menu' text, button's background image, set colors, and default font 
-    Back = Button((1180,640), (150, 120), 'Menu', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Back = Button((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\Rule720p.png").convert()
     #Text setting
@@ -297,31 +297,31 @@ def rulebook(screen, FPS) :
 
         #Change the color of Button when mouse cusor hover above the text
         if Next.rect.collidepoint(pygame.mouse.get_pos()) and page != allpage :
-            Next.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Next.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[0] = 1
         elif page == allpage :
-            Next.hover((68,68,68), 'Image\Button\ButtonGray.png')
+            Next.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
             Bhover[0] = 0
         else :
-            Next.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Next.hover('black', 'Image\Button\ButtonNewUnhover.png')
             Bhover[0] = 0
 
         if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
-            Prev.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Prev.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[1] = 1
         elif page == 1 : 
-            Prev.hover((68,68,68), 'Image\Button\ButtonGray.png')
+            Prev.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
             Bhover[1] = 0
         else :
-            Prev.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Prev.hover('black', 'Image\Button\ButtonNewUnhover.png')
             Bhover[1] = 0
 
 
         if Back.rect.collidepoint(pygame.mouse.get_pos()):
-            Back.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[2] = 1
         else : 
-            Back.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
             Bhover[2] = 0
 
         #if any button are hover, mouse cursor will turn to hand 

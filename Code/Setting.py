@@ -44,9 +44,9 @@ def setting(screen, FPS, res , isFullscreen) :
     #Setting Text
     ScreenMode = TButton((275,235),'Screen Mode : ',30,'Black',"Font\Roboto\Roboto-Regular.ttf")    
     # button for changing window mode
-    Mode = Button((570, 255), (256, 128), window_mode[1], 30, 'Image\Button\ButtonUnhover2.png', 'black')
+    Mode = Button((570, 255), (180, 50), window_mode[1], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     # button for going back to mainmenu
-    Back = Button((1180,640), (150, 120), 'Menu', 30, 'Image\Button\ButtonUnhover2.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Back = Button((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     button_group.add(ScreenMode,Mode,Back)
     Bhover = [0,0]
 
@@ -75,17 +75,17 @@ def setting(screen, FPS, res , isFullscreen) :
                         return "menu"
 
         if Mode.rect.collidepoint(pygame.mouse.get_pos()):
-            Mode.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Mode.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[0] = 1
         else : 
-            Mode.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Mode.hover('black', 'Image\Button\ButtonNewUnhover.png')
             Bhover[0] = 0
         
         if Back.rect.collidepoint(pygame.mouse.get_pos()):
-            Back.hover((153,0,0), 'Image\Button\Buttonhover2.png')
+            Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[1] = 1
         else : 
-            Back.hover('black', 'Image\Button\ButtonUnhover2.png')
+            Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
             Bhover[1] = 0
         
         #if any button are hover, mouse cursor will turn to hand 
