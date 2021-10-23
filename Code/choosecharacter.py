@@ -1,202 +1,193 @@
-import pygame,sys
+import pygame, sys
+from classButton import Button
+
 pygame.init()
 
 WIDTH, HEIGHT = 1280,720
-FPS = 60
-color = ['White']
-text_font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",50)
+name_user = []
+act_user = []
+
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SPLENDA")
 icon = pygame.image.load('choose/splenda.png')
 pygame.display.set_icon(icon)
 
-act_id = -1
+def character(profile, profile_rect, bg, text_white):
+    screen.blit(bg, (0, 0))
+    screen.blit(text_white, (40, 10))
+    for count, value in enumerate(profile):
+        screen.blit(value, profile_rect[count])
 
-#load image
-profile_width, profile_height = 400,225
-bg = pygame.image.load('choose/bg.png')
-bg = pygame.transform.scale(bg, (1280,720))
-text_player = text_font.render('CHOOSE YOUR CHARACTER',True,color[0]).convert_alpha()
-profile1 = pygame.image.load('choose/character/character1.png')
-profile1 = pygame.transform.scale(profile1,(200,242))
-profile1_rect = profile1.get_rect(midbottom= (160,350))
-profile2 = pygame.image.load('choose/character/character2.png')
-profile2 = pygame.transform.scale(profile2,(200, 237))
-profile2_rect = profile2.get_rect(midbottom= (400,350))
-profile3 = pygame.image.load('choose/character/character3.png')
-profile3 = pygame.transform.scale(profile3,(200,238))
-profile3_rect = profile3.get_rect(midbottom= (640,350))
-profile4 = pygame.image.load('choose/character/character4.png')
-profile4 = pygame.transform.scale(profile4,(180,238))
-profile4_rect = profile4.get_rect(midbottom= (160,600))
-profile5 = pygame.image.load('choose/character/character5.png')
-profile5 = pygame.transform.scale(profile5,(197,242))
-profile5_rect = profile5.get_rect(midbottom= (390,600))
-profile6 = pygame.image.load('choose/character/character7.png')
-profile6 = pygame.transform.scale(profile6,(185,238))
-profile6_rect = profile6.get_rect(midbottom= (640,600))
-#show full
-fullacter1 = pygame.image.load('choose/characterfull/fullacter1.png')
-fullacter1 = pygame.transform.scale(fullacter1,(412,500))
-fullacter2 = pygame.image.load('choose/characterfull/fullacter2.png')
-fullacter2 = pygame.transform.scale(fullacter2, (422, 500))
-fullacter3 = pygame.image.load('choose/characterfull/fullacter3.png')
-fullacter3 = pygame.transform.scale(fullacter3,(463,500))
-fullacter4 = pygame.image.load('choose/characterfull/fullacter4.png')
-fullacter4 = pygame.transform.scale(fullacter4,(378,500))
-fullacter5 = pygame.image.load('choose/characterfull/fullacter5.png')
-fullacter5 = pygame.transform.scale(fullacter5,(403,500))
-fullacter6 = pygame.image.load('choose/characterfull/fullacter6.png')
-fullacter6 = pygame.transform.scale(fullacter6,(335,450))
-#load bg character
-bgacter1 = pygame.image.load('choose/backgroundacter/bgact1.png')
-bgacter1 = pygame.transform.scale(bgacter1,(1280,720))
-bgacter2 = pygame.image.load('choose/backgroundacter/bgact2.png')
-bgacter2 = pygame.transform.scale(bgacter2,(1280,720))
-bgacter3 = pygame.image.load('choose/backgroundacter/bgact3.png')
-bgacter3 = pygame.transform.scale(bgacter3,(1280,720))
-bgacter4 = pygame.image.load('choose/backgroundacter/bgact4.png')
-bgacter4 = pygame.transform.scale(bgacter4,(1280,720))
-bgacter5 = pygame.image.load('choose/backgroundacter/bgact5.png')
-bgacter5 = pygame.transform.scale(bgacter5,(1280,720))
-bgacter6 = pygame.image.load('choose/backgroundacter/bgact6.png')
-bgacter6 = pygame.transform.scale(bgacter6,(1280,720))
+def showFullActer(act_id, full_profile, button):
+    if act_id != -1:
+        screen.blit(full_profile[act_id], (800, 90))
+    button.draw(screen)
+    button.update()
 
 
-def character():
-    screen.blit(bg,(0,0))
-    screen.blit(text_player, (100,30))
-    screen.blit(profile1, profile1_rect)
-    screen.blit(profile2, profile2_rect)
-    screen.blit(profile3, profile3_rect)
-    screen.blit(profile4, profile4_rect)
-    screen.blit(profile5, profile5_rect)
-    screen.blit(profile6, profile6_rect)
+def showFaceActer(face, name_user, base_font):
+    for x, y in enumerate(face):
+        screen.blit(y, y.get_rect(topleft = ((x * 120) + 150, 550)))
+        text_name3 = base_font.render(name_user[x], True, (255, 255, 255))
+        screen.blit(text_name3, y.get_rect(topleft = ((x * 120) + 150, 670)))
 
-def showFullActer(acter_id):
-    if acter_id == 1:
-        screen.blit(bgacter1, (0, 0))
-        screen.blit(fullacter1,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    if acter_id == 2:
-        screen.blit(bgacter2, (0, 0))
-        screen.blit(fullacter2,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    if acter_id == 3:
-        screen.blit(bgacter3, (0, 0))
-        screen.blit(fullacter3,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    if acter_id == 4:
-        screen.blit(bgacter4, (0, 0))
-        screen.blit(fullacter4,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    if acter_id == 5:
-        screen.blit(bgacter5, (0, 0))
-        screen.blit(fullacter5,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    if acter_id == 6:
-        screen.blit(bgacter6, (0, 0))
-        screen.blit(fullacter6,(830,140))
-        screen.blit(text_player, (100, 30))
-        screen.blit(profile1, profile1_rect)
-        screen.blit(profile2, profile2_rect)
-        screen.blit(profile3, profile3_rect)
-        screen.blit(profile4, profile4_rect)
-        screen.blit(profile5, profile5_rect)
-        screen.blit(profile6, profile6_rect)
-    
 
-def main(act_id):
+def selectCharacter(screen, name_user, act_user):
     clock = pygame.time.Clock()
+    face = []
+    face_scale = [(128, 100), (110, 100), (100, 108), (100, 132), (100, 119), (100, 107)]
+
+    profile = []
+    profile_scale = [(200, 242), (200, 237), (200, 238), (180, 238), (197, 242), (185, 238)]
+    profile_rect = []
+
+    full_profile = []
+    full_profile_scale = [(330, 400), (339, 400), (371, 400), (302, 400), (322, 400), (307, 400)]
+
+    active = False
+    user_text = ''
+    act_id = -1
+    FPS = 10
+    text_font = pygame.font.Font("Font\Roboto\Roboto-BlackItalic.ttf", 50)
+    base_font = pygame.font.Font(None, 32)
+
+    # input
+    frametext = pygame.Rect(815, 491, 160, 50)
+    text_rect = pygame.Rect(820, 500, 140, 32)
+    color_active = pygame.Color('deeppink')
+    color_passive = pygame.Color('white')
+    colortext = color_passive
+
+    # button
+    button = pygame.sprite.Group()
+    b_confirm = Button((1100, 580), (200, 80), 'Confirm', 40, 'Image/Button/testButton-01.png', 'orange')
+    b_start = Button((850, 580), (200, 80), 'Start', 40, 'Image/Button/testButton-01.png', 'orange')
+
+    # load image
+    bg = pygame.image.load('choose/bg.png')
+    bg = pygame.transform.scale(bg, (1280, 720))
+    text_white = text_font.render('CHOOSE YOUR CHARACTER', True, 'white').convert_alpha()
+
+    for p in range(6):
+        profile.append(pygame.image.load(f'choose/character/character{p + 1}.png').convert_alpha())
+        profile[p] = pygame.transform.scale(profile[p], profile_scale[p])
+        profile_rect.append(profile[p].get_rect(midbottom=((p % 3) * 220 + 160, int(p / 3) * 240 + 300)))
+
+    # show full
+    for i in range(6):
+        full_profile.append(pygame.image.load(f'choose/characterfull/fullacter{i + 1}.png').convert_alpha())
+        full_profile[i] = pygame.transform.scale(full_profile[i], full_profile_scale[i])
+
     run = True
     while run:
         clock.tick(FPS)
+        if not button.has(b_confirm):
+            button.add(b_confirm)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-        character()
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if text_rect.collidepoint(event.pos):
+                    active = True
+                else:
+                    active = False
+
+            if event.type == pygame.KEYDOWN:
+                if active == True:
+                    if event.key == pygame.K_BACKSPACE:
+                        user_text = user_text[:-1]
+                    else:
+                        user_text += event.unicode
+            if active:
+                colortext = color_active
+            else:
+                colortext = color_passive
+
+        character(profile, profile_rect, bg, text_white)
+
+        #mouse choose character
         mouse_pos = pygame.mouse.get_pos()
-        if profile1_rect.collidepoint(mouse_pos):
+
+        if profile_rect[0].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            # print(pygame.mouse.get_pressed())
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_presses = pygame.mouse.get_pressed()
+                if mouse_presses[0]:
+                    act_id = 0
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+        if profile_rect[1].collidepoint(mouse_pos):
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 1
-                
-        else:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
-        if profile2_rect.collidepoint(mouse_pos):
+        if profile_rect[2].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 2
 
-        if profile3_rect.collidepoint(mouse_pos):
+        if profile_rect[3].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 3
 
-        if profile4_rect.collidepoint(mouse_pos):
+        if profile_rect[4].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            print(pygame.mouse.get_pressed())
             if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 4
 
-        if profile5_rect.collidepoint(mouse_pos):
+        if profile_rect[5].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 5
 
-        if profile6_rect.collidepoint(mouse_pos):
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_presses = pygame.mouse.get_pressed()
-                if mouse_presses[0]:
-                    act_id = 6
-        
-        print(act_id)
-        showFullActer(act_id)
+        if len(act_user) > 1:
+            if b_start.rect.collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_presses = pygame.mouse.get_pressed()
+                    if mouse_presses[0]:
+                        return 'game'
+
+        if act_id not in act_user and len(act_user) < 4:
+            if b_confirm.rect.collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        act_user.append(act_id)
+                        name_user.append(user_text)
+                        user_text = ''
+                        face.append(pygame.image.load(f'choose/face/face{act_id + 1}.png').convert_alpha())
+                        face[-1] = pygame.transform.scale(face[-1], face_scale[-1])
+
+        if act_id != -1:
+            pygame.draw.rect(screen, 'black', frametext)
+            pygame.draw.rect(screen, colortext, text_rect)  # startingText="Please type here"
+            text_surface = base_font.render(user_text, True, (0, 0, 0))
+            screen.blit(text_surface, (text_rect.x + 5, text_rect.y + 5))
+            text_rect.w = max(90, text_surface.get_width() + 10)
+            frametext.w = max(100, text_surface.get_width() + 20)
+
+        if len(act_user) > 1 and not button.has(b_start):
+            button.add(b_start)
+
+        showFullActer(act_id, full_profile, button)
+        showFaceActer(face, name_user, base_font)
         pygame.display.update()
 
 if __name__ == "__main__":
-    main(act_id)
+    selectCharacter(screen, name_user, act_user )
