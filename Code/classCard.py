@@ -87,15 +87,15 @@ class Card(BonusCard):
         self.colors = colors
 
     # check if player can take this card
-    def check_req(self, p_tokens: Dict[str, int]) -> bool:
+    def check_req(self, p_tokens: Dict[str, int], p_cards: Dict[str, int]) -> bool:
         is_enough = True
         remain_gold = p_tokens['gold']
         for colors in self.requirements.keys():
-            if p_tokens[colors] < self.requirements[colors]:                
+            if p_tokens[colors] + p_cards[colors] < self.requirements[colors]:                
                 if remain_gold <= 0:
                     is_enough = False
                 else:
-                    remain_gold = (p_tokens[colors] + remain_gold) - self.requirements[colors]
+                    remain_gold = (p_tokens[colors] + p_cards[colors] + remain_gold) - self.requirements[colors]
                 if not is_enough:
                     return is_enough            
         if remain_gold < 0:
@@ -103,12 +103,14 @@ class Card(BonusCard):
         return is_enough
 
     # reduce tokens that are required in this card from player
-    def pay_tokens(self, p_tokens: Dict[str, int]):
+    def pay_tokens(self, p_tokens: Dict[str, int], p_cards: Dict[str, int]):
         for colors in self.requirements.keys():
             print(f'tokens: {p_tokens}')
-            p_tokens[colors] = p_tokens[colors] - self.requirements[colors]
-            if p_tokens[colors] < 0:
-                p_tokens['gold'] = p_tokens['gold'] + p_tokens[colors]
-                p_tokens[colors] = 0
+            col_diff = self.requirements[colors] - p_cards[colors]
+            if col_diff > 0:
+                p_tokens[colors] = p_tokens[colors] - col_diff
+                if p_tokens[colors] < 0:
+                    p_tokens['gold'] = p_tokens['gold'] + p_tokens[colors]
+                    p_tokens[colors] = 0
                           
         

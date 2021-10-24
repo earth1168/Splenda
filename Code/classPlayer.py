@@ -21,6 +21,7 @@ class Player():
         self.chr_id = chr_id
         self.name = name
         self.score = 0
+        self.hold_cards = []
         self.tokens = {
             "white": 0,
             "blue": 0,
@@ -35,4 +36,4 @@ class Player():
             "green": 0,
             "red": 0,
             "black": 0
-        }
+        }        
