@@ -1,5 +1,6 @@
 #Written by Pojnarin 62070501041
 import pygame
+import Rule
 from sys import exit
 
 from pygame.mixer import pause
@@ -22,19 +23,19 @@ def mainmenu(screen, FPS) :
     PAUSEBG = pygame.image.load("Image\Popup\Popup720p.png").convert_alpha()
     #define variable for state of the game 0 = No pause , 1 = Pause
     Pause = 0
-    ##########################################
-    Rule = 0
+    ########################################## VVVVVVVVVVVVVVVVVVVVV
+    #When open rule, set Pause = 2
     POPINBG = pygame.image.load("Image\Background\PauseGame720p.png").convert_alpha()
     RULEPBG = pygame.image.load("Image\Background\RuleInGame720p.png").convert_alpha()
     ##########################################
     #Define variable to monitor if mouse hover over button
-    Bhover = [0,0,0,0,0,0,0,0,0,0]
-    ##########################################
+    Bhover = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    ########################################## ^^^^^^^^^^^^^^^^^^
 
     #Create Text button objects for mainmenu option
     button_group = pygame.sprite.Group()
     StartGame = TButton((50,250),'StartGame',50,'White',"Font\Roboto\Roboto-Regular.ttf")
-    Rule = TButton((50,320),'Rule',50,'White',"Font\Roboto\Roboto-Regular.ttf")
+    RuleB = TButton((50,320),'Rule',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     Setting = TButton((50,390),'Setting',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     Exit = TButton((50,460),'Exit',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     #Create Text button objects and Text rectangle for when the game is pause
@@ -42,7 +43,7 @@ def mainmenu(screen, FPS) :
     QExit = TButton((326,244),'Are you sure you want to exit?',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     Yes = TButton((436,420),'Yes',50,'White',"Font\Roboto\Roboto-Regular.ttf")
     No = TButton((818,420),'No',50,'White',"Font\Roboto\Roboto-Regular.ttf")
-    button_group.add(StartGame,Rule,Setting,Exit)
+    button_group.add(StartGame,RuleB,Setting,Exit)
     pause_button_group.add(QExit,Yes,No)
     ##########################################
     #New Button Group
@@ -68,8 +69,11 @@ def mainmenu(screen, FPS) :
     #Add new button to group
     newpausebutton_group.add(PauseButton)
     popinbutton_group.add(RuleButton,ResumeButton,BackBotton)
-    ##########################################
-
+    ###########################################################
+    text_font_bold = pygame.font.Font("Font\Roboto\Roboto-Bold.ttf",40)
+    text_font_regular = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",30)
+    page = 1
+    allpage = 20
     #Game loop
     run = True
     while run:
@@ -79,12 +83,13 @@ def mainmenu(screen, FPS) :
             if event.type == pygame.QUIT :
                 run = False
 
-            ##########################################
+            ########################################## vvvvvvvvv When press key 'ESC'
             if event.type == pygame.KEYDOWN :
                 if event.key == pygame.K_ESCAPE :
                     if Pause == 1 : Pause = 0
                     elif Pause == 0 : Pause = 1
-            ##########################################
+                    else : Pause = 0
+            ########################################## ^^^^^^^^^^
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 :
@@ -98,30 +103,26 @@ def mainmenu(screen, FPS) :
                             return "setting"
                         if Exit.rect.collidepoint(pygame.mouse.get_pos()) :
                             run = False
-                        ##########################################
+                        ##########################################v
                         #New Button
                         if PauseButton.rect.collidepoint(pygame.mouse.get_pos()):
                             Pause = 1
-                            Rule = 0
-                        ##########################################
+                        ##########################################^
                     elif Pause == 1 :
                         if Yes.rect.collidepoint(pygame.mouse.get_pos()):
                             run = False
                         if No.rect.collidepoint(pygame.mouse.get_pos()):
                             Pause = 0
-                        ##########################################
+                        ##########################################V
                         if BackBotton.rect.collidepoint(pygame.mouse.get_pos()):
                             print("return 'menu' ")
                             Pause = 0
                         if ResumeButton.rect.collidepoint(pygame.mouse.get_pos()):
                             Pause = 0
                         if RuleButton.rect.collidepoint(pygame.mouse.get_pos()):
-                            Rule = 1
                             Pause = 2
-                        ##########################################
-                    if Rule == 1 :
-                        page = 1
-                        allpage = 20
+                        ##########################################^
+                    else :
                         if Next.rect.collidepoint(pygame.mouse.get_pos()):
                             if page != allpage :
                                 page += 1
@@ -129,14 +130,16 @@ def mainmenu(screen, FPS) :
                             if page != 1 :
                                 page -= 1
                         if Back.rect.collidepoint(pygame.mouse.get_pos()):
-                            Rule = 0
                             Pause = 1
 
         #Change the color of text when mouse cusor hover above the text
         if Pause == 0 :
             Bhover[4] = 0
             Bhover[5] = 0
-            #################################
+            ################################# Reset hover after Unpause
+            Bhover[10] = 0
+            Bhover[11] = 0
+            Bhover[12] = 0
             Bhover[8] = 0
             Bhover[9] = 0
             #################################
@@ -178,8 +181,11 @@ def mainmenu(screen, FPS) :
 
         elif Pause == 1 :
             Bhover[3] = 0
-            ##########################################
+            ########################################## Hover effect of Pause Button on menu
             #New Button
+            Bhover[10] = 0
+            Bhover[11] = 0
+            Bhover[12] = 0
             Bhover[6] = 0
             PauseButton.hover('black', 'Image\Button\ButtonNewUnhover.png')
             ##########################################
@@ -195,7 +201,7 @@ def mainmenu(screen, FPS) :
             else : 
                 Bhover[5] = 0
                 No.hover('White')
-            ###########################################
+            ########################################### Hover effect of Pause Menu Option
             if RuleButton.rect.collidepoint(pygame.mouse.get_pos()):
                 Bhover[7] = 1    
                 RuleButton.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
@@ -217,7 +223,35 @@ def mainmenu(screen, FPS) :
                 Bhover[9] = 0
                 BackBotton.hover('black', 'Image\Button\ButtonNewUnhover.png')
             ###########################################
+        else :
+            Bhover[7] = 0
+            if Next.rect.collidepoint(pygame.mouse.get_pos()) and page != allpage :
+                Bhover[10] = 1    
+                Next.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            elif page == allpage :
+                Next.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
+                Bhover[10] = 0
+            else :
+                Bhover[10] = 0
+                Next.hover('black', 'Image\Button\ButtonNewUnhover.png')
 
+            if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
+                Bhover[11] = 1    
+                Prev.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            elif page == 1 : 
+                Prev.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
+                Bhover[11] = 0
+            else :
+                Bhover[11] = 0
+                Prev.hover('black', 'Image\Button\ButtonNewUnhover.png')
+
+            if Back.rect.collidepoint(pygame.mouse.get_pos()):
+                Bhover[12] = 1    
+                Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else :
+                Bhover[12] = 0
+                Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
+        #############################################################################^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         #if any button are hover, mouse cursor will turn to hand 
         if 1 in Bhover :
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
@@ -232,22 +266,27 @@ def mainmenu(screen, FPS) :
         button_group.draw(screen)
         button_group.update()
 
-        ########################################## Before Pause
+        ########################################## Before Pause : Render Pause Button to pause from menu
         newpausebutton_group.draw(screen)
         newpausebutton_group.update() 
         ##########################################
-        ########################################## After Pause
-        if Pause == 1 and Rule == 0:
+        ########################################## After Pause : Render Pause Menu option 
+        if Pause == 1 :
+            page = 1
             screen.blit(POPINBG,(0,0))
             popinbutton_group.draw(screen)
             popinbutton_group.update() 
         ##########################################
-        ##########################################
-        if Rule == 1:
+        ########################################## If Click on Rule while Pause, Render Rule scene
+        elif Pause == 2 :
             screen.blit(RULEPBG,(0,0))
+            Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'Black')
+            screen.blit(Page_surface,(25,640))
             # draw all button on the screen
             rulebutton_group.draw(screen)
             rulebutton_group.update() 
+            #render text body
+            Rule.ruletext (page,text_font_bold,text_font_regular)
         ##########################################
         
         #Update screen
