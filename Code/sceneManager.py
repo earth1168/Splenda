@@ -55,7 +55,7 @@ class GameState():
 # General Setup
 pygame.init()
 game_state = GameState()
-FPS = 60
+FPS = 15
 
 # Screen Setup
 isFullscreen = False
