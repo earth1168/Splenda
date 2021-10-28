@@ -49,18 +49,18 @@ class ButtonDirty(pygame.sprite.DirtySprite):
 
     # draw button
     def draw_button(self):
-        self.font = pygame.font.Font(self.font, self.t_size)
+        font = pygame.font.Font(self.font, self.t_size)
         # Create surface to draw button on
         self.image = pygame.Surface(self.size, pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = self.position)
         # Text on the button
-        self.t_render = self.font.render(self.text, True, self.t_colors)
+        self.t_render = font.render(self.text, True, self.t_colors)
         self.t_rect = self.t_render.get_rect(center = self.image.get_rect().center)
         # if specify an image, then use image as button's background
         # if not specify an image, then background is transparent
         if self.bg_path != '':
             self.bg = pygame.image.load(self.bg_path).convert_alpha()
-            self.bg = pygame.transform.scale(self.bg, self.size)
+            self.bg = pygame.transform.smoothscale(self.bg, self.size)
             self.bg_rect = self.bg.get_rect(center = self.image.get_rect().center)
             # Draw button background on the surface
             self.image.blit(self.bg, self.bg_rect)
