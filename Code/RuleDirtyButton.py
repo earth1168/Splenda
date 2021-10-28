@@ -1,7 +1,7 @@
 #Written by Pojnarin 62070501041
 import pygame
 from sys import exit
-from classButton import Button 
+from classButtonDirty import ButtonDirty
 pygame.init()
 #Set variable for window size
 WIDTH, HEIGHT = 1280,720
@@ -258,19 +258,23 @@ def rulebook(screen, FPS) :
     #Define variable to monitor if mouse hover over button
     Bhover = [0,0,0]
     # group of buttons. work with sprite (Button class in this context)
-    button_group = pygame.sprite.Group()
+    button_group = pygame.sprite.LayeredDirty()
     # button with 'start' text, button's background image, set colors, and set font 
-    Next = Button((1180,140), (130, 50), 'Next', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Next = ButtonDirty((1180,140), (130, 50), 'Next', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'exit' text, button's background image, set colors, and default font 
-    Prev = Button((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Prev = ButtonDirty((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'Menu' text, button's background image, set colors, and default font 
-    Back = Button((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Next.visible = Prev.visible = Back.visible = 1
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\Rule720p.png").convert()
     #Text setting
     text_font_bold = pygame.font.Font("Font\Roboto\Roboto-Bold.ttf",40)
     text_font_regular = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",30)
-    text_font_Button = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",20)
+
+    # add button to group
+    button_group.add(Next, Prev,Back)
+    button_group.clear(screen, BACKGROUND)
     #Set page of text. Default is page 1
     page = 1
     allpage = 20
@@ -337,11 +341,8 @@ def rulebook(screen, FPS) :
         #Text page set up and render
         Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'White')
         screen.blit(Page_surface,(25,640))
-        # add button to group
-        button_group.add(Next, Prev,Back)
         # draw all button on the screen
         button_group.draw(screen)
-        button_group.update() 
         #render text body
         ruletext (page,text_font_bold,text_font_regular)
         #Update screen

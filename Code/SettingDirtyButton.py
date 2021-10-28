@@ -5,8 +5,7 @@ import os
 path = os.getcwd()
 sys.path.insert(0, path)
 
-from Code.classButton import Button
-from Code.classText import TButton
+from classButtonDirty import ButtonDirty
 
 pygame.init()
 #Set variable for window size
@@ -34,20 +33,22 @@ def setting(screen, FPS, res , isFullscreen) :
     pygame.display.set_caption("Game setting")
     BACKGROUND = pygame.image.load("Image\Background\Setting720p.png").convert()
     #Text setting
+    font = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",30)
     isFullscreen = isFullscreen
     window_mode = ['Window', 'Fullscreen']
 
     # Define buttons and their group (only use fullscreen/window button(b3))
-    button_group = pygame.sprite.Group()
+    button_group = pygame.sprite.LayeredDirty()
     #Setting Text
-    ScreenMode = TButton((275,235),'Screen Mode : ',30,'Black',"Font\Roboto\Roboto-Regular.ttf")    
+    ScreenModeSurface = font.render('Screen Mode : ', True, 'Black')
     # button for changing window mode
-    Mode = Button((570, 255), (180, 50), window_mode[1], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
+    Mode = ButtonDirty((570, 255), (180, 50), window_mode[1], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     # button for going back to mainmenu
-    Back = Button((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    button_group.add(ScreenMode,Mode,Back)
+    Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Mode.visible = Back.visible = 1
+    button_group.add(Mode,Back)
     Bhover = [0,0]
-
+    button_group.clear(screen, BACKGROUND)
     #Game loop
     run = True
     while run:
@@ -95,9 +96,9 @@ def setting(screen, FPS, res , isFullscreen) :
         #FPS of the game
         clock.tick(FPS)
         screen.blit(BACKGROUND,(0,0))
+        screen.blit(ScreenModeSurface,(275,235))
         # draw button
         button_group.draw(screen)
-        button_group.update()
         #Update screen
         pygame.display.update()
 

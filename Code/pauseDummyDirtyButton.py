@@ -4,7 +4,6 @@ import Rule
 from sys import exit
 
 from pygame.mixer import pause
-from classButton import Button 
 from classButtonDirty import ButtonDirty
 
 pygame.init()
@@ -12,7 +11,7 @@ pygame.init()
 WIDTH, HEIGHT = 1280,720
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
-FPS = 15
+FPS = 30
 
 def mainmenu(screen, FPS) :
     clock = pygame.time.Clock()
@@ -206,6 +205,7 @@ def mainmenu(screen, FPS) :
         screen.blit(BACKGROUND,(0,0))
 
         Menusprites.draw(screen)
+        btn_pause.visible = 1
         ########################################## After Pause : Render Pause Menu option 
         if Pause == 1 :
             page = 1
