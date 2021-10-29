@@ -7,7 +7,7 @@ pygame.init()
 WIDTH, HEIGHT = 1280,720
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
-FPS = 15
+FPS = 25
 
 #Input with a paragraph of text and render it on screen
 def text_block(font, text, color, pos, block_width, screen, row_height) :
@@ -265,7 +265,6 @@ def rulebook(screen, FPS) :
     Prev = ButtonDirty((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     # button with 'Menu' text, button's background image, set colors, and default font 
     Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    Next.visible = Prev.visible = Back.visible = 1
     #Set path of background image file
     BACKGROUND = pygame.image.load("Image\Background\Rule720p.png").convert()
     #Text setting
@@ -307,7 +306,7 @@ def rulebook(screen, FPS) :
             Next.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
             Bhover[0] = 0
         else :
-            Next.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            Next.unhover()
             Bhover[0] = 0
 
         if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
@@ -317,7 +316,7 @@ def rulebook(screen, FPS) :
             Prev.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
             Bhover[1] = 0
         else :
-            Prev.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            Prev.unhover()
             Bhover[1] = 0
 
 
@@ -325,7 +324,7 @@ def rulebook(screen, FPS) :
             Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[2] = 1
         else : 
-            Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            Back.unhover()
             Bhover[2] = 0
 
         #if any button are hover, mouse cursor will turn to hand 
@@ -341,10 +340,11 @@ def rulebook(screen, FPS) :
         #Text page set up and render
         Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'White')
         screen.blit(Page_surface,(25,640))
+        ruletext (page,text_font_bold,text_font_regular)
+        Next.visible = Prev.visible = Back.visible = 1
         # draw all button on the screen
         button_group.draw(screen)
         #render text body
-        ruletext (page,text_font_bold,text_font_regular)
         #Update screen
         pygame.display.update()
 

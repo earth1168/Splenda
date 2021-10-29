@@ -11,7 +11,7 @@ pygame.init()
 WIDTH, HEIGHT = 1280,720
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
-FPS = 30
+FPS = 25
 
 def mainmenu(screen, FPS) :
     clock = pygame.time.Clock()
@@ -125,7 +125,7 @@ def mainmenu(screen, FPS) :
                 btn_pause.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Bhover[6] = 0
-                btn_pause.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                btn_pause.unhover()
                 
 
         elif Pause == 1 :
@@ -136,7 +136,7 @@ def mainmenu(screen, FPS) :
             Bhover[11] = 0
             Bhover[12] = 0
             Bhover[6] = 0
-            btn_pause.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            btn_pause.unhover()
 
             ########################################### Hover effect of Pause Menu Option
             if btn_Rule.rect.collidepoint(pygame.mouse.get_pos()):
@@ -144,21 +144,21 @@ def mainmenu(screen, FPS) :
                 btn_Rule.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Bhover[7] = 0
-                btn_Rule.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                btn_Rule.unhover()
 
             if btn_Resume.rect.collidepoint(pygame.mouse.get_pos()):
                 Bhover[8] = 1    
                 btn_Resume.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Bhover[8] = 0
-                btn_Resume.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                btn_Resume.unhover()
 
             if btn_Back.rect.collidepoint(pygame.mouse.get_pos()):
                 Bhover[9] = 1    
                 btn_Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Bhover[9] = 0
-                btn_Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                btn_Back.unhover()
             ###########################################
 
         else :
@@ -171,7 +171,7 @@ def mainmenu(screen, FPS) :
                 Bhover[10] = 0
             else :
                 Bhover[10] = 0
-                Next.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                Next.unhover()
 
             if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :
                 Bhover[11] = 1    
@@ -181,14 +181,14 @@ def mainmenu(screen, FPS) :
                 Bhover[11] = 0
             else :
                 Bhover[11] = 0
-                Prev.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                Prev.unhover()
 
             if Back.rect.collidepoint(pygame.mouse.get_pos()):
                 Bhover[12] = 1    
                 Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Bhover[12] = 0
-                Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
+                Back.unhover()
         #############################################################################^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         
 

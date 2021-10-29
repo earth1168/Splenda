@@ -15,7 +15,7 @@ infoObj = pygame.display.Info()
 screen = pygame.display.set_mode(res)
 isFullscreen = False
 #Set FPS of the game
-FPS = 15
+FPS = 25
 
 # change screen resolution. return new resolution
 def change_resolution(screen, res_new, isFullscreen):
@@ -45,7 +45,6 @@ def setting(screen, FPS, res , isFullscreen) :
     Mode = ButtonDirty((570, 255), (180, 50), window_mode[1], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     # button for going back to mainmenu
     Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    Mode.visible = Back.visible = 1
     button_group.add(Mode,Back)
     Bhover = [0,0]
     button_group.clear(screen, BACKGROUND)
@@ -77,14 +76,14 @@ def setting(screen, FPS, res , isFullscreen) :
             Mode.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[0] = 1
         else : 
-            Mode.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            Mode.unhover()
             Bhover[0] = 0
         
         if Back.rect.collidepoint(pygame.mouse.get_pos()):
             Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             Bhover[1] = 1
         else : 
-            Back.hover('black', 'Image\Button\ButtonNewUnhover.png')
+            Back.unhover()
             Bhover[1] = 0
         
         #if any button are hover, mouse cursor will turn to hand 
@@ -97,6 +96,7 @@ def setting(screen, FPS, res , isFullscreen) :
         clock.tick(FPS)
         screen.blit(BACKGROUND,(0,0))
         screen.blit(ScreenModeSurface,(275,235))
+        Mode.visible = Back.visible = 1
         # draw button
         button_group.draw(screen)
         #Update screen
