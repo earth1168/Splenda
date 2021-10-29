@@ -4,7 +4,7 @@
 #   - Card
 
 from typing import Dict, List, Tuple
-from classButton import Button
+from classButtonDirty import ButtonDirty
 
 # BonusCard class:
 # create bonus card object
@@ -19,13 +19,13 @@ from classButton import Button
 #   - player_id: int -- id of player who take this bonus card
 #   - requirements: Dict[color name, int] -- number of card required to get this bonus card
 #   - position: Tuple[x, y] -- position of bonus card
-class BonusCard(Button):
+class BonusCardDirty(ButtonDirty):
     def __init__(self, 
                 card_id: int, 
                 point: int, 
                 card_size: Tuple[int, int],
                 img_path: str):
-        super().__init__((0, 0), card_size, '', 0, img_path)       
+        super().__init__((0, 0), card_size, '', 30, img_path)       
         self.card_id = card_id
         self.point = point
         self.image_path = img_path
@@ -38,10 +38,6 @@ class BonusCard(Button):
             "red": 0,
             "black": 0
         }
-
-    # set position of bonus card
-    def set_pos(self, x: int, y: int):
-        self.position = (x, y)
 
     # set requirements of bonus card
     def set_req(self, req_list: List[int]):
@@ -76,7 +72,7 @@ class BonusCard(Button):
 #   - player_id: int -- id of player who take this card
 #   - requirements: Dict[color name, int] -- number of card required to get this card
 #   - position: Tuple[x, y] -- position of card
-class Card(BonusCard):
+class CardDirty(BonusCardDirty):
     def __init__(self, 
                 card_id: int, 
                 point: int, 
@@ -104,14 +100,25 @@ class Card(BonusCard):
         return is_enough
 
     # reduce tokens that are required in this card from player
+    # return: Dictionary of tokens that reduce from player
     def pay_tokens(self, p_tokens: Dict[str, int], p_cards: Dict[str, int]):
+        paid_tokens = {
+            "white": 0,
+            "blue": 0,
+            "green": 0,
+            "red": 0,
+            "black": 0
+        }
         for colors in self.requirements.keys():
             print(f'tokens: {p_tokens}')
             col_diff = self.requirements[colors] - p_cards[colors]
             if col_diff > 0:
                 p_tokens[colors] = p_tokens[colors] - col_diff
+                paid_tokens.update({colors: col_diff})
                 if p_tokens[colors] < 0:
                     p_tokens['gold'] = p_tokens['gold'] + p_tokens[colors]
+                    paid_tokens[colors] += p_tokens[colors]
                     p_tokens[colors] = 0
+        return paid_tokens
                           
         

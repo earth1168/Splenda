@@ -41,6 +41,8 @@ class ButtonDirty(pygame.sprite.DirtySprite):
             self.t_colors = t_colors
         self.font = t_font
         self._layer = 0
+        self.bg_hover_path = ''
+        self.is_hover = False
         # Create surface to draw button on
         self.image = pygame.Surface(btn_size, pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = position)
@@ -49,12 +51,12 @@ class ButtonDirty(pygame.sprite.DirtySprite):
 
     # draw button
     def draw_button(self):
-        font = pygame.font.Font(self.font, self.t_size)
+        self.font = pygame.font.Font(self.font, self.t_size)
         # Create surface to draw button on
         self.image = pygame.Surface(self.size, pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = self.position)
         # Text on the button
-        self.t_render = font.render(self.text, True, self.t_colors)
+        self.t_render = self.font.render(self.text, True, self.t_colors)
         self.t_rect = self.t_render.get_rect(center = self.image.get_rect().center)
         # if specify an image, then use image as button's background
         # if not specify an image, then background is transparent
@@ -68,6 +70,7 @@ class ButtonDirty(pygame.sprite.DirtySprite):
         self.image.blit(self.t_render, self.t_rect)
 
     # When mouse is hovering on button. change text's color and/or button background image
+    # only update in the first frame that mouse hover on the button
     #   - colors_new: text | tuple(r, g, b) -- text's color when hovering
     #       default: text's color is not changed
     #   - bg_new: text --  path of button's background image when hovering
@@ -75,17 +78,42 @@ class ButtonDirty(pygame.sprite.DirtySprite):
     def hover(self,
                 colors_new: Union[str, Tuple[int, int, int]]='',
                 bg_new: str=''):
-        if colors_new != '':
-            self.t_colors = colors_new
-        if bg_new != '':
-            self.bg_path = bg_new
-        self.draw_button()
+        if not self.is_hover:
+            if bg_new != '':
+                if self.bg_hover_path != bg_new:
+                    self.bg_hover_path = bg_new
+                    self.bg_hover = pygame.image.load(self.bg_hover_path).convert_alpha()
+                    self.bg_hover = pygame.transform.scale(self.bg_hover, self.size)
+                self.image.blit(self.bg_hover, self.bg_rect)
+            if colors_new != '':
+                self.t_hover_render = self.font.render(self.text, True, colors_new)
+                self.image.blit(self.t_hover_render, self.t_rect)
+            self.is_hover = True
+            # set dirty to 1. tell program to update image
+            self.dirty = 1
+
+    # when mouse is not hovering on the button. change back to normal
+    # only update in the first frame that mouse not hover on the button
+    def unhover(self):
+        if self.is_hover:
+            self.image.blit(self.bg, self.bg_rect)
+            self.image.blit(self.t_render, self.t_rect)
+            self.is_hover = False
+            self.dirty = 1
+
+    # change the text on the button
+    def update_text(self, text_new):
+        self.text = text_new
+        self.t_render = self.font.render(self.text, True, self.t_colors)
+        self.image.blit(self.bg, self.bg_rect)
+        self.image.blit(self.t_render, self.t_rect)
         self.dirty = 1
 
     # change position of button
-    #   - pos_new: tuple(x, y) -- new position to put button on
-    def reposition(self, pos_new: Tuple[int, int]):
-        self.position = pos_new
+    #   - pos_new: x, y -- new position to put button on
+    def reposition(self, x: int, y: int):
+        self.position = (x, y)
+        self.rect.center = self.position
 
     # chage size of button
     #   - size_new: tuple(width, height) -- new button's size 
@@ -97,6 +125,7 @@ class ButtonDirty(pygame.sprite.DirtySprite):
     def resize_text(self, t_size_new: int):
         self.t_size = t_size_new
 
+    # is mouse collide with the button?
     def is_collide_mouse(self, mouse):
         return self.rect.collidepoint(mouse)
 

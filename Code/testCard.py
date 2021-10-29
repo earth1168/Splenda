@@ -105,7 +105,7 @@ def testCard(screen, res, FPS):
 
     # instantiate card objects
     for i in range(3):
-        card_group.add(Card(i, card_points[i], (110, 175), 'Image/Card/Potion.png', card_colors[i]))
+        card_group.add(Card(i, card_points[i], (110, 175), 'Image/Card/Potion.png', 1, card_colors[i]))
     # set cards' position
     for i, card in enumerate(card_group.sprites(), start=1):
         card.set_pos(res[0]/4*i, res[1]/2+100)
