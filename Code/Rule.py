@@ -7,7 +7,7 @@ pygame.init()
 WIDTH, HEIGHT = 1280,720
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
 #Set FPS of the game
-FPS = 15
+FPS = 25
 
 #Input with a paragraph of text and render it on screen
 def text_block(font, text, color, pos, block_width, screen, row_height) :
