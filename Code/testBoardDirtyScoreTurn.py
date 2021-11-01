@@ -142,18 +142,17 @@ def hold_card(card: CardDirty, player: Player, token_gold: Token):
     print()
 
 #EndTurn #############################################################################################################   
-def endturn(turn,count_turn,allplayer,player_list) :
-    print(f'{player_list[turn].name}')
-    print(f'{player_list[turn].tokens}')
-    print(f'{player_list[turn].score}\n')
+def endturn(turn,count_turn,allplayer) :
     turn = (turn+1)%allplayer
     count_turn = count_turn + 1
     return turn, count_turn
 
 #EndGame ############################################################################################################# 
 def endgame(turn,player_list,End,winner) :
-    if player_list[turn].score >= 15 :
+    if End == 0 and player_list[turn].score >= 15:
         End = 1
+        winner = turn
+    elif End == 1 and player_list[turn].score > player_list[winner].score :
         winner = turn
     return End, winner
 
@@ -361,8 +360,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                 btn_confirm.unhover()
                                 btn_cancel.visible = btn_confirm.visible = 0
                                 ################################################
-                                End, winner = endgame(turn,player_list,End,winner)
-                                turn,count_turn = endturn(turn,count_turn,allplayer,player_list)
+                                turn,count_turn = endturn(turn,count_turn,allplayer)
                                 ###########################################################################################################
                         # show all hold cards
                         if btn_show_hold.visible:
@@ -403,8 +401,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                     btn_show_hold.visible = 1 
                                     Pause = Now
                                     #####################################################
-                                    End, winner = endgame(turn,player_list,End,winner)
-                                    turn,count_turn = endturn(turn,count_turn,allplayer,player_list)
+                                    turn,count_turn = endturn(turn,count_turn,allplayer)
                                     #################################################################################################
                         # buy a card
                         if big_card.btn_buy.is_collide_mouse(pos_check):
@@ -435,7 +432,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                 Pause = Now
                                 ##############################################################
                                 End, winner = endgame(turn,player_list,End,winner)
-                                turn,count_turn = endturn(turn,count_turn,allplayer,player_list)
+                                turn,count_turn = endturn(turn,count_turn,allplayer)
                                 ########################################################################################################
                             else:
                                 print(f'can not buy c{big_card.selected_card.card_id}')  
@@ -474,15 +471,16 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             #         if event.key == key:
             #             reduce_token(token, player)
         ######################################################### End Game #######################################################
-        if End == 1 :
-            print('winner is Player'+str(winner))
+        if End == 1 and turn == 0 :
+            print('winner is Player'+str(winner)+' name : '+f'{player_list[winner].name}')
+            run = False
 
         # update text: number of tokens that player has ##########################################################################
-        tokens_text1 = font.render(f'{player_list[0].tokens}', True, 'white', 'chartreuse4')
-        tokens_text2 = font.render(f'{player_list[1].tokens}', True, 'white', 'chartreuse4')
-        tokens_text3 = font.render(f'{player_list[2].tokens}', True, 'white', 'chartreuse4')
-        tokens_text4 = font.render(f'{player_list[3].tokens}', True, 'white', 'chartreuse4')
-        turn_text = font.render('Turn : '+f'{player_list[turn].name}'+' '+f'{player_list[turn].score}', True, 'white', 'chartreuse4')
+        tokens_text1 = font.render(f'{player_list[0].tokens}'+' score :'+f'{player_list[0].score}', True, 'white', 'chartreuse4')
+        tokens_text2 = font.render(f'{player_list[1].tokens}'+' score :'+f'{player_list[1].score}', True, 'white', 'chartreuse4')
+        tokens_text3 = font.render(f'{player_list[2].tokens}'+' score :'+f'{player_list[2].score}', True, 'white', 'chartreuse4')
+        tokens_text4 = font.render(f'{player_list[3].tokens}'+' score :'+f'{player_list[3].score}', True, 'white', 'chartreuse4')
+        turn_text = font.render('Turn : '+f'{player_list[turn].name}', True, 'white', 'chartreuse4')
 
         clock.tick(FPS)     
         # get all rects of sprites on screen   
