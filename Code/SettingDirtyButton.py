@@ -42,7 +42,7 @@ def setting(screen, FPS, res , isFullscreen) :
     #Setting Text
     ScreenModeSurface = font.render('Screen Mode : ', True, 'Black')
     # button for changing window mode
-    Mode = ButtonDirty((570, 255), (180, 50), window_mode[1], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
+    Mode = ButtonDirty((570, 255), (180, 50), window_mode[0], 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     # button for going back to mainmenu
     Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     button_group.add(Mode,Back)
@@ -65,9 +65,9 @@ def setting(screen, FPS, res , isFullscreen) :
                         isFullscreen = not isFullscreen
                         # change text on the button
                         if isFullscreen:
-                            Mode.text = window_mode[0]
+                            Mode.update_text(window_mode[1])
                         else:
-                            Mode.text = window_mode[1]
+                            Mode.update_text(window_mode[0])
                         res = change_resolution(screen, res, isFullscreen)  
                     if Back.rect.collidepoint(pygame.mouse.get_pos()):
                         return "menu"
@@ -96,7 +96,7 @@ def setting(screen, FPS, res , isFullscreen) :
         clock.tick(FPS)
         screen.blit(BACKGROUND,(0,0))
         screen.blit(ScreenModeSurface,(275,235))
-        Mode.visible = Back.visible = 1
+        Mode.dirty = Back.dirty = 1
         # draw button
         button_group.draw(screen)
         #Update screen

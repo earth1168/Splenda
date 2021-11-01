@@ -350,9 +350,10 @@ def testBoard(screen, res, FPS, player: Player):
                                 for i, token in enumerate(allsprites.get_sprites_from_layer(0)):
                                     if i > 4:
                                         break
-                                    token.qty += paid_tokens[token.colors]
-                                    token.update_text(f'{token.qty}')
-                                    token.visible = 1
+                                    if paid_tokens[token.colors] > 0:
+                                        token.qty += paid_tokens[token.colors]
+                                        token.update_text(f'{token.qty}')                                    
+                                        token.visible = 1
                                 # remove card from player's hold card list, if any
                                 if big_card.selected_card in player.hold_cards:
                                     player.hold_cards.remove(big_card.selected_card)
