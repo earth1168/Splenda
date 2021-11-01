@@ -31,6 +31,7 @@ class BonusCardDirty(ButtonDirty):
         self.image_path = img_path
         self.status = 'in_deck'
         self.player_id = -1
+        self._layer = 2
         self.requirements = {
             "white": 0,
             "blue": 0,
@@ -81,6 +82,7 @@ class CardDirty(BonusCardDirty):
                 level: int,
                 colors: str):
         super().__init__(card_id, point, card_size, img_path)
+        self.level = level
         self.colors = colors
 
     # check if player can take this card
