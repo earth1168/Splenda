@@ -2,6 +2,8 @@
 # This script contains 1 class:
 #   - Player
 
+from classToken import Token
+
 # Player class:
 # create button object with customizable background, size, and text
 # inherit from Sprite class in pygame
@@ -22,13 +24,21 @@ class Player():
         self.name = name
         self.score = 0
         self.hold_cards = []
+        # self.tokens = {
+        #     "white": 0,
+        #     "blue": 0,
+        #     "green": 0,
+        #     "red": 0,
+        #     "black": 0,
+        #     "gold": 0
+        # }
         self.tokens = {
-            "white": 0,
-            "blue": 0,
-            "green": 0,
-            "red": 0,
-            "black": 0,
-            "gold": 0
+            "white": Token((520, 60), (50, 50), 'Image\Coin\whiteCoin-01.png', "white", 0),
+            "blue": Token((600, 60), (50, 50), 'Image\Coin\\blueCoin-01.png', "blue", 0),
+            "green": Token((680, 60), (50, 50), 'Image\Coin\greenCoin-01.png', "green", 0),
+            "red": Token((760, 60), (50, 50), 'Image\Coin\\redCoin-01.png', "red", 0),
+            "black": Token((840, 60), (50, 50), 'Image\Coin\\blackCoin-01.png', "black", 0),
+            "gold": Token((440, 60), (50, 50), 'Image\Coin\goldCoin-01.png', "gold", 0)
         }
         self.cards = {
             "white": 0,
@@ -36,4 +46,22 @@ class Player():
             "green": 0,
             "red": 0,
             "black": 0
-        }        
+        }  
+
+        for token in self.tokens.values():
+            token.visible = 0            
+
+    # reposition tokens
+    def repos_tokens(self, pos_x, pos_y, distance=0):
+        self.tokens['gold'].reposition(pos_x, pos_y)
+        for i, token in enumerate(self.tokens.values(), start=1):
+            if i > 5:
+                break
+            token.reposition(pos_x+((50+distance)*i), pos_y)
+
+    def is_hold_card(self):
+        if not self.hold_cards:
+            return False
+        else:
+            return True
+        

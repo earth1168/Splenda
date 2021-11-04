@@ -2,8 +2,6 @@ from typing import List, Tuple
 import pygame
 import csv
 import random
-
-from pygame.mixer import pause
 from classPlayer import Player
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty
@@ -48,8 +46,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
         if sel_token.qty > 0 and sel_qty < 3 and\
              (show_token.qty == 0 or (sel_token.qty >= 3 and sel_qty == 1 and show_token.qty > 0)):
             show_token.visible = 1
-            show_token.change_qty(show_token.qty+1)
-            sel_token.change_qty(sel_token.qty-1)
+            show_token.qty += 1
+            sel_token.qty -= 1
             show_token.update_text(f'{show_token.qty}')
             sel_token.update_text(f'{sel_token.qty}')
             sel_qty += 1
@@ -61,8 +59,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
 
 # return token to pile
 def return_token(token: Token, show_token: Token, sel_qty, can_select):
-    token.change_qty(token.qty + 1)
-    show_token.change_qty(show_token.qty - 1)
+    token.qty += 1
+    show_token.qty -= 1
     sel_qty -= 1
     can_select = True
     token.visible = 1
@@ -75,32 +73,34 @@ def return_token(token: Token, show_token: Token, sel_qty, can_select):
 def cancel_token(token_list: List[Token], show_token_list: List[Token]):
     for i, show_tok in enumerate(show_token_list):
         if show_tok.qty > 0:
-            token_list[i].change_qty(token_list[i].qty + show_tok.qty)
-            show_tok.change_qty(0)
+            token_list[i].qty += show_tok.qty
+            show_tok.qty = 0
             token_list[i].visible = 1
-            show_tok.visible = 0       
+            show_tok.visible = 0    
             token_list[i].update_text(f'{token_list[i].qty}')
             show_tok.update_text(f'{show_tok.qty}') 
 
 # add token to player
 def take_tokens(token_list, player: Player):
     for token in token_list:
-        player.tokens[token.colors] += token.qty
+        player.tokens[token.colors].qty += token.qty
+        player.tokens[token.colors].update_text(f'{player.tokens[token.colors].qty}')
+        player.tokens[token.colors].out_of_stock()
         token.qty = 0
         token.visible = 0
         token.dirty = 1
 
 def get_tokens(token: Token, player: Player):
     if token.qty > 0:
-        player.tokens[token.colors] += 1
+        player.tokens[token.colors].qty += 1
         token.qty -= 1
         token.dirty = 1
     print(f'take {token.colors}')
-    print(f'player: {token.colors} = {player.tokens[token.colors]}')
+    print(f'player: {token.colors} = {player.tokens[token.colors].qty}')
     token.out_of_stock()
 
 def reduce_token(token: Token, player: Player):
-    player.tokens[token.colors] -= 1
+    player.tokens[token.colors].qty -= 1
     token.qty += 1
     token.visible = 1
 
@@ -124,6 +124,9 @@ def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
     player.cards[card.colors] += 1
+    for token in player.tokens.values():
+        token.update_text(f'{token.qty}')
+        token.out_of_stock()
     card.kill()
     print(f'take card: +{card.point} points')
     print(f'owned cards: {player.cards}')
@@ -133,18 +136,29 @@ def pay_tokens(card: CardDirty, player: Player):
 # add card to player's hold card list and give gold token to player
 def hold_card(card: CardDirty, player: Player, token_gold: Token):
     player.hold_cards.append(card)
-    if player.tokens['gold'] < 3 and token_gold.qty > 0:
-        player.tokens['gold'] += 1
-        token_gold.change_qty(token_gold.qty-1)
+    if player.tokens['gold'].qty < 3 and token_gold.qty > 0:
+        player.tokens['gold'].qty += 1
+        player.tokens['gold'].update_text(f"{player.tokens['gold'].qty}")
+        player.tokens['gold'].out_of_stock()
+        token_gold.qty -= 1
         token_gold.update_text(f'{token_gold.qty}')
+        token_gold.out_of_stock()
     card.kill()
     print(f'hold {len(player.hold_cards)} card(s)')
     print()
 
+def check_player_token(player: Player):
+    total_token = 0
+    for p_token in player.tokens.values():
+        total_token += p_token.qty
+    print(f'total token: {total_token}')    
+    return total_token > 10
+    
 def testBoard(screen, res, FPS, player: Player):
     clock = pygame.time.Clock()
     run = True
     sel_qty = 0
+    total_token = 0
     can_select = True
     big_card = None
     new_card = None
@@ -156,8 +170,6 @@ def testBoard(screen, res, FPS, player: Player):
     font = pygame.font.Font(None, 30)
     msg1 = font.render('Owned Tokens:', True, 'white')
     msg1_rect = msg1.get_rect(center = (res[0]/2, 20))
-    tokens_text = font.render(f'{player.tokens}', True, 'white', 'green')
-    tok_t_rect = tokens_text.get_rect(center = (res[0]/2, 50))
 
     # set background
     background = pygame.Surface(screen.get_size())
@@ -176,6 +188,15 @@ def testBoard(screen, res, FPS, player: Player):
         allsprites.change_layer(tok_in_pane, 1)
     tokGold = Token((150, 100), (100, 100), 'Image\Coin\goldCoin-01.png', 'gold', 5)
     allsprites.add(tokGold)
+    # for i in range(5):
+    #     tok_player = Token((150+50*i, 680), (50, 50), 'Image\Coin\\'+tok_col[i]+'Coin-01.png', tok_col[i], 0)
+    #     tok_player.visible = 0
+    #     allsprites.add(tok_player)
+    # tokGold_player = Token((100, 680), (50, 50), 'Image\Coin\goldCoin-01.png', 'gold', 0)
+    # tokGold_player.visible = 0
+    # allsprites.add(tokGold_player)
+    for token in player.tokens.values():
+        allsprites.add(token)
 
     # create buttons
     btn_cancel = ButtonDirty((500, 300), (130, 50), 'cancle', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
@@ -213,6 +234,14 @@ def testBoard(screen, res, FPS, player: Player):
     hold_pane._layer = 3
     btn_close = ButtonDirty((600, 600), (75, 75), '', 0, 'Image\Button\CloseButton.png')
     btn_close._layer = 3
+
+    # create text sprite to display text: 'Tokens > 10 ....'
+    text_sprite = pygame.sprite.DirtySprite()
+    text_sprite.image = font.render('Tokens > 10: Click on token to return it to pile', True, 'white', 'chartreuse4')
+    text_sprite.rect = text_sprite.image.get_rect(center = (res[0]/2, 120))
+    text_sprite._layer = 6
+    text_sprite.visible = 0
+    allsprites.add(text_sprite)
 
     # draw background (static image, cannot change)
     allsprites.clear(screen, background)
@@ -298,8 +327,17 @@ def testBoard(screen, res, FPS, player: Player):
                                 sel_qty = 0
                                 can_select = True
                                 btn_confirm.unhover()
-                                btn_cancel.visible = btn_confirm.visible = 0
+                                # for i in range(5):
+                                #     token = allsprites.get_sprites_from_layer(0)[i+6]
+                                #     token.qty = player.tokens[token.colors]
+                                #     token.update_text(f'{token.qty}')
+                                #     token.out_of_stock()
+                                if check_player_token(player):
+                                    print('return tokens')
+                                    Pause = 3
+                                btn_cancel.visible = btn_confirm.visible = 0                                
                         # show all hold cards
+                        btn_show_hold.visible = player.is_hold_card()
                         if btn_show_hold.visible:
                             if btn_show_hold.is_collide_mouse(event.pos):
                                 print('click show hold cards')
@@ -334,8 +372,16 @@ def testBoard(screen, res, FPS, player: Player):
                                     big_card.kill()
                                     if new_card != None:
                                         allsprites.add(new_card) 
-                                    btn_show_hold.visible = 1 
-                                    Pause = Now
+                                    # gold_token = allsprites.get_sprites_from_layer(0)[11]
+                                    # gold_token.qty = player.tokens['gold']
+                                    # gold_token.update_text(f'{gold_token.qty}')
+                                    # gold_token.out_of_stock()                                    
+                                    btn_show_hold.visible = player.is_hold_card()
+                                    if check_player_token(player):
+                                        print('return tokens')
+                                        Pause = 3
+                                    else:
+                                        Pause = 0
                         # buy a card
                         if big_card.btn_buy.is_collide_mouse(pos_check):
                             # print('click buy')
@@ -348,7 +394,7 @@ def testBoard(screen, res, FPS, player: Player):
                                     new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
                                 # return tokens to pile
                                 for i, token in enumerate(allsprites.get_sprites_from_layer(0)):
-                                    if i > 4:
+                                    if i > 5:
                                         break
                                     if paid_tokens[token.colors] > 0:
                                         token.qty += paid_tokens[token.colors]
@@ -360,8 +406,11 @@ def testBoard(screen, res, FPS, player: Player):
                                     print(f'hold {len(player.hold_cards)} card(s)')
                                 big_card.kill()   
                                 if new_card != None:
-                                    allsprites.add(new_card)                             
-                                Pause = Now
+                                    allsprites.add(new_card)
+                                if big_card.is_hold:
+                                    allsprites.remove_sprites_of_layer(3)                   
+                                Pause = 0
+                                btn_show_hold.visible = player.is_hold_card()
                             else:
                                 print(f'can not buy c{big_card.selected_card.card_id}')  
                         big_card.dirty = 1             
@@ -383,11 +432,29 @@ def testBoard(screen, res, FPS, player: Player):
                         if btn_close.is_collide_mouse(event.pos):
                             print('close hold cards')
                             allsprites.remove_sprites_of_layer(3)
+                            Pause = 0                         
+                        hold_pane.dirty = 1      
+                         
+                    # player return tokens
+                    if Pause == 3:  
+                        total_token = 0
+                        for token in player.tokens.values():
+                            total_token += token.qty
+                        if total_token > 10:
+                            for i, token in enumerate(player.tokens.values()):
+                                if token.is_collide_mouse(event.pos) and token.qty > 0:
+                                    print(f'click on {token.colors}')
+                                    token.qty -= 1
+                                    allsprites.get_sprites_from_layer(0)[i].qty += 1
+                                    token.update_text(f'{token.qty}')
+                                    allsprites.get_sprites_from_layer(0)[i].update_text(f'{allsprites.get_sprites_from_layer(0)[i].qty}')
+                                    token.out_of_stock()
+                                    allsprites.get_sprites_from_layer(0)[i].out_of_stock()
+                                    total_token -= 1
+                        if total_token <= 10:
+                            print('return complete')
                             Pause = 0
-                        # not showing show hold button when there aren't any hold card
-                        if len(player.hold_cards) <= 0:
-                            btn_show_hold.visible = 0 
-                        hold_pane.dirty = 1                   
+                                
 
             # if event.type == pygame.KEYDOWN:
             #     for key, token in enumerate(allsprites.sprites(), start=pygame.K_0):
@@ -399,13 +466,14 @@ def testBoard(screen, res, FPS, player: Player):
             #         if event.key == key:
             #             reduce_token(token, player)
 
-        # update text: number of tokens that player has
-        tokens_text = font.render(f'{player.tokens}', True, 'white', 'chartreuse4')
-
         clock.tick(FPS)     
         # get all rects of sprites on screen   
         rects = allsprites.draw(screen)
-        screen.blit(tokens_text, tok_t_rect) 
+        # display text 'Tokens > 10 ....'
+        if total_token > 10:
+            text_sprite.visible = 1
+        else:
+            text_sprite.visible = 0 
         # only update sprites in allsprites 
         pygame.display.update(rects)
     

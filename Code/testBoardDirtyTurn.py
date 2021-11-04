@@ -28,7 +28,7 @@ def read_card_data(data_path, card_list):
 def place_cards(card_list: List[CardDirty], allsprites, order):
     for i in range(3):
         card = card_list[order[i]]  
-        card.reposition(700+140*i, 300)    
+        card.reposition(700+140*i, 500)    
         allsprites.add(card)
         # move cards to 3rd layer (layer 2)
         allsprites.change_layer(card, 2)
@@ -42,8 +42,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
         if sel_token.qty > 0 and sel_qty < 3 and\
              (show_token.qty == 0 or (sel_token.qty >= 3 and sel_qty == 1 and show_token.qty > 0)):
             show_token.visible = 1
-            show_token.change_qty(show_token.qty+1)
-            sel_token.change_qty(sel_token.qty-1)
+            show_token.qty += 1
+            sel_token.qty -= 1
             show_token.update_text(f'{show_token.qty}')
             sel_token.update_text(f'{sel_token.qty}')
             sel_qty += 1
@@ -54,8 +54,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
     return sel_qty, can_select
 
 def return_token(token: Token, show_token: Token, sel_qty, can_select):
-    token.change_qty(token.qty + 1)
-    show_token.change_qty(show_token.qty - 1)
+    token.qty += 1
+    show_token.qty -= 1
     sel_qty -= 1
     can_select = True
     token.visible = 1
@@ -67,8 +67,8 @@ def return_token(token: Token, show_token: Token, sel_qty, can_select):
 def cancel_token(token_list: List[Token], show_token_list: List[Token]):
     for i, show_tok in enumerate(show_token_list):
         if show_tok.qty > 0:
-            token_list[i].change_qty(token_list[i].qty + show_tok.qty)
-            show_tok.change_qty(0)
+            token_list[i].qty += show_tok.qty
+            show_tok.qty = 0
             token_list[i].visible = 1
             show_tok.visible = 0       
             token_list[i].update_text(f'{token_list[i].qty}')
@@ -76,22 +76,24 @@ def cancel_token(token_list: List[Token], show_token_list: List[Token]):
 
 def take_tokens(token_list, player: Player):
     for token in token_list:
-        player.tokens[token.colors] += token.qty
+        player.tokens[token.colors].qty += token.qty
+        player.tokens[token.colors].update_text(f'{player.tokens[token.colors].qty}')
+        player.tokens[token.colors].out_of_stock()
         token.qty = 0
         token.visible = 0
         token.dirty = 1
 
 def get_tokens(token: Token, player: Player):
     if token.qty > 0:
-        player.tokens[token.colors] += 1
+        player.tokens[token.colors].qty += 1
         token.qty -= 1
         token.dirty = 1
     print(f'take {token.colors}')
-    print(f'player: {token.colors} = {player.tokens[token.colors]}')
+    print(f'player: {token.colors} = {player.tokens[token.colors].qty}')
     token.out_of_stock()
 
 def reduce_token(token: Token, player: Player):
-    player.tokens[token.colors] -= 1
+    player.tokens[token.colors].qty -= 1
     token.qty += 1
     token.visible = 1
 
@@ -99,6 +101,9 @@ def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
     player.cards[card.colors] += 1
+    for token in player.tokens.values():
+        token.update_text(f'{token.qty}')
+        token.out_of_stock()
     card.kill()
     print(f'take card: +{card.point} points')
     print(f'owned cards: {player.cards}')
@@ -107,10 +112,13 @@ def pay_tokens(card: CardDirty, player: Player):
 
 def hold_card(card: CardDirty, player: Player, token_gold: Token):
     player.hold_cards.append(card)
-    if player.tokens['gold'] < 3 and token_gold.qty > 0:
-        player.tokens['gold'] += 1
-        token_gold.change_qty(token_gold.qty-1)
+    if player.tokens['gold'].qty < 3 and token_gold.qty > 0:
+        player.tokens['gold'].qty += 1
+        player.tokens['gold'].update_text(f"{player.tokens['gold'].qty}")
+        player.tokens['gold'].out_of_stock()
+        token_gold.qty -= 1
         token_gold.update_text(f'{token_gold.qty}')
+        token_gold.out_of_stock()
     card.kill()
     print(f'hold {len(player.hold_cards)} card(s)')
     print()
@@ -152,17 +160,17 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     tok_t_rect1 = tokens_text1.get_rect(center = (res[0]/2, 50))
     #Player 2
     msg2 = font.render('Player 2 Owned Tokens:', True, 'white')
-    msg2_rect = msg1.get_rect(center = (res[0]/2, 80))
+    msg2_rect = msg1.get_rect(center = (res[0]/2, 120))
     tokens_text2 = font.render(f'{player_list[1].tokens}', True, 'white', 'green')
     tok_t_rect2 = tokens_text2.get_rect(center = (res[0]/2, 110))
     #Player 3
     msg3 = font.render('Player 3 Owned Tokens:', True, 'white')
-    msg3_rect = msg1.get_rect(center = (res[0]/2, 140))
+    msg3_rect = msg1.get_rect(center = (res[0]/2, 220))
     tokens_text3 = font.render(f'{player_list[2].tokens}', True, 'white', 'green')
     tok_t_rect3 = tokens_text3.get_rect(center = (res[0]/2, 170))
     #Player 4
     msg4 = font.render('Player 4 Owned Tokens:', True, 'white')
-    msg4_rect = msg1.get_rect(center = (res[0]/2, 200))
+    msg4_rect = msg1.get_rect(center = (res[0]/2, 320))
     tokens_text4 = font.render(f'{player_list[3].tokens}', True, 'white', 'green')
     tok_t_rect4 = tokens_text4.get_rect(center = (res[0]/2, 230))
 #Set 4 player  text #############################################################################################################
@@ -190,6 +198,11 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     tokGold = Token((150, 100), (100, 100), 'Image\Button\CloseButton.png', 'gold', 5)
     allsprites.add(tokGold)
 
+    for i, p in enumerate(player_list):
+        for token in p.tokens.values():
+            allsprites.add(token)
+        p.repos_tokens(490, 60+(100*i), 10)
+
     btn_cancel = ButtonDirty((500, 300), (130, 50), 'cancle', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     btn_confirm = ButtonDirty((500, 400), (130, 50), 'confirm', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
     btn_cancel.visible = btn_confirm.visible = 0
@@ -212,6 +225,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     spr_layer1 = allsprites.get_sprites_from_layer(1)
     # cards
     spr_layer2 = allsprites.get_sprites_from_layer(2)
+
 
     while run:
         for event in pygame.event.get():
@@ -342,23 +356,23 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             #             reduce_token(token, player)
 
         # update text: number of tokens that player has ##########################################################################
-        tokens_text1 = font.render(f'{player_list[0].tokens}', True, 'white', 'chartreuse4')
-        print(f'{player_list[0].tokens}')
-        tokens_text2 = font.render(f'{player_list[1].tokens}', True, 'white', 'chartreuse4')
-        print(f'{player_list[1].tokens}')
-        tokens_text3 = font.render(f'{player_list[2].tokens}', True, 'white', 'chartreuse4')
-        print(f'{player_list[2].tokens}')
-        tokens_text4 = font.render(f'{player_list[3].tokens}', True, 'white', 'chartreuse4')
-        print(f'{player_list[3].tokens}')
+        # tokens_text1 = font.render(f'{player_list[0].tokens}', True, 'white', 'chartreuse4')
+        # print(f'{player_list[0].tokens}')
+        # tokens_text2 = font.render(f'{player_list[1].tokens}', True, 'white', 'chartreuse4')
+        # print(f'{player_list[1].tokens}')
+        # tokens_text3 = font.render(f'{player_list[2].tokens}', True, 'white', 'chartreuse4')
+        # print(f'{player_list[2].tokens}')
+        # tokens_text4 = font.render(f'{player_list[3].tokens}', True, 'white', 'chartreuse4')
+        # print(f'{player_list[3].tokens}')
         
 
         clock.tick(FPS)     
         # get all rects of sprites on screen   
         rects = allsprites.draw(screen)
-        screen.blit(tokens_text1, tok_t_rect1) 
-        screen.blit(tokens_text2, tok_t_rect2) 
-        screen.blit(tokens_text3, tok_t_rect3) 
-        screen.blit(tokens_text4, tok_t_rect4) 
+        # screen.blit(tokens_text1, tok_t_rect1) 
+        # screen.blit(tokens_text2, tok_t_rect2) 
+        # screen.blit(tokens_text3, tok_t_rect3) 
+        # screen.blit(tokens_text4, tok_t_rect4) 
         # only update sprites in allsprites 
         pygame.display.update(rects)
     

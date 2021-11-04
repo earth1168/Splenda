@@ -48,8 +48,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
         if sel_token.qty > 0 and sel_qty < 3 and\
              (show_token.qty == 0 or (sel_token.qty >= 3 and sel_qty == 1 and show_token.qty > 0)):
             show_token.visible = 1
-            show_token.change_qty(show_token.qty+1)
-            sel_token.change_qty(sel_token.qty-1)
+            show_token.qty += 1
+            sel_token.qty -= 1
             show_token.update_text(f'{show_token.qty}')
             sel_token.update_text(f'{sel_token.qty}')
             sel_qty += 1
@@ -61,8 +61,8 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
 
 # return token to pile
 def return_token(token: Token, show_token: Token, sel_qty, can_select):
-    token.change_qty(token.qty + 1)
-    show_token.change_qty(show_token.qty - 1)
+    token.qty += 1
+    show_token.qty -= 1
     sel_qty -= 1
     can_select = True
     token.visible = 1
@@ -75,8 +75,8 @@ def return_token(token: Token, show_token: Token, sel_qty, can_select):
 def cancel_token(token_list: List[Token], show_token_list: List[Token]):
     for i, show_tok in enumerate(show_token_list):
         if show_tok.qty > 0:
-            token_list[i].change_qty(token_list[i].qty + show_tok.qty)
-            show_tok.change_qty(0)
+            token_list[i].qty += show_tok.qty
+            show_tok.qty = 0
             token_list[i].visible = 1
             show_tok.visible = 0       
             token_list[i].update_text(f'{token_list[i].qty}')
@@ -85,18 +85,20 @@ def cancel_token(token_list: List[Token], show_token_list: List[Token]):
 # add token to player
 def take_tokens(token_list, player: Player):
     for token in token_list:
-        player.tokens[token.colors] += token.qty
+        player.tokens[token.colors].qty += token.qty
+        player.tokens[token.colors].update_text(f'{player.tokens[token.colors].qty}')
+        player.tokens[token.colors].out_of_stock()
         token.qty = 0
         token.visible = 0
         token.dirty = 1
 
 def get_tokens(token: Token, player: Player):
     if token.qty > 0:
-        player.tokens[token.colors] += 1
+        player.tokens[token.colors].qty += 1
         token.qty -= 1
         token.dirty = 1
     print(f'take {token.colors}')
-    print(f'player: {token.colors} = {player.tokens[token.colors]}')
+    print(f'player: {token.colors} = {player.tokens[token.colors].qty}')
     token.out_of_stock()
 
 def reduce_token(token: Token, player: Player):
@@ -124,6 +126,9 @@ def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
     player.cards[card.colors] += 1
+    for token in player.tokens.values():
+        token.update_text(f'{token.qty}')
+        token.out_of_stock()
     card.kill()
     print(f'take card: +{card.point} points')
     print(f'owned cards: {player.cards}')
@@ -133,10 +138,13 @@ def pay_tokens(card: CardDirty, player: Player):
 # add card to player's hold card list and give gold token to player
 def hold_card(card: CardDirty, player: Player, token_gold: Token):
     player.hold_cards.append(card)
-    if player.tokens['gold'] < 3 and token_gold.qty > 0:
-        player.tokens['gold'] += 1
-        token_gold.change_qty(token_gold.qty-1)
+    if player.tokens['gold'].qty < 3 and token_gold.qty > 0:
+        player.tokens['gold'].qty += 1
+        player.tokens['gold'].update_text(f"{player.tokens['gold'].qty}")
+        player.tokens['gold'].out_of_stock()
+        token_gold.qty -= 1
         token_gold.update_text(f'{token_gold.qty}')
+        token_gold.out_of_stock()
     card.kill()
     print(f'hold {len(player.hold_cards)} card(s)')
     print()
@@ -196,22 +204,22 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     tok_t_rect1 = tokens_text1.get_rect(center = (res[0]/2, 50))
     #Player 2
     msg2 = font.render('Player 2 Owned Tokens:', True, 'white')
-    msg2_rect = msg1.get_rect(center = (res[0]/2, 80))
+    msg2_rect = msg1.get_rect(center = (res[0]/2, 120))
     tokens_text2 = font.render(f'{player_list[1].tokens}', True, 'white', 'green')
     tok_t_rect2 = tokens_text2.get_rect(center = (res[0]/2, 110))
     #Player 3
     msg3 = font.render('Player 3 Owned Tokens:', True, 'white')
-    msg3_rect = msg1.get_rect(center = (res[0]/2, 140))
+    msg3_rect = msg1.get_rect(center = (res[0]/2, 220))
     tokens_text3 = font.render(f'{player_list[2].tokens}', True, 'white', 'green')
     tok_t_rect3 = tokens_text3.get_rect(center = (res[0]/2, 170))
     #Player 4
     msg4 = font.render('Player 4 Owned Tokens:', True, 'white')
-    msg4_rect = msg1.get_rect(center = (res[0]/2, 200))
+    msg4_rect = msg1.get_rect(center = (res[0]/2, 320))
     tokens_text4 = font.render(f'{player_list[3].tokens}', True, 'white', 'green')
     tok_t_rect4 = tokens_text4.get_rect(center = (res[0]/2, 230))
 
     turn_text = font.render('Turn : '+f'{player_list[turn].name}', True, 'white', 'chartreuse4')
-    turn_t_rect = turn_text.get_rect(center = (res[0]/2, 280))
+    turn_t_rect = turn_text.get_rect(center = (res[0]/2, 420))
 #Set 4 player  text #############################################################################################################
 
     # set background
@@ -235,6 +243,12 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
         allsprites.change_layer(tok_in_pane, 1)
     tokGold = Token((150, 100), (100, 100), 'Image\Coin\goldCoin-01.png', 'gold', 5)
     allsprites.add(tokGold)
+
+    for i, p in enumerate(player_list):
+        for token in p.tokens.values():
+            token._layer = 6
+            allsprites.add(token)
+        p.repos_tokens(490, 60+(100*i), 10)
 
     # create buttons
     btn_cancel = ButtonDirty((500, 300), (130, 50), 'cancle', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
@@ -284,7 +298,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     # cards
     spr_layer2 = allsprites.get_sprites_from_layer(2)
 
-    while run:
+    while run:        
         for event in pygame.event.get():
             # press x key on keyboard to exit
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_x):
@@ -363,6 +377,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                 turn,count_turn = endturn(turn,count_turn,allplayer)
                                 ###########################################################################################################
                         # show all hold cards
+                        btn_show_hold.visible = player_list[turn].is_hold_card()
                         if btn_show_hold.visible:
                             if btn_show_hold.is_collide_mouse(event.pos):
                                 print('click show hold cards')
@@ -376,6 +391,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                     
                     # big card is showing
                     if Pause == 1:
+                        print(f'is {player_list[turn].name} hold any card?: {player_list[turn].is_hold_card()}')
                         # calculate coordinate to check with buttons on big card
                         pos_check = (
                             event.pos[0] - big_card.rect.topleft[0],
@@ -397,12 +413,12 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                     new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
                                     big_card.kill()
                                     if new_card != None:
-                                        allsprites.add(new_card) 
-                                    btn_show_hold.visible = 1 
-                                    Pause = Now
+                                        allsprites.add(new_card)
+                                    Pause = 0
                                     #####################################################
                                     turn,count_turn = endturn(turn,count_turn,allplayer)
                                     #################################################################################################
+                                    btn_show_hold.visible = player_list[turn].is_hold_card()
                         # buy a card
                         if big_card.btn_buy.is_collide_mouse(pos_check):
                             # print('click buy')
@@ -416,7 +432,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                     new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
                                 # return tokens to pile
                                 for i, token in enumerate(allsprites.get_sprites_from_layer(0)):
-                                    if i > 4:
+                                    if i > 5:
                                         break
                                     if paid_tokens[token.colors] > 0:
                                         token.qty += paid_tokens[token.colors]
@@ -428,12 +444,15 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                     print(f'hold {len(player_list[turn].hold_cards)} card(s)')
                                 big_card.kill()   
                                 if new_card != None:
-                                    allsprites.add(new_card)                             
-                                Pause = Now
+                                    allsprites.add(new_card)                
+                                if big_card.is_hold:
+                                    allsprites.remove_sprites_of_layer(3)   
+                                Pause = 0
                                 ##############################################################
                                 End, winner = endgame(turn,player_list,End,winner)
                                 turn,count_turn = endturn(turn,count_turn,allplayer)
                                 ########################################################################################################
+                                btn_show_hold.visible = player_list[turn].is_hold_card()
                             else:
                                 print(f'can not buy c{big_card.selected_card.card_id}')  
                         big_card.dirty = 1             
@@ -455,10 +474,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                         if btn_close.is_collide_mouse(event.pos):
                             print('close hold cards')
                             allsprites.remove_sprites_of_layer(3)
-                            Pause = 0
-                        # not showing show hold button when there aren't any hold card
-                        if len(player_list[turn].hold_cards) <= 0:
-                            btn_show_hold.visible = 0 
+                            Pause = 0                        
                         hold_pane.dirty = 1                   
 
             # if event.type == pygame.KEYDOWN:
@@ -476,19 +492,19 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             run = False
 
         # update text: number of tokens that player has ##########################################################################
-        tokens_text1 = font.render(f'{player_list[0].tokens}'+' score :'+f'{player_list[0].score}', True, 'white', 'chartreuse4')
-        tokens_text2 = font.render(f'{player_list[1].tokens}'+' score :'+f'{player_list[1].score}', True, 'white', 'chartreuse4')
-        tokens_text3 = font.render(f'{player_list[2].tokens}'+' score :'+f'{player_list[2].score}', True, 'white', 'chartreuse4')
-        tokens_text4 = font.render(f'{player_list[3].tokens}'+' score :'+f'{player_list[3].score}', True, 'white', 'chartreuse4')
+        # tokens_text1 = font.render(f'{player_list[0].tokens}'+' score :'+f'{player_list[0].score}', True, 'white', 'chartreuse4')
+        # tokens_text2 = font.render(f'{player_list[1].tokens}'+' score :'+f'{player_list[1].score}', True, 'white', 'chartreuse4')
+        # tokens_text3 = font.render(f'{player_list[2].tokens}'+' score :'+f'{player_list[2].score}', True, 'white', 'chartreuse4')
+        # tokens_text4 = font.render(f'{player_list[3].tokens}'+' score :'+f'{player_list[3].score}', True, 'white', 'chartreuse4')
         turn_text = font.render('Turn : '+f'{player_list[turn].name}', True, 'white', 'chartreuse4')
 
         clock.tick(FPS)     
         # get all rects of sprites on screen   
         rects = allsprites.draw(screen)
-        screen.blit(tokens_text1, tok_t_rect1) 
-        screen.blit(tokens_text2, tok_t_rect2) 
-        screen.blit(tokens_text3, tok_t_rect3) 
-        screen.blit(tokens_text4, tok_t_rect4) 
+        # screen.blit(tokens_text1, tok_t_rect1) 
+        # screen.blit(tokens_text2, tok_t_rect2) 
+        # screen.blit(tokens_text3, tok_t_rect3) 
+        # screen.blit(tokens_text4, tok_t_rect4) 
         screen.blit(turn_text, turn_t_rect)
         # only update sprites in allsprites 
         pygame.display.update(rects)

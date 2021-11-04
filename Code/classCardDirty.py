@@ -4,6 +4,7 @@
 #   - Card
 
 from typing import Dict, List, Tuple
+from classToken import Token
 from classButtonDirty import ButtonDirty
 
 # BonusCard class:
@@ -86,15 +87,15 @@ class CardDirty(BonusCardDirty):
         self.colors = colors
 
     # check if player can take this card
-    def check_req(self, p_tokens: Dict[str, int], p_cards: Dict[str, int]) -> bool:
+    def check_req(self, p_tokens: Dict[str, Token], p_cards: Dict[str, int]) -> bool:
         is_enough = True
-        remain_gold = p_tokens['gold']
+        remain_gold = p_tokens['gold'].qty
         for colors in self.requirements.keys():
-            if p_tokens[colors] + p_cards[colors] < self.requirements[colors]:                
+            if p_tokens[colors].qty + p_cards[colors] < self.requirements[colors]:                
                 if remain_gold <= 0:
                     is_enough = False
                 else:
-                    remain_gold = (p_tokens[colors] + p_cards[colors] + remain_gold) - self.requirements[colors]
+                    remain_gold = (p_tokens[colors].qty + p_cards[colors] + remain_gold) - self.requirements[colors]
                 if not is_enough:
                     return is_enough            
         if remain_gold < 0:
@@ -103,24 +104,27 @@ class CardDirty(BonusCardDirty):
 
     # reduce tokens that are required in this card from player
     # return: Dictionary of tokens that reduce from player
-    def pay_tokens(self, p_tokens: Dict[str, int], p_cards: Dict[str, int]):
+    def pay_tokens(self, p_tokens: Dict[str, Token], p_cards: Dict[str, int]):
         paid_tokens = {
             "white": 0,
             "blue": 0,
             "green": 0,
             "red": 0,
-            "black": 0
+            "black": 0,
+            "gold": 0
         }
         for colors in self.requirements.keys():
-            print(f'tokens: {p_tokens}')
+            # print(f'tokens: {p_tokens}')
             col_diff = self.requirements[colors] - p_cards[colors]
             if col_diff > 0:
-                p_tokens[colors] = p_tokens[colors] - col_diff
-                paid_tokens.update({colors: col_diff})
-                if p_tokens[colors] < 0:
-                    p_tokens['gold'] = p_tokens['gold'] + p_tokens[colors]
-                    paid_tokens[colors] += p_tokens[colors]
-                    p_tokens[colors] = 0
+                p_tokens[colors].qty = p_tokens[colors].qty - col_diff
+                # paid_tokens.update({colors: col_diff})
+                paid_tokens[colors] = col_diff
+                if p_tokens[colors].qty < 0:
+                    p_tokens['gold'].qty = p_tokens['gold'].qty + p_tokens[colors].qty
+                    paid_tokens['gold'] -= p_tokens[colors].qty
+                    paid_tokens[colors] += p_tokens[colors].qty
+                    p_tokens[colors].qty = 0
         return paid_tokens
                           
         
