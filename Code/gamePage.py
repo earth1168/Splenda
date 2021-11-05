@@ -35,15 +35,15 @@ lv304 = pygame.image.load('../Image/Card/Lv3/304.png')
 lv304 = pygame.transform.smoothscale (lv304, (122, 167))
 
 
-Noble1 = pygame.image.load('../Image/Card/Noble/noble01.png')
+Noble1 = pygame.image.load('../Image/Card/Noble/N01.png')
 Noble1 = pygame.transform.smoothscale (Noble1, (122, 122))
-Noble2 = pygame.image.load('../Image/Card/Noble/noble02.png')
+Noble2 = pygame.image.load('../Image/Card/Noble/N02.png')
 Noble2 = pygame.transform.smoothscale (Noble2, (122, 122))
-Noble3 = pygame.image.load('../Image/Card/Noble/noble03.png')
+Noble3 = pygame.image.load('../Image/Card/Noble/N03.png')
 Noble3 = pygame.transform.smoothscale (Noble3, (122, 122))
-Noble4 = pygame.image.load('../Image/Card/Noble/noble04.png')
+Noble4 = pygame.image.load('../Image/Card/Noble/N04.png')
 Noble4 = pygame.transform.smoothscale (Noble4, (122, 122))
-Noble5 = pygame.image.load('../Image/Card/Noble/noble05.png')
+Noble5 = pygame.image.load('../Image/Card/Noble/N05.png')
 Noble5 = pygame.transform.smoothscale (Noble5, (122, 122))
 
 
@@ -69,51 +69,57 @@ WhiteCoin = pygame.transform.smoothscale (WhiteCoin, (108, 108))
 GoldCoin = pygame.image.load('../Image/Coin/GoldCoin-01.png')
 GoldCoin = pygame.transform.smoothscale (GoldCoin, (108, 108))
 
+name_user = 1
+act_user = 1
 
-# Run until the user asks to quit
-running = True
-while running:
+def getPlayer(name_user, act_user):
+    # Run until the user asks to quit
+    running = True
+    while running:
 
-    # Did the user click the window close button?
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    screen.blit(bgimage,(0,0))
-    screen.blit(lv101,(1086,533))
-    screen.blit(lv102,(954,533))
-    screen.blit(lv103,(822,533))
-    screen.blit(lv104,(690,533))
-    screen.blit(Deck1,(558,533))
-    screen.blit(RemainingCard,(611,675))
+        # Did the user click the window close button?
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        screen.blit(bgimage,(0,0))
+        screen.blit(lv101,(1086,533))
+        screen.blit(lv102,(954,533))
+        screen.blit(lv103,(822,533))
+        screen.blit(lv104,(690,533))
+        screen.blit(Deck1,(558,533))
+        screen.blit(RemainingCard,(611,675))
 
-    screen.blit(lv201,(1086,356))
-    screen.blit(lv202,(954,356))
-    screen.blit(lv203,(822,356))
-    screen.blit(lv204,(690,356))
-    screen.blit(Deck2,(558,356))
+        screen.blit(lv201,(1086,356))
+        screen.blit(lv202,(954,356))
+        screen.blit(lv203,(822,356))
+        screen.blit(lv204,(690,356))
+        screen.blit(Deck2,(558,356))
 
-    screen.blit(lv301,(1086,179))
-    screen.blit(lv302,(954,179))
-    screen.blit(lv303,(822,179))
-    screen.blit(lv304,(690,179))
-    screen.blit(Deck3,(558,179))
+        screen.blit(lv301,(1086,179))
+        screen.blit(lv302,(954,179))
+        screen.blit(lv303,(822,179))
+        screen.blit(lv304,(690,179))
+        screen.blit(Deck3,(558,179))
 
-    screen.blit(Noble1,(1086,29))
-    screen.blit(Noble2,(954,29))
-    screen.blit(Noble3,(822,29))
-    screen.blit(Noble4,(690,29))
-    screen.blit(Noble5,(558,29))
-    
-
-
-    screen.blit(BlackCoin,(440,602))
-    screen.blit(RedCoin,(440,484))
-    screen.blit(GreenCoin,(440,366))
-    screen.blit(BlueCoin,(440,248))
-    screen.blit(WhiteCoin,(440,130))
-    screen.blit(GoldCoin,(440,12))
+        screen.blit(Noble1,(1086,29))
+        screen.blit(Noble2,(954,29))
+        screen.blit(Noble3,(822,29))
+        screen.blit(Noble4,(690,29))
+        screen.blit(Noble5,(558,29))
+        
 
 
-    pygame.display.update()
-# Done! Time to quit.
-pygame.quit()
+        screen.blit(BlackCoin,(440,602))
+        screen.blit(RedCoin,(440,484))
+        screen.blit(GreenCoin,(440,366))
+        screen.blit(BlueCoin,(440,248))
+        screen.blit(WhiteCoin,(440,130))
+        screen.blit(GoldCoin,(440,12))
+
+
+        pygame.display.update()
+    # Done! Time to quit.
+    pygame.quit()
+    exit()
+if __name__ == "__main__":
+    getPlayer(name_user, act_user)
