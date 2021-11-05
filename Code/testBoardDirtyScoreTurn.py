@@ -156,13 +156,10 @@ def endturn(turn,count_turn,allplayer) :
     return turn, count_turn
 
 #EndGame ############################################################################################################# 
-def endgame(turn,player_list,End,winner) :
+def endgame(turn,player_list,End) :
     if End == 0 and player_list[turn].score >= 15:
         End = 1
-        winner = turn
-    elif End == 1 and player_list[turn].score > player_list[winner].score :
-        winner = turn
-    return End, winner
+    return End
 
 #Set 4 player #############################################################################################################
 player1 = Player(0, 0, 'testB0i1')
@@ -179,8 +176,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     turn = 0
     count_turn = 1
     #Set variabel for end game #############################################################################################################
-    End = 0
-    winner = 4
+    End = 1
     #############################################################################################################
 
     clock = pygame.time.Clock()
@@ -449,7 +445,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
                                     allsprites.remove_sprites_of_layer(3)   
                                 Pause = 0
                                 ##############################################################
-                                End, winner = endgame(turn,player_list,End,winner)
+                                End = endgame(turn,player_list,End)
                                 turn,count_turn = endturn(turn,count_turn,allplayer)
                                 ########################################################################################################
                                 btn_show_hold.visible = player_list[turn].is_hold_card()
@@ -488,7 +484,12 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             #             reduce_token(token, player)
         ######################################################### End Game #######################################################
         if End == 1 and turn == 0 :
-            print('winner is Player'+str(winner)+' name : '+f'{player_list[winner].name}')
+            sort_player_list = sorted(player_list, key=lambda x: x.score, reverse=True)
+            #for Game Result ; Return sort_player_list 
+            print('winner is Player'+' name : '+f'{sort_player_list[0].name}')
+            print('second is Player'+' name : '+f'{sort_player_list[1].name}')
+            if allplayer > 2 :
+                print('third is Player'+' name : '+f'{sort_player_list[1].name}')
             run = False
 
         # update text: number of tokens that player has ##########################################################################
