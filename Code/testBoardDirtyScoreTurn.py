@@ -484,12 +484,13 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             #             reduce_token(token, player)
         ######################################################### End Game #######################################################
         if End == 1 and turn == 0 :
-            sort_player_list = sorted(player_list, key=lambda x: x.score, reverse=True)
-            #for Game Result ; Return sort_player_list 
+            sort_player_list = sorted(player_list, key=lambda x: (-x.score,sum(x.cards.values())))
+            #for Game Result scence use next line Return; 
+            #Return sort_player_list 
             print('winner is Player'+' name : '+f'{sort_player_list[0].name}')
             print('second is Player'+' name : '+f'{sort_player_list[1].name}')
             if allplayer > 2 :
-                print('third is Player'+' name : '+f'{sort_player_list[1].name}')
+                print('third is Player'+' name : '+f'{sort_player_list[2].name}')
             run = False
 
         # update text: number of tokens that player has ##########################################################################
