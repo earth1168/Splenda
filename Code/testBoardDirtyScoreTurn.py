@@ -176,7 +176,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
     turn = 0
     count_turn = 1
     #Set variabel for end game #############################################################################################################
-    End = 1
+    End = 0
     #############################################################################################################
 
     clock = pygame.time.Clock()
