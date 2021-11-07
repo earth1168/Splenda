@@ -72,7 +72,7 @@ GoldCoin = pygame.transform.smoothscale (GoldCoin, (108, 108))
 name_user = 1
 act_user = 1
 
-def getPlayer(name_user, act_user):
+def getPlayer(name_user, act_user): 
     # Run until the user asks to quit
     running = True
     while running:
