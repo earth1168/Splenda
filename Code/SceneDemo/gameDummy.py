@@ -29,7 +29,6 @@ def show_players(screen, res, chr_list):
 def game_screen(screen, res, FPS, chr_list):
     clock = pygame.time.Clock()
     player_num = len(chr_list)
-
     font1 = pygame.font.Font(None, 30)
     font2 = pygame.font.Font(None, 50)
     message1 = font1.render(f'{player_num} players', False, 'white')

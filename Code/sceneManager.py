@@ -22,18 +22,26 @@ class GameState():
 
     def menu(self):
         # self.scene = menuDummy.menu_screen(screen, res, FPS)
+        pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
+        pygame.mixer.music.play(-1)
         self.scene = MainMenu.mainmenu(screen, FPS)
 
     def select_character(self):
+        pygame.mixer.music.load("Music\Medieval Theme #1.wav")
+        pygame.mixer.music.play(-1)
         self.scene = selectDummy.select_screen(screen, res, FPS, chr_list)
 
     def game(self):
         self.scene = gameDummy.game_screen(screen, res, FPS, chr_list)
     
     def rule_book(self):
+        pygame.mixer.music.load("Music\Medieval Theme #1.wav")
+        pygame.mixer.music.play(-1)
         self.scene = RuleDirtyButton.rulebook(screen, FPS)
 
     def setting(self):
+        pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
+        pygame.mixer.music.play(-1)
         self.scene = SettingDirtyButton.setting(screen, FPS, res, isFullscreen)
     
     def scene_manager(self):
@@ -56,7 +64,9 @@ class GameState():
 pygame.init()
 game_state = GameState()
 FPS = 25
-
+#Music
+volume = 0.5
+pygame.mixer.music.set_volume(volume)
 # Screen Setup
 isFullscreen = False
 # game resolution (width, height)
