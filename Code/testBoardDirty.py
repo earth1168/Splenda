@@ -123,13 +123,13 @@ def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], card_counter
 def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
-    player.cards[card.colors] += 1
+    player.cards[card.colors].qty += 1
     for token in player.tokens.values():
         token.update_text(f'{token.qty}')
         token.out_of_stock()
     card.kill()
     print(f'take card: +{card.point} points')
-    print(f'owned cards: {player.cards}')
+    # print(f'owned cards: {player.cards}')
     print()
     return paid_tokens
 
@@ -153,6 +153,15 @@ def check_player_token(player: Player):
         total_token += p_token.qty
     print(f'total token: {total_token}')    
     return total_token > 10
+
+def deck_empty(card_counter, card_list, allsprites):
+    for i, c_list in enumerate(card_list):
+        if card_counter[i] >= len(c_list):
+            empty_card = pygame.sprite.DirtySprite()
+            empty_card.image = pygame.image.load('Image\Card\emptyCard.png').convert_alpha()
+            empty_card.image = pygame.transform.smoothscale (empty_card.image, (122, 167))
+            empty_card.rect = empty_card.image.get_rect(topleft = (558, 179+(177*(2-i))))
+            allsprites.add(empty_card)
     
 def testBoard(screen, res, FPS, player: Player):
     clock = pygame.time.Clock()
@@ -369,6 +378,7 @@ def testBoard(screen, res, FPS, player: Player):
                                 if len(player.hold_cards) < 3:
                                     hold_card(big_card.selected_card, player, allsprites.sprites()[5])
                                     new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
+                                    deck_empty(card_counter, card_list, allsprites)
                                     big_card.kill()
                                     if new_card != None:
                                         allsprites.add(new_card) 
@@ -392,6 +402,7 @@ def testBoard(screen, res, FPS, player: Player):
                                 # get new card from card pile if bought card is not held
                                 if not big_card.is_hold:
                                     new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
+                                    deck_empty(card_counter, card_list, allsprites)
                                 # return tokens to pile
                                 for i, token in enumerate(allsprites.get_sprites_from_layer(0)):
                                     if i > 5:

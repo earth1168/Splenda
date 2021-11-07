@@ -49,10 +49,10 @@ class BonusCardDirty(ButtonDirty):
             i+=1
 
     # check if player can take this bonus card
-    def check_req(self, p_cards: Dict[str, int]) -> bool:
+    def check_req(self, p_cards: Dict[str, Token]) -> bool:
         is_enough = True
         for colors in self.requirements.keys():
-            if p_cards[colors] < self.requirements[colors]:
+            if p_cards[colors].qty < self.requirements[colors]:
                 is_enough = False
             if not is_enough:
                 return is_enough
@@ -87,15 +87,15 @@ class CardDirty(BonusCardDirty):
         self.colors = colors
 
     # check if player can take this card
-    def check_req(self, p_tokens: Dict[str, Token], p_cards: Dict[str, int]) -> bool:
+    def check_req(self, p_tokens: Dict[str, Token], p_cards: Dict[str, Token]) -> bool:
         is_enough = True
         remain_gold = p_tokens['gold'].qty
         for colors in self.requirements.keys():
-            if p_tokens[colors].qty + p_cards[colors] < self.requirements[colors]:                
+            if p_tokens[colors].qty + p_cards[colors].qty < self.requirements[colors]:                
                 if remain_gold <= 0:
                     is_enough = False
                 else:
-                    remain_gold = (p_tokens[colors].qty + p_cards[colors] + remain_gold) - self.requirements[colors]
+                    remain_gold = (p_tokens[colors].qty + p_cards[colors].qty + remain_gold) - self.requirements[colors]
                 if not is_enough:
                     return is_enough            
         if remain_gold < 0:
@@ -104,7 +104,7 @@ class CardDirty(BonusCardDirty):
 
     # reduce tokens that are required in this card from player
     # return: Dictionary of tokens that reduce from player
-    def pay_tokens(self, p_tokens: Dict[str, Token], p_cards: Dict[str, int]):
+    def pay_tokens(self, p_tokens: Dict[str, Token], p_cards: Dict[str, Token]):
         paid_tokens = {
             "white": 0,
             "blue": 0,
@@ -115,7 +115,7 @@ class CardDirty(BonusCardDirty):
         }
         for colors in self.requirements.keys():
             # print(f'tokens: {p_tokens}')
-            col_diff = self.requirements[colors] - p_cards[colors]
+            col_diff = self.requirements[colors] - p_cards[colors].qty
             if col_diff > 0:
                 p_tokens[colors].qty = p_tokens[colors].qty - col_diff
                 # paid_tokens.update({colors: col_diff})

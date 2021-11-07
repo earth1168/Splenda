@@ -13,7 +13,7 @@ class BigCard(pygame.sprite.DirtySprite):
         self.rect = self.image.get_rect(center = position)
 
         card_img = pygame.image.load(card.image_path).convert_alpha()
-        card_img = pygame.transform.scale(card_img, (card.size[0]*3, card.size[1]*3))
+        card_img = pygame.transform.smoothscale(card_img, (card.size[0]*3, card.size[1]*3))
         card_img_rect = card_img.get_rect(center = self.image.get_rect().center)
 
         self.btn_close = ButtonDirty(card_img_rect.topright, (75, 75), '', 0, 'Image\Button\CloseButton.png')

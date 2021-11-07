@@ -125,13 +125,13 @@ def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], card_counter
 def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
-    player.cards[card.colors] += 1
+    player.cards[card.colors].qty += 1
     for token in player.tokens.values():
         token.update_text(f'{token.qty}')
         token.out_of_stock()
     card.kill()
     print(f'take card: +{card.point} points')
-    print(f'owned cards: {player.cards}')
+    # print(f'owned cards: {player.cards}')
     print()
     return paid_tokens
 
@@ -484,7 +484,7 @@ def testBoard(screen, res, FPS, player_list: List[Player], allplayer):
             #             reduce_token(token, player)
         ######################################################### End Game #######################################################
         if End == 1 and turn == 0 :
-            sort_player_list = sorted(player_list, key=lambda x: (-x.score,sum(x.cards.values())))
+            sort_player_list = sorted(player_list, key=lambda x: (-x.score,sum(x.cards.values().qty)))
             #for Game Result scence use next line Return; 
             #Return sort_player_list 
             print('winner is Player'+' name : '+f'{sort_player_list[0].name}')
