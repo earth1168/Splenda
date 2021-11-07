@@ -1,5 +1,5 @@
 import pygame, sys
-from classButton import Button
+from classButtonDirty import ButtonDirty
 
 pygame.init()
 
@@ -9,7 +9,7 @@ act_user = []
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("SPLENDA")
-icon = pygame.image.load('choose/splenda.png')
+icon = pygame.image.load('Character/splenda.png')
 pygame.display.set_icon(icon)
 
 def character(profile, profile_rect, bg, text_white):
@@ -22,7 +22,6 @@ def showFullActer(act_id, full_profile, button):
     if act_id != -1:
         screen.blit(full_profile[act_id], (800, 90))
     button.draw(screen)
-    button.update()
 
 def showFaceActer(face, name_user, base_font):
     for x, y in enumerate(face):
@@ -54,40 +53,43 @@ def selectCharacter(screen, name_user, act_user):
     act_id = -1
     FPS = 15
     text_font = pygame.font.Font("Font\Roboto\Roboto-BlackItalic.ttf", 50)
+    text_max = pygame.font.Font("Font\Roboto\Roboto-BlackItalic.ttf", 35)
+    text = pygame.font.Font("Font\Roboto\Roboto-BlackItalic.ttf", 25)
     base_font = pygame.font.Font(None, 32)
 
     # input
-    frametext = pygame.Rect(815, 491, 160, 50)
-    text_rect = pygame.Rect(820, 500, 140, 32)
+    frametext = pygame.Rect(970, 491, 160, 50)
+    text_rect = pygame.Rect(975, 500, 140, 32)
     color_active = pygame.Color(195, 155, 211)
     color_passive = pygame.Color('white')
     colortext = color_passive
 
     # button
     button = pygame.sprite.Group()
-    b_confirm = Button((1100, 580), (200, 80), 'Confirm', 40, 'Image/Button/testButton-01.png', 'white')
-    b_start = Button((850, 580), (200, 80), 'Start', 40, 'Image/Button/testButton-01.png', 'white')
+    b_confirm = ButtonDirty((1100, 580), (200, 80), 'Confirm', 40, 'Image/Button/testButton-01.png', 'purple')
+    b_start = ButtonDirty((850, 580), (200, 80), 'Start', 40, 'Image/Button/testButton-01.png', 'purple')
 
     # load image
     bg = pygame.image.load('Character/bg.png')
-    bg = pygame.transform.scale(bg, (1280, 720))
+    bg = pygame.transform.smoothscale(bg, (1280, 720))
     text_white = text_font.render('CHOOSE YOUR CHARACTER', True, 'white').convert_alpha()
 
     for p in range(6):
         profile.append(pygame.image.load(f'Character/character/character{p + 1}.png').convert_alpha())
-        profile[p] = pygame.transform.scale(profile[p], profile_scale[p])
+        profile[p] = pygame.transform.smoothscale(profile[p], profile_scale[p])
         profile_rect.append(profile[p].get_rect(midbottom=((p % 3) * 220 + 160, int(p / 3) * 240 + 300)))
 
     # show full
     for i in range(6):
         full_profile.append(pygame.image.load(f'Character/characterfull/fullacter{i + 1}.png').convert_alpha())
-        full_profile[i] = pygame.transform.scale(full_profile[i], full_profile_scale[i])
+        full_profile[i] = pygame.transform.smoothscale(full_profile[i], full_profile_scale[i])
 
     run = True
     while run:
         clock.tick(FPS)
         if not button.has(b_confirm):
             button.add(b_confirm)
+
         #input text user
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -177,9 +179,9 @@ def selectCharacter(screen, name_user, act_user):
                         name_user.append(user_text)
                         user_text = ''
                         face.append(pygame.image.load(f'Character/face/face{act_id + 1}.png').convert_alpha())
-                        face[-1] = pygame.transform.scale(face[-1], face_scale[-1])
+                        face[-1] = pygame.transform.smoothscale(face[-1], face_scale[-1])
                         profile_gray[act_id] = pygame.image.load(f'Character/gray/cha{act_id + 1}.png').convert_alpha()
-                        profile_gray[act_id] = pygame.transform.scale(profile_gray[act_id], profile_scale[act_id])
+                        profile_gray[act_id] = pygame.transform.smoothscale(profile_gray[act_id], profile_scale[act_id])
 
         if act_id != -1:
             pygame.draw.rect(screen, 'black', frametext)
@@ -188,9 +190,16 @@ def selectCharacter(screen, name_user, act_user):
             screen.blit(text_surface, (text_rect.x + 5, text_rect.y + 5))
             text_rect.w = max(90, text_surface.get_width() + 10)
             frametext.w = max(100, text_surface.get_width() + 20)
+            textname = text.render('Enter your name :', True, 'white').convert_alpha()
+            screen.blit(textname, (770, 500))
 
         if len(act_user) > 1 and not button.has(b_start):
             button.add(b_start)
+
+        if len(act_user) > 3:
+            textmax = text_max.render('Max player is 4', True, 'white').convert_alpha()
+            screen.blit(textmax, (850, 630))
+
 
         showFullActer(act_id, full_profile, button)
         showFaceActer(face, name_user, base_font)
