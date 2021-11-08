@@ -1,5 +1,4 @@
-,A,B,C,,E,F,G,H,I,J
-2,Level,Gem color,Point,image_path,white,blue,green,red,black,
+2,level,colors,point,image_path,white,blue,green,red,black,
 3,1,black,0,Image\Card\Lv1\114.png,1,1,1,1,0,
 4,1,black,0,Image\Card\Lv1\129.png,1,2,1,1,0,
 5,1,black,0,Image\Card\Lv1\104.png,2,2,0,1,0,
