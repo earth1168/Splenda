@@ -11,11 +11,19 @@ from SceneDemo import gameDummy
 import MainMenu
 import RuleDirtyButton
 import SettingDirtyButton
+import SettingDirtyButton2
 
 # This class will call scene that should run next when current scene end.
 # variables:
 #   self.scene -> tell what scene that running now.
+
 class GameState():
+    #Frist open setup
+    # Screen Setup
+    isFullscreen = False
+    # music volume setup
+    volume = 1
+
     def __init__(self):
         # start at menu scene
         self.scene = 'menu'
@@ -42,7 +50,7 @@ class GameState():
     def setting(self):
         pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
         pygame.mixer.music.play(-1)
-        self.scene = SettingDirtyButton.setting(screen, FPS, res, isFullscreen)
+        self.scene, self.isFullscreen, self.volume   = SettingDirtyButton2.setting(screen, FPS, res, self.isFullscreen, self.volume)
     
     def scene_manager(self):
         if self.scene == 'menu':
@@ -65,10 +73,7 @@ pygame.init()
 game_state = GameState()
 FPS = 25
 #Music
-volume = 0.5
-pygame.mixer.music.set_volume(volume)
-# Screen Setup
-isFullscreen = False
+
 # game resolution (width, height)
 res = (1280, 720)
 screen = pygame.display.set_mode(res)

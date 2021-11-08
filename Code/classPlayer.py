@@ -40,16 +40,27 @@ class Player():
             "black": Token((840, 60), (50, 50), 'Image\Coin\\blackCoin-01.png', "black", 0),
             "gold": Token((440, 60), (50, 50), 'Image\Coin\goldCoin-01.png', "gold", 0)
         }
+        # self.cards = {
+        #     "white": 0,
+        #     "blue": 0,
+        #     "green": 0,
+        #     "red": 0,
+        #     "black": 0
+        # }  
         self.cards = {
-            "white": 0,
-            "blue": 0,
-            "green": 0,
-            "red": 0,
-            "black": 0
-        }  
+            "white": Token((520, 130), (50, 70), 'Image\Card\Lv1\\105.png', "white", 0),
+            "blue": Token((600, 130), (50, 70), 'Image\Card\Lv1\\103.png', "blue", 0),
+            "green": Token((680, 130), (50, 70), 'Image\Card\Lv1\\102.png', "green", 0),
+            "red": Token((760, 130), (50, 70), 'Image\Card\Lv1\\101.png', "red", 0),
+            "black": Token((840, 130), (50, 70), 'Image\Card\Lv1\\104.png', "black", 0),
+            "hold": Token((440, 130), (50, 70), 'Image\Card\D01.png', "gold", 0)
+        }
 
         for token in self.tokens.values():
-            token.visible = 0            
+            token.visible = 0  
+
+        for card in self.cards.values():
+            card.visible = 0          
 
     # reposition tokens
     def repos_tokens(self, pos_x, pos_y, distance=0):
@@ -58,6 +69,13 @@ class Player():
             if i > 5:
                 break
             token.reposition(pos_x+((50+distance)*i), pos_y)
+
+    def repos_cards(self, pos_x, pos_y, distance=0):
+        self.cards['hold'].reposition(pos_x, pos_y)
+        for i, card in enumerate(self.cards.values(), start=1):
+            if i > 5:
+                break
+            card.reposition(pos_x+((50+distance)*i), pos_y)
 
     def is_hold_card(self):
         if not self.hold_cards:
