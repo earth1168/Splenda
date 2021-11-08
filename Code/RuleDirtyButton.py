@@ -167,7 +167,7 @@ def Textpage (page) :
         return EndGame
     
 #setup and render text
-def ruletext (page,text_font_bold,text_font_regular) :
+def ruletext (page,text_font_bold,text_font_regular,screen) :
     #Components Text render 
         if page == 1 :
             text_block(text_font_bold , "Components", 'Black', (530,150), 1030, screen, 10)
@@ -340,7 +340,7 @@ def rulebook(screen, FPS) :
         #Text page set up and render
         Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'White')
         screen.blit(Page_surface,(25,640))
-        ruletext (page,text_font_bold,text_font_regular)
+        ruletext (page,text_font_bold,text_font_regular,screen)
         Next.visible = Prev.visible = Back.visible = 1
         # draw all button on the screen
         button_group.draw(screen)

@@ -2,6 +2,7 @@
 import pygame
 import csv
 import random
+import RuleDirtyButton
 from typing import List
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty
@@ -373,187 +374,255 @@ def gameBoard(name_user, act_user):
     background.blit(Noble4,(690,29))
     background.blit(Noble5,(558,29))
     allsprites.clear(screen, background)
+
+    ################################## For pausegame when press ESC #########################################
+    #By Pojnarin 62070501041
+    #define variable for state of the game 0 = No pause , 1 = Pause
+    freeze = 0
+    #Rule start page
+    page = 1
+    allpage = 20
+    #Text for rule
+    text_font_bold = pygame.font.Font("Font\Roboto\Roboto-Bold.ttf",40)
+    text_font_regular = pygame.font.Font("Font\Roboto\Roboto-Regular.ttf",30)
+    #When open rule, set Pause = 2
+    POPINBG = pygame.sprite.DirtySprite()
+    POPINBG.image = pygame.image.load("Image\Background\PauseGame720p.png").convert_alpha()
+    POPINBG.rect = POPINBG.image.get_rect(topleft = (0, 0))
+    RULEPBG = pygame.sprite.DirtySprite()
+    RULEPBG.image = pygame.image.load("Image\Background\RuleInGame720p.png").convert_alpha()
+    RULEPBG.rect = RULEPBG.image.get_rect(topleft = (0, 0))
+    POPINBG.visible = 0
+    RULEPBG.visible = 0
+    POPINBG._layer = RULEPBG._layer = 5
+    allsprites.add(POPINBG,RULEPBG) 
+    #DirtyButton Start Here ################################### NNNNNNNNNNNNNNNNNNNNEEEEEEEEEEEEEEEEEEEEEEWWWWWWWWWWWWWWWWWWWWWWWWWWW
+    
+    #Pop up button
+    btn_Rule = ButtonDirty((670,300), (140, 70), 'Rule', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    btn_Resume = ButtonDirty((670,400), (140, 70), 'Resume', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    btn_Back = ButtonDirty((670,520), (250, 70), 'Back to Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    #Rule Button
+    Next = ButtonDirty((1180,140), (130, 50), 'Next', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Prev = ButtonDirty((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    #Set visibility
+    btn_Rule.visible = btn_Resume.visible = btn_Back.visible = Next.visible = Prev.visible = Back.visible = 0
+    btn_Rule._layer = btn_Resume._layer = btn_Back._layer = Next._layer = Prev._layer = Back._layer = 5
+    #Add button in group
+    allsprites.add(btn_Rule, btn_Resume, btn_Back, Next, Prev, Back)
+
+    ##################################
+
     while running:
         # Did the user click the window close button?
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
+            ########################################## vvvvvvvvv When press key 'ESC'
+            if event.type == pygame.KEYDOWN :
+                if event.key == pygame.K_ESCAPE :
+                    if freeze == 1 : 
+                        freeze = 0
+                    elif freeze == 0 : 
+                        freeze = 1
+                    else : freeze = 0
+            ########################################## ^^^^^^^^^^
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if Pause == 0:
-                        for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
-                            if token.is_collide_mouse(event.pos) and token.qty > 0:
-                                # print(f'hit {token.colors}')
-                                select_popup.visible = 1
-                                btn_cancel.visible = btn_confirm.visible = 1
-                                # sel_qty, can_select = select_token(token, allsprites.get_sprites_from_layer(1)[i+5], sel_qty, can_select)
-                                Pause = 1
-                                # get_tokens(token, player)
-                                break                        
+                    if freeze == 0:
+                        if Pause == 0:
+                            for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
+                                if token.is_collide_mouse(event.pos) and token.qty > 0:
+                                    # print(f'hit {token.colors}')
+                                    select_popup.visible = 1
+                                    btn_cancel.visible = btn_confirm.visible = 1
+                                    # sel_qty, can_select = select_token(token, allsprites.get_sprites_from_layer(1)[i+5], sel_qty, can_select)
+                                    Pause = 1
+                                    # get_tokens(token, player)
+                                    break                        
 
-                        for card in allsprites.get_sprites_from_layer(2):
-                            if card.is_collide_mouse(event.pos):
-                               print(f'click c{card.card_id}')
-                               print(f'colors: {card.colors}')
-                               print(f'cost: {card.requirements}')
-                               print(f'point: {card.point}') 
-                               big_card = BigCard(card, (res[0]/2+300, res[1]/2))
-                               allsprites.add(big_card)
-                               Now = Pause
-                               Pause = 2
-                               break    
+                            for card in allsprites.get_sprites_from_layer(2):
+                                if card.is_collide_mouse(event.pos):
+                                    print(f'click c{card.card_id}')
+                                    print(f'colors: {card.colors}')
+                                    print(f'cost: {card.requirements}')
+                                    print(f'point: {card.point}') 
+                                    big_card = BigCard(card, (res[0]/2+300, res[1]/2))
+                                    allsprites.add(big_card)
+                                    Now = Pause
+                                    Pause = 2
+                                    break   
 
-                        if player_list[turn].cards['hold'].visible:
-                            if player_list[turn].cards['hold'].is_collide_mouse(event.pos):
-                                print('click show hold cards')
-                                allsprites.add(hold_pane, btn_close)
-                                for i, card in enumerate(player_list[turn].hold_cards):
-                                    card.reposition(400+140*i, 300)
-                                    allsprites.add(card)
-                                    allsprites.change_layer(card, 3)
-                                Pause = 3
-                        card.dirty = 1                    
-                    # selecting tokens
-                    if Pause == 1:
-                        for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
-                            if token.is_collide_mouse(event.pos) and token.qty > 0:
-                                # print(f'hit {token.colors}')                                
-                                sel_qty, can_select = select_token(token, allsprites.get_sprites_from_layer(1)[i+5], sel_qty, can_select)
-                                # get_tokens(token, player)
-                                break
-                        # reduce quantity of selected token when click on it
-                        for i, sel_token in enumerate(allsprites.get_sprites_from_layer(1)[5:10], start=5):
-                            if not token.visible:
-                                continue
-                            if sel_token.is_collide_mouse(event.pos) and sel_token.qty > 0:
-                                print(f'hit showed {sel_token.colors}')
-                                sel_qty, can_select = return_token(allsprites.get_sprites_from_layer(1)[i-5], sel_token, sel_qty, can_select)
-                                if sel_qty == 0:
-                                    select_popup.visible = 0                                    
+                            if player_list[turn].cards['hold'].visible:
+                                if player_list[turn].cards['hold'].is_collide_mouse(event.pos):
+                                    print('click show hold cards')
+                                    allsprites.add(hold_pane, btn_close)
+                                    for i, card in enumerate(player_list[turn].hold_cards):
+                                        card.reposition(400+140*i, 300)
+                                        allsprites.add(card)
+                                        allsprites.change_layer(card, 3)
+                                    Pause = 3
+                            card.dirty = 1                    
+                        # selecting tokens
+                        elif Pause == 1:
+                            for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
+                                if token.is_collide_mouse(event.pos) and token.qty > 0:
+                                    # print(f'hit {token.colors}')                                
+                                    sel_qty, can_select = select_token(token, allsprites.get_sprites_from_layer(1)[i+5], sel_qty, can_select)
+                                    # get_tokens(token, player)
+                                    break
+                            # reduce quantity of selected token when click on it
+                            for i, sel_token in enumerate(allsprites.get_sprites_from_layer(1)[5:10], start=5):
+                                if not token.visible:
+                                    continue
+                                if sel_token.is_collide_mouse(event.pos) and sel_token.qty > 0:
+                                    print(f'hit showed {sel_token.colors}')
+                                    sel_qty, can_select = return_token(allsprites.get_sprites_from_layer(1)[i-5], sel_token, sel_qty, can_select)
+                                    if sel_qty == 0:
+                                        select_popup.visible = 0                                    
+                                        btn_cancel.visible = btn_confirm.visible = 0
+                                        Pause = 0
+                            # cancel selected tokens. return all selected tokens to the pile
+                            if btn_cancel.visible:
+                                if btn_cancel.rect.collidepoint(event.pos):
+                                    print('close token pane')
+                                    cancel_token(allsprites.get_sprites_from_layer(1)[:5], allsprites.get_sprites_from_layer(1)[5:10])
+                                    sel_qty = 0
+                                    can_select = True
+                                    btn_cancel.unhover()   
+                                    select_popup.visible = 0                         
                                     btn_cancel.visible = btn_confirm.visible = 0
                                     Pause = 0
-                        # cancel selected tokens. return all selected tokens to the pile
-                        if btn_cancel.visible:
-                            if btn_cancel.rect.collidepoint(event.pos):
-                                print('close token pane')
-                                cancel_token(allsprites.get_sprites_from_layer(1)[:5], allsprites.get_sprites_from_layer(1)[5:10])
-                                sel_qty = 0
-                                can_select = True
-                                btn_cancel.unhover()   
-                                select_popup.visible = 0                         
-                                btn_cancel.visible = btn_confirm.visible = 0
-                                Pause = 0
-                        # take all selected tokens
-                        if btn_confirm.visible:
-                            if btn_confirm.rect.collidepoint(event.pos):
-                                print('take token(s)')
-                                take_tokens(allsprites.get_sprites_from_layer(1)[5:10], player_list[turn])
-                                sel_qty = 0
-                                can_select = True
-                                btn_confirm.unhover()
-                                select_popup.visible = 0
-                                btn_cancel.visible = btn_confirm.visible = 0
-                                turn,count_turn = endturn(turn,count_turn,allplayer)
-                                turn_frame.rect.topleft = (0, 10+180*turn)
-                                turn_frame.dirty = 1
-                                Pause = 0
-                    # big card is showing
-                    if Pause == 2:
-                        pos_check = (
-                            event.pos[0] - big_card.rect.topleft[0],
-                            event.pos[1]- big_card.rect.topleft[1]
-                        )
-                        # close big card
-                        if big_card.btn_close.is_collide_mouse(pos_check):
-                            # print('click close')
-                            # delete big card from the screen and allsprites. 
-                            big_card.kill()
-                            Pause = Now
-
-                        #  hold a card
-                        if not big_card.is_hold:
-                            if big_card.btn_hold.is_collide_mouse(pos_check):
-                                print('click hold')
-                                if len(player_list[turn].hold_cards) < 3:
-                                    hold_card(big_card.selected_card, player_list[turn], allsprites.sprites()[1])
-                                    player_list[turn].cards['hold'].qty = len(player_list[turn].hold_cards)
-                                    player_list[turn].cards['hold'].update_text(f'{player_list[turn].cards["hold"].qty}')
-                                    player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()
-                                    ####################################################################Change player to player_list[turn]
-                                    new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
-                                    update_card_qty(card_counter, card_list, card_qty_list, allsprites)
-                                    big_card.kill()
-                                    if new_card != None:
-                                        allsprites.add(new_card)
-                                    Pause = 0
-                                    #####################################################
+                            # take all selected tokens
+                            if btn_confirm.visible:
+                                if btn_confirm.rect.collidepoint(event.pos):
+                                    print('take token(s)')
+                                    take_tokens(allsprites.get_sprites_from_layer(1)[5:10], player_list[turn])
+                                    sel_qty = 0
+                                    can_select = True
+                                    btn_confirm.unhover()
+                                    select_popup.visible = 0
+                                    btn_cancel.visible = btn_confirm.visible = 0
                                     turn,count_turn = endturn(turn,count_turn,allplayer)
-                                    #################################################################################################
                                     turn_frame.rect.topleft = (0, 10+180*turn)
-                                    turn_frame.dirty = 1                                    
-                        # buy a card
-                        if big_card.btn_buy.is_collide_mouse(pos_check):
-                            # print('click buy')
-                            # check if player can buy a card
-                            if big_card.selected_card.check_req(player_list[turn].tokens, player_list[turn].cards):
-                                print(f'can buy c{big_card.selected_card.card_id}')
-                                paid_tokens = pay_tokens(big_card.selected_card, player_list[turn])
-                                ####################################################################Change player to player_list[turn]
-                                # get new card from card pile if bought card is not held
-                                if not big_card.is_hold:
-                                    new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
-                                    update_card_qty(card_counter, card_list, allsprites)
-                                # return tokens to pile
-                                for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
-                                    if i > 5:
-                                        break
-                                    if paid_tokens[token.colors] > 0:
-                                        token.qty += paid_tokens[token.colors]
-                                        token.update_text(f'{token.qty}')                                    
-                                        token.visible = 1
-                                # remove card from player's hold card list, if any
-                                if big_card.selected_card in player_list[turn].hold_cards:
-                                    player_list[turn].hold_cards.remove(big_card.selected_card)
-                                    player_list[turn].cards['hold'].qty = len(player_list[turn].hold_cards)
-                                    player_list[turn].cards['hold'].update_text(f'{player_list[turn].cards["hold"].qty}')
-                                    player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()
-                                    print(f'hold {len(player_list[turn].hold_cards)} card(s)')
-                                big_card.kill()   
-                                if new_card != None:
-                                    allsprites.add(new_card)                
-                                if big_card.is_hold:
-                                    allsprites.remove_sprites_of_layer(3)   
-                                Pause = 0
-                                ##############################################################
-                                End = endgame(turn,player_list,End)
-                                turn,count_turn = endturn(turn,count_turn,allplayer)
-                                ########################################################################################################
-                                turn_frame.rect.topleft = (0, 10+180*turn)
-                                turn_frame.dirty = 1
-                            else:
-                                print(f'can not buy c{big_card.selected_card.card_id}')  
-                        big_card.dirty = 1 
-                    # hold cards are showing
-                    if Pause == 3:
-                        # show big card when click on hold card  
-                        for card in player_list[turn].hold_cards:
-                            if card.is_collide_mouse(event.pos):
-                                print(f'click c{card.card_id}')
-                                print(f'colors: {card.colors}')
-                                print(f'cost: {card.requirements}')
-                                big_card = BigCard(card, (res[0]/2+300, res[1]/2), True)                                
-                                allsprites.add(big_card)
-                                Now = Pause
-                                Pause = 2
-                                break  
-                        # close hold card pane
-                        if btn_close.is_collide_mouse(event.pos):
-                            print('close hold cards')
-                            allsprites.remove_sprites_of_layer(3)
-                            Pause = 0                        
-                        hold_pane.dirty = 1 
+                                    turn_frame.dirty = 1
+                                    Pause = 0
+                        # big card is showing
+                        elif Pause == 2:
+                            pos_check = (
+                                event.pos[0] - big_card.rect.topleft[0],
+                                event.pos[1]- big_card.rect.topleft[1]
+                            )
+                            # close big card
+                            if big_card.btn_close.is_collide_mouse(pos_check):
+                                # print('click close')
+                                # delete big card from the screen and allsprites. 
+                                big_card.kill()
+                                Pause = Now
 
+                            #  hold a card
+                            if not big_card.is_hold:
+                                if big_card.btn_hold.is_collide_mouse(pos_check):
+                                    print('click hold')
+                                    if len(player_list[turn].hold_cards) < 3:
+                                        hold_card(big_card.selected_card, player_list[turn], allsprites.sprites()[1])
+                                        player_list[turn].cards['hold'].qty = len(player_list[turn].hold_cards)
+                                        player_list[turn].cards['hold'].update_text(f'{player_list[turn].cards["hold"].qty}')
+                                        player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()
+                                        ####################################################################Change player to player_list[turn]
+                                        new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
+                                        update_card_qty(card_counter, card_list, card_qty_list, allsprites)
+                                        big_card.kill()
+                                        if new_card != None:
+                                            allsprites.add(new_card)
+                                        Pause = 0
+                                        #####################################################
+                                        turn,count_turn = endturn(turn,count_turn,allplayer)
+                                        #################################################################################################
+                                        turn_frame.rect.topleft = (0, 10+180*turn)
+                                        turn_frame.dirty = 1                                    
+                            # buy a card
+                            if big_card.btn_buy.is_collide_mouse(pos_check):
+                                # print('click buy')
+                                # check if player can buy a card
+                                if big_card.selected_card.check_req(player_list[turn].tokens, player_list[turn].cards):
+                                    print(f'can buy c{big_card.selected_card.card_id}')
+                                    paid_tokens = pay_tokens(big_card.selected_card, player_list[turn])
+                                    ####################################################################Change player to player_list[turn]
+                                    # get new card from card pile if bought card is not held
+                                    if not big_card.is_hold:
+                                        new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
+                                        update_card_qty(card_counter, card_list, allsprites)
+                                    # return tokens to pile
+                                    for i, token in enumerate(allsprites.get_sprites_from_layer(1)[:5]):
+                                        if i > 5:
+                                            break
+                                        if paid_tokens[token.colors] > 0:
+                                            token.qty += paid_tokens[token.colors]
+                                            token.update_text(f'{token.qty}')                                    
+                                            token.visible = 1
+                                    # remove card from player's hold card list, if any
+                                    if big_card.selected_card in player_list[turn].hold_cards:
+                                        player_list[turn].hold_cards.remove(big_card.selected_card)
+                                        player_list[turn].cards['hold'].qty = len(player_list[turn].hold_cards)
+                                        player_list[turn].cards['hold'].update_text(f'{player_list[turn].cards["hold"].qty}')
+                                        player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()
+                                        print(f'hold {len(player_list[turn].hold_cards)} card(s)')
+                                    big_card.kill()   
+                                    if new_card != None:
+                                        allsprites.add(new_card)                
+                                    if big_card.is_hold:
+                                        allsprites.remove_sprites_of_layer(3)   
+                                    Pause = 0
+                                    ##############################################################
+                                    End = endgame(turn,player_list,End)
+                                    turn,count_turn = endturn(turn,count_turn,allplayer)
+                                    ########################################################################################################
+                                    turn_frame.rect.topleft = (0, 10+180*turn)
+                                    turn_frame.dirty = 1
+                                else:
+                                    print(f'can not buy c{big_card.selected_card.card_id}')  
+                            big_card.dirty = 1 
+                        # hold cards are showing
+                        if Pause == 3:
+                            # show big card when click on hold card  
+                            for card in player_list[turn].hold_cards:
+                                if card.is_collide_mouse(event.pos):
+                                    print(f'click c{card.card_id}')
+                                    print(f'colors: {card.colors}')
+                                    print(f'cost: {card.requirements}')
+                                    big_card = BigCard(card, (res[0]/2+300, res[1]/2), True)                                
+                                    allsprites.add(big_card)
+                                    Now = Pause
+                                    Pause = 2
+                                    break  
+                            # close hold card pane
+                            if btn_close.is_collide_mouse(event.pos):
+                                print('close hold cards')
+                                allsprites.remove_sprites_of_layer(3)
+                                Pause = 0                        
+                            hold_pane.dirty = 1 
+                    elif freeze == 1:
+                        if btn_Back.rect.collidepoint(pygame.mouse.get_pos()):
+                            print("return 'menu' ")
+                            freeze = 0
+                        if btn_Resume.rect.collidepoint(pygame.mouse.get_pos()):
+                            freeze = 0
+                        if btn_Rule.rect.collidepoint(pygame.mouse.get_pos()):
+                            freeze = 2
+                    elif freeze == 2:
+                        if Next.rect.collidepoint(pygame.mouse.get_pos()):
+                            if page != allpage :
+                                page += 1
+                        if Prev.rect.collidepoint(pygame.mouse.get_pos()):
+                            if page != 1 :
+                                page -= 1
+                        if Back.rect.collidepoint(pygame.mouse.get_pos()):
+                            freeze = 1
+                
+        
         if End == 1 and turn == 0 :
             sort_player_list = sorted(player_list, key=lambda x: (-x.score,sum(x.cards.values().qty)))
             #for Game Result scence use next line Return; 
@@ -564,9 +633,72 @@ def gameBoard(name_user, act_user):
                 print('third is Player'+' name : '+f'{sort_player_list[2].name}')
             run = False        
 
-        clock.tick(FPS)
-        rects = allsprites.draw(screen)
+        ####### Button Hover #############################################################
+        if freeze == 1 :
+            ########################################### Hover effect of Pause Menu Option
+            if btn_Rule.rect.collidepoint(pygame.mouse.get_pos()): 
+                btn_Rule.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else :
+                btn_Rule.unhover()
 
+            if btn_Resume.rect.collidepoint(pygame.mouse.get_pos()):
+                btn_Resume.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else :
+                btn_Resume.unhover()
+
+            if btn_Back.rect.collidepoint(pygame.mouse.get_pos()):  
+                btn_Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else :
+                btn_Back.unhover()
+            ###########################################
+        elif freeze == 2 :
+            if Next.rect.collidepoint(pygame.mouse.get_pos()) and page != allpage :  
+                Next.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            elif page == allpage :
+                Next.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
+            else :
+                Next.unhover()
+
+            if Prev.rect.collidepoint(pygame.mouse.get_pos()) and page != 1 :  
+                Prev.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            elif page == 1 : 
+                Prev.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
+            else :
+                Prev.unhover()
+
+            if Back.rect.collidepoint(pygame.mouse.get_pos()): 
+                Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else :
+                Back.unhover()
+        #############################################################################^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+        clock.tick(FPS)
+        ########################################## After Pause : Render Pause Menu option 
+        if freeze == 1 :
+            page = 1
+            POPINBG.visible = 1
+            RULEPBG.visible = 0
+            Next.visible = Prev.visible = Back.visible = 0
+            btn_Back.visible = btn_Resume.visible = btn_Rule.visible = 1
+        ##########################################
+        ########################################## If Click on Rule while Pause, Render Rule scene
+        elif freeze == 2 :
+            POPINBG.visible = 0
+            btn_Back.visible = btn_Resume.visible = btn_Rule.visible = 0
+            RULEPBG.visible = 1
+            Next.visible = Prev.visible = Back.visible = 1
+        else : 
+            POPINBG.visible = 0
+            RULEPBG.visible = 0
+            btn_Back.visible = btn_Resume.visible = btn_Rule.visible = Next.visible = Prev.visible = Back.visible = 0
+        ##########################################
+        
+        rects = allsprites.draw(screen)
+        if freeze == 2 :
+            Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'Black')
+            screen.blit(Page_surface,(25,640))
+            RuleDirtyButton.ruletext (page,text_font_bold,text_font_regular,screen)
+        
         pygame.display.update(rects)
     # Done! Time to quit.
     pygame.quit()

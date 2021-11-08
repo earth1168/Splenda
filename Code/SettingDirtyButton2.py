@@ -8,7 +8,6 @@ path = os.getcwd()
 sys.path.insert(0, path)
 
 from classButtonDirty import ButtonDirty
-from ClassSlider import Slider
 pygame.init()
 #Set variable for window size
 WIDTH, HEIGHT = 1280,720
