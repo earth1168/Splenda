@@ -48,12 +48,12 @@ class Player():
         #     "black": 0
         # }  
         self.cards = {
-            "white": Token((520, 130), (50, 70), 'Image\Card\Lv1\\105.png', "white", 3),
-            "blue": Token((600, 130), (50, 70), 'Image\Card\Lv1\\103.png', "blue", 3),
-            "green": Token((680, 130), (50, 70), 'Image\Card\Lv1\\102.png', "green", 3),
-            "red": Token((760, 130), (50, 70), 'Image\Card\Lv1\\101.png', "red", 3),
-            "black": Token((840, 130), (50, 70), 'Image\Card\Lv1\\104.png', "black", 3),
-            "hold": Token((440, 130), (50, 70), 'Image\Card\D01.png', "gold", 0)
+            "white": Token((520, 130), (50, 70), 'Image\Card\yellowBG.png', "white", 0),
+            "blue": Token((600, 130), (50, 70), 'Image\Card\\blueBG.png', "blue", 0),
+            "green": Token((680, 130), (50, 70), 'Image\Card\greenBG.png', "green", 0),
+            "red": Token((760, 130), (50, 70), 'Image\Card\\redBG.png', "red", 0),
+            "black": Token((840, 130), (50, 70), 'Image\Card\\blackBG.png', "black", 0),
+            "hold": Token((440, 130), (50, 70), 'Image\Card\holdBG.png', "hold", 0)
         }
 
         for token in self.tokens.values():

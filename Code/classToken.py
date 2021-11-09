@@ -6,6 +6,7 @@ class Token(ButtonDirty):
         super().__init__(position, size, f'{qty}', 30, img_path, 'black')
         self.colors = colors
         self.qty = qty
+        self._layer = 2
 
     # not draw the token when there is no token
     def out_of_stock(self):

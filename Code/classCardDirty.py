@@ -33,7 +33,7 @@ class BonusCardDirty(ButtonDirty):
         self.image_path = img_path
         self.status = 'in_deck'
         self.player_id = -1
-        self._layer = 2
+        self._layer = 1
         self.requirements = {
             "white": 0,
             "blue": 0,
