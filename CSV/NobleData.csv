@@ -1,6 +1,4 @@
-Splendor Noble list : Sheet1,,,,,,,,
-,C,,E,F,G,H,I,J
-2,Point,image_path,white,blue,green,red,black,
+2,point,image_path,white,blue,green,red,black,
 3,3,Image\Card\Noble\N01.png,3,3,0,0,3,
 4,3,Image\Card\Noble\N02.png,0,3,3,3,0,
 5,3,Image\Card\Noble\N03.png,3,0,3,3,0,

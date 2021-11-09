@@ -4,7 +4,7 @@ import csv
 import random
 from classPlayer import Player
 from classButtonDirty import ButtonDirty
-from classCardDirty import CardDirty
+from classCardDirty import CardDirty, BonusCardDirty
 from classToken import Token
 from classBigCard import BigCard
 
@@ -27,6 +27,15 @@ def read_card_data(data_path, card_list):
                 card.requirements[colors] = int(row[colors])
             card_list[card.level-1].append(card)
 
+def read_noble_data(data_path, noble_list):
+    with open(data_path, mode='r') as data_file:
+        data_reader = csv.DictReader(data_file, delimiter=',')
+        for id, row in enumerate(data_reader):
+            noble = BonusCardDirty(id, int(row['point']), (122, 122), row['image_path'])
+            for colors in noble.requirements.keys():
+                noble.requirements[colors] = int(row[colors])
+            noble_list.append(noble)
+
 # place cards on board
 def place_cards(card_list: List[List[CardDirty]], allsprites, order: List[List[int]]):
     card_counter = [0, 0, 0]
@@ -39,6 +48,24 @@ def place_cards(card_list: List[List[CardDirty]], allsprites, order: List[List[i
             # show card id on card 
             card.update_text(f'{card.card_id}')  
     return card_counter
+
+def place_nobles(noble_list: List[BonusCardDirty], allsprites, order: List[int], btn_list: List[ButtonDirty]):
+    for i, idx in enumerate(order):
+        noble = noble_list[idx]
+        noble.reposition(1150, 180+(150*i))
+        print(noble.rect.center)
+        btn_list[i].reposition(noble.rect.centerx+25, noble.rect.y+20)
+        btn_list[i].visible = 0
+        allsprites.add(noble, btn_list[i])
+        allsprites.change_layer(btn_list[i], 2)
+        noble.t_colors = 'black'  
+        # show noble id on noble 
+        noble.update_text(f'{noble.card_id}') 
+
+def place_own_cards(player, allsprites):
+    player.repos_cards(920, 60)
+    for card in player.cards.values():        
+        allsprites.add(card)
 
 # select a token
 def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: bool):
@@ -124,6 +151,8 @@ def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
     player.cards[card.colors].qty += 1
+    player.cards[card.colors].update_text(f'{player.cards[card.colors].qty}')
+    player.cards[card.colors].visible = 1
     for token in player.tokens.values():
         token.update_text(f'{token.qty}')
         token.out_of_stock()
@@ -147,12 +176,27 @@ def hold_card(card: CardDirty, player: Player, token_gold: Token):
     print(f'hold {len(player.hold_cards)} card(s)')
     print()
 
+def take_noble(noble: BonusCardDirty, btn_select: ButtonDirty, player: Player, btn_sel_list: List[ButtonDirty]):
+    player.score += noble.point
+    noble.player_id = player.id 
+    noble.visible = 0
+    for i in range(len(btn_sel_list)):
+        btn_sel_list[i].visible = 0
+
 def check_player_token(player: Player):
     total_token = 0
     for p_token in player.tokens.values():
         total_token += p_token.qty
     print(f'total token: {total_token}')    
     return total_token > 10
+
+def check_noble(noble_list, noble_order, player):
+    available_idx = []  
+    for i in range(len(noble_order)):
+        noble = noble_list[noble_order[i]]
+        if noble.player_id < 0 and noble.check_req(player.cards):
+            available_idx.append(i)
+    return available_idx
 
 def deck_empty(card_counter, card_list, allsprites):
     for i, c_list in enumerate(card_list):
@@ -173,6 +217,7 @@ def testBoard(screen, res, FPS, player: Player):
     new_card = None
     Now = 0
     Pause = 0
+    available_idx = []
     paid_tokens = {}
     tok_col = ['white', 'blue', 'green', 'red', 'black']
 
@@ -206,6 +251,7 @@ def testBoard(screen, res, FPS, player: Player):
     # allsprites.add(tokGold_player)
     for token in player.tokens.values():
         allsprites.add(token)
+    place_own_cards(player, allsprites)
 
     # create buttons
     btn_cancel = ButtonDirty((500, 300), (130, 50), 'cancle', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
@@ -220,7 +266,9 @@ def testBoard(screen, res, FPS, player: Player):
     # card_list[1] -> level 2 card, 
     # card_list[2] -> level 3 card
     card_list = [[], [], []]
-    read_card_data('CSV\CardData_example.csv', card_list)
+    read_card_data('CSV\CardData.csv', card_list)
+    noble_list = []
+    read_noble_data('CSV\\NobleData.csv' , noble_list)
 
     # set order of cards to appeqr for each level
     # random_order is 2-D list. each row store order of card to show
@@ -229,12 +277,21 @@ def testBoard(screen, res, FPS, player: Player):
     # random_order[2] -> order of level 3 card,
     random_order = []
     for i in range(3):
-        rand_lv = random.sample(range(len(card_list[i])), len(card_list[i]))
-        random_order.append(rand_lv)
+        rand_card = random.sample(range(len(card_list[i])), len(card_list[i]))
+        random_order.append(rand_card)    
     print(random_order)
+    allplayer = 3
+    noble_qty = allplayer + 1
+    noble_order = random.sample(range(len(noble_list)), noble_qty)
+    print(noble_order)
+    btn_sel_list = []
+    for i in range(noble_qty):
+        btn_select = ButtonDirty((500, 500), (60, 30), 'select', 20, 'Image\Button\ButtonNewUnhover.png', 'black')
+        btn_sel_list.append(btn_select)
     # place cards on board
     # card_counter keep track of the order of card on each level
     card_counter = place_cards(card_list, allsprites, random_order)
+    place_nobles(noble_list, allsprites, noble_order, btn_sel_list)
 
     # create objects for showing hold cards
     hold_pane = pygame.sprite.DirtySprite()
@@ -263,7 +320,7 @@ def testBoard(screen, res, FPS, player: Player):
     # cards
     spr_layer2 = allsprites.get_sprites_from_layer(2)
 
-    while run:
+    while run:        
         for event in pygame.event.get():
             # press x key on keyboard to exit
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_x):
@@ -285,6 +342,7 @@ def testBoard(screen, res, FPS, player: Player):
                         btn_confirm.unhover()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
+                print(f'score: {player.score}') 
                 if event.button == 1:
                     # board is showing
                     if Pause == 0:
@@ -309,7 +367,7 @@ def testBoard(screen, res, FPS, player: Player):
                                     btn_cancel.visible = btn_confirm.visible = 0
                         # show big card when click on a card
                         for card in allsprites.get_sprites_from_layer(2):
-                            if card.is_collide_mouse(event.pos):
+                            if card.is_collide_mouse(event.pos) and isinstance(card, CardDirty):
                                 print(f'click c{card.card_id}')
                                 print(f'colors: {card.colors}')
                                 print(f'cost: {card.requirements}')
@@ -336,14 +394,16 @@ def testBoard(screen, res, FPS, player: Player):
                                 sel_qty = 0
                                 can_select = True
                                 btn_confirm.unhover()
-                                # for i in range(5):
-                                #     token = allsprites.get_sprites_from_layer(0)[i+6]
-                                #     token.qty = player.tokens[token.colors]
-                                #     token.update_text(f'{token.qty}')
-                                #     token.out_of_stock()
                                 if check_player_token(player):
                                     print('return tokens')
                                     Pause = 3
+                                if Pause == 0:
+                                    available_idx = check_noble(noble_list, noble_order, player)
+                                    if not available_idx: 
+                                        Pause = 0
+                                        btn_show_hold.visible = player.is_hold_card()
+                                    else:
+                                        Pause = 4
                                 btn_cancel.visible = btn_confirm.visible = 0                                
                         # show all hold cards
                         btn_show_hold.visible = player.is_hold_card()
@@ -419,9 +479,14 @@ def testBoard(screen, res, FPS, player: Player):
                                 if new_card != None:
                                     allsprites.add(new_card)
                                 if big_card.is_hold:
-                                    allsprites.remove_sprites_of_layer(3)                   
-                                Pause = 0
-                                btn_show_hold.visible = player.is_hold_card()
+                                    allsprites.remove_sprites_of_layer(3)
+                                # check noble cards                                
+                                available_idx = check_noble(noble_list, noble_order, player)
+                                if not available_idx: 
+                                    Pause = 0
+                                    btn_show_hold.visible = player.is_hold_card()
+                                else:
+                                    Pause = 4
                             else:
                                 print(f'can not buy c{big_card.selected_card.card_id}')  
                         big_card.dirty = 1             
@@ -464,8 +529,23 @@ def testBoard(screen, res, FPS, player: Player):
                                     total_token -= 1
                         if total_token <= 10:
                             print('return complete')
-                            Pause = 0
-                                
+                            available_idx = check_noble(noble_list, noble_order, player)
+                            if not available_idx: 
+                                Pause = 0
+                                btn_show_hold.visible = player.is_hold_card()
+                            else:
+                                Pause = 4
+
+                    # taking a noble card
+                    if Pause == 4:
+                        for idx in available_idx:
+                            noble = noble_list[noble_order[idx]]
+                            btn_sel_list[idx].visible = 1
+                            if btn_sel_list[idx].is_collide_mouse(event.pos):
+                                take_noble(noble, btn_sel_list[idx], player, btn_sel_list)
+                                Pause = 0
+                                btn_show_hold.visible = player.is_hold_card()
+                                break                                                     
 
             # if event.type == pygame.KEYDOWN:
             #     for key, token in enumerate(allsprites.sprites(), start=pygame.K_0):

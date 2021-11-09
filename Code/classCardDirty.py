@@ -4,6 +4,7 @@
 #   - Card
 
 from typing import Dict, List, Tuple
+import pygame
 from classToken import Token
 from classButtonDirty import ButtonDirty
 
@@ -57,8 +58,6 @@ class BonusCardDirty(ButtonDirty):
             if not is_enough:
                 return is_enough
         return is_enough
-       
-
 
 # Card class:
 # create card object
