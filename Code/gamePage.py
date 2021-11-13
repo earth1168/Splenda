@@ -15,7 +15,7 @@ FPS = 30
 res = [1280, 720]
 
 screen = pygame.display.set_mode(res)
-bgimage = pygame.image.load("Image/Card/bg-01.png")
+bgimage = pygame.image.load(".../Card/bg-01.png")
 bgimage = pygame.transform.scale(bgimage, (1280, 720))
 
 lv101 = pygame.image.load('Image/Card/Lv1/101.png')
