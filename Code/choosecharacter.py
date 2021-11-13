@@ -23,7 +23,7 @@ def showFullActer(act_id, full_profile, button):
         screen.blit(full_profile[act_id], (800, 90))
     button.draw(screen)
 
-def showFaceActer(face, name_user, base_font):
+def showFaceActer(face, name_user, base_font, text_max):
     for x, y in enumerate(face):
         screen.blit(y, y.get_rect(topleft = ((x * 120) + 150, 550)))
         text_name3 = base_font.render(name_user[x], True, (255, 255, 255))
@@ -65,9 +65,11 @@ def selectCharacter(screen, name_user, act_user):
     colortext = color_passive
 
     # button
-    button = pygame.sprite.Group()
-    b_confirm = ButtonDirty((1100, 580), (200, 80), 'Confirm', 40, 'Image/Button/testButton-01.png', 'purple')
-    b_start = ButtonDirty((850, 580), (200, 80), 'Start', 40, 'Image/Button/testButton-01.png', 'purple')
+    button = pygame.sprite.LayeredDirty()
+    b_confirm = ButtonDirty((1100, 580), (130, 50), 'Confirm', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    b_start = ButtonDirty((850, 580), (130, 50), 'Start', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    b_confirm.visible = b_start.visible = 0
+    button.add(b_confirm, b_start)
 
     # load image
     bg = pygame.image.load('Character/bg.png')
@@ -87,8 +89,10 @@ def selectCharacter(screen, name_user, act_user):
     run = True
     while run:
         clock.tick(FPS)
-        if not button.has(b_confirm):
-            button.add(b_confirm)
+        if act_id != -1:
+            b_confirm.visible = 1
+        else:
+            b_confirm.visible = 0
 
         #input text user
         for event in pygame.event.get():
@@ -106,7 +110,7 @@ def selectCharacter(screen, name_user, act_user):
                 if active == True:
                     if event.key == pygame.K_BACKSPACE:
                         user_text = user_text[:-1]
-                    else:
+                    elif len(user_text) < 6 :
                         user_text += event.unicode
             if active:
                 colortext = color_active
@@ -120,7 +124,7 @@ def selectCharacter(screen, name_user, act_user):
         mouse_pos = pygame.mouse.get_pos()
         if profile_rect[0].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 0
@@ -129,59 +133,69 @@ def selectCharacter(screen, name_user, act_user):
 
         if profile_rect[1].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 1
 
         if profile_rect[2].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 2
 
         if profile_rect[3].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 3
 
         if profile_rect[4].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 4
 
         if profile_rect[5].collidepoint(mouse_pos):
             pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
                 mouse_presses = pygame.mouse.get_pressed()
                 if mouse_presses[0]:
                     act_id = 5
 
         if len(act_user) > 1:
             if b_start.rect.collidepoint(mouse_pos):
+                b_start.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed()[0]:
                     mouse_presses = pygame.mouse.get_pressed()
                     if mouse_presses[0]:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                         return 'game'
+            else:
+                b_start.unhover()
 
-        if act_id not in act_user and len(act_user) < 4:
+        if act_id not in act_user and len(act_user) < 4 and act_id != -1:
             if b_confirm.rect.collidepoint(mouse_pos):
+                b_confirm.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        act_user.append(act_id)
-                        name_user.append(user_text)
-                        user_text = ''
-                        face.append(pygame.image.load(f'Character/face/face{act_id + 1}.png').convert_alpha())
-                        face[-1] = pygame.transform.smoothscale(face[-1], face_scale[-1])
-                        profile_gray[act_id] = pygame.image.load(f'Character/gray/cha{act_id + 1}.png').convert_alpha()
-                        profile_gray[act_id] = pygame.transform.smoothscale(profile_gray[act_id], profile_scale[act_id])
+                if pygame.mouse.get_pressed()[0]:
+                    b_confirm.unhover()
+                    b_confirm.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
+                    act_user.append(act_id)
+                    name_user.append(user_text)
+                    user_text = ''
+                    face.append(pygame.image.load(f'Character/face/face{act_id + 1}.png').convert_alpha())
+                    face[-1] = pygame.transform.smoothscale(face[-1], face_scale[-1])
+                    profile_gray[act_id] = pygame.image.load(f'Character/gray/cha{act_id + 1}.png').convert_alpha()
+                    profile_gray[act_id] = pygame.transform.smoothscale(profile_gray[act_id], profile_scale[act_id])
+            else:
+                b_confirm.unhover()
+        elif act_id in act_user :
+            b_confirm.hover((68,68,68), 'Image\Button\ButtonNewGray.png')
 
         if act_id != -1:
             pygame.draw.rect(screen, 'black', frametext)
@@ -193,16 +207,15 @@ def selectCharacter(screen, name_user, act_user):
             textname = text.render('Enter your name :', True, 'white').convert_alpha()
             screen.blit(textname, (770, 500))
 
-        if len(act_user) > 1 and not button.has(b_start):
-            button.add(b_start)
+        if len(act_user) > 1:
+            b_start.visible = 1
 
         if len(act_user) > 3:
             textmax = text_max.render('Max player is 4', True, 'white').convert_alpha()
             screen.blit(textmax, (850, 630))
 
-
         showFullActer(act_id, full_profile, button)
-        showFaceActer(face, name_user, base_font)
+        showFaceActer(face, name_user, base_font, text_max)
         graycharacter(profile_gray, profile_rect)
         pygame.display.update()
 

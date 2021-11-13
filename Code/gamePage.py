@@ -2,7 +2,7 @@
 import pygame
 import csv
 import random
-import RuleDirtyButton
+import RuleDirtyButton 
 from typing import List
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty, BonusCardDirty
@@ -15,73 +15,11 @@ FPS = 30
 res = [1280, 720]
 
 screen = pygame.display.set_mode(res)
-bgimage = pygame.image.load("Image/Card/bg-01.png")
-bgimage = pygame.transform.scale(bgimage, (1280, 720))
+Deck_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",20)
 
-lv101 = pygame.image.load('Image/Card/Lv1/101.png')
-lv101 = pygame.transform.smoothscale (lv101, (122, 167))
-lv102 = pygame.image.load('Image/Card/Lv1/102.png')
-lv102 = pygame.transform.smoothscale (lv102, (122, 167))
-lv103 = pygame.image.load('Image/Card/Lv1/103.png')
-lv103 = pygame.transform.smoothscale (lv103, (122, 167))
-lv104 = pygame.image.load('Image/Card/Lv1/104.png')
-lv104 = pygame.transform.smoothscale (lv104, (122, 167))
-
-lv201 = pygame.image.load('Image/Card/Lv2/201.png')
-lv201 = pygame.transform.smoothscale (lv201, (122, 167))
-lv202 = pygame.image.load('Image/Card/Lv2/202.png')
-lv202 = pygame.transform.smoothscale (lv202, (122, 167))
-lv203 = pygame.image.load('Image/Card/Lv2/203.png')
-lv203 = pygame.transform.smoothscale (lv203, (122, 167))
-lv204 = pygame.image.load('Image/Card/Lv2/204.png')
-lv204 = pygame.transform.smoothscale (lv204, (122, 167))
-
-lv301 = pygame.image.load('Image/Card/Lv3/301.png')
-lv301 = pygame.transform.smoothscale (lv301, (122, 167))
-lv302 = pygame.image.load('Image/Card/Lv3/302.png')
-lv302 = pygame.transform.smoothscale (lv302, (122, 167))
-lv303 = pygame.image.load('Image/Card/Lv3/303.png')
-lv303 = pygame.transform.smoothscale (lv303, (122, 167))
-lv304 = pygame.image.load('Image/Card/Lv3/304.png')
-lv304 = pygame.transform.smoothscale (lv304, (122, 167))
-
-
-Noble1 = pygame.image.load('Image/Card/Noble/N01.png')
-Noble1 = pygame.transform.smoothscale (Noble1, (122, 122))
-Noble2 = pygame.image.load('Image/Card/Noble/N02.png')
-Noble2 = pygame.transform.smoothscale (Noble2, (122, 122))
-Noble3 = pygame.image.load('Image/Card/Noble/N03.png')
-Noble3 = pygame.transform.smoothscale (Noble3, (122, 122))
-Noble4 = pygame.image.load('Image/Card/Noble/N04.png')
-Noble4 = pygame.transform.smoothscale (Noble4, (122, 122))
-Noble5 = pygame.image.load('Image/Card/Noble/N05.png')
-Noble5 = pygame.transform.smoothscale (Noble5, (122, 122))
-
-
-Deck1 = pygame.image.load('Image/Card/D01.png')
-Deck1 = pygame.transform.smoothscale (Deck1, (122, 167))
-Deck2 = pygame.image.load('Image/Card/D02.png')
-Deck2 = pygame.transform.smoothscale (Deck2, (122, 167))
-Deck3 = pygame.image.load('Image/Card/D03.png')
-Deck3 = pygame.transform.smoothscale (Deck3, (122, 167))
-test_font = pygame.font.Font(None,30)
-RemainingCard = test_font.render('25','AA','White')
-
-RedCoin = pygame.image.load('Image/Coin/RedCoin-01.png')
-RedCoin = pygame.transform.smoothscale (RedCoin, (108, 108))
-BlueCoin = pygame.image.load('Image/Coin/BlueCoin-01.png')
-BlueCoin = pygame.transform.smoothscale (BlueCoin, (108, 108))
-GreenCoin = pygame.image.load('Image/Coin/GreenCoin-01.png')
-GreenCoin = pygame.transform.smoothscale (GreenCoin, (108, 108))
-BlackCoin = pygame.image.load('Image/Coin/BlackCoin-01.png')
-BlackCoin = pygame.transform.smoothscale (BlackCoin, (108, 108))
-WhiteCoin = pygame.image.load('Image/Coin/WhiteCoin-01.png')
-WhiteCoin = pygame.transform.smoothscale (WhiteCoin, (108, 108))
-GoldCoin = pygame.image.load('Image/Coin/GoldCoin-01.png')
-GoldCoin = pygame.transform.smoothscale (GoldCoin, (108, 108))
-
-name_user = ['testB01','testB02','testB03','testB04']
-act_user = [0, 1, 2, 3]
+name_user = ['testB01','testB02']
+act_user = [0, 1]
+result_player_list = []
 
 # read cards' data from csv file
 def read_card_data(data_path, card_list):
@@ -104,15 +42,20 @@ def read_noble_data(data_path, noble_list):
 
 def getPlayerData(name_user, act_user):
     allplayer = 0
-    name_font = pygame.font.Font(None,30)
+    name_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",20)
+    score_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",30)
     player_name = []
     cha = []
     bg_player = []
     player_list = []
+    player_score = []    
+
     print(f'act_user length: {len(act_user)}')
     for act_id in act_user:
         print(f'selected character id: {act_id}')
-    for i in range(len(act_user)):        
+    for i in range(len(act_user)): 
+        player = Player(i, act_user[i], name_user[i]) 
+        player.chr_id = act_user[i]               
         if i%2 == 0:
             #player 0,2
             bg_player.append(pygame.image.load('Image/Card/bgEven.png').convert_alpha())
@@ -131,12 +74,16 @@ def getPlayerData(name_user, act_user):
         playerName = pygame.sprite.DirtySprite()
         playerName.image = name_font.render(name_user[i],'AA','White')
         playerName.rect = playerName.image.get_rect(bottomleft = (10, 177+(177*i)))
-        player_name.append(playerName)
-            
-        player = Player(i, act_user[i], name_user[i])
+        player_name.append(playerName)               
+        # player score sprite
+        playerScore = pygame.sprite.DirtySprite()
+        playerScore.image = score_font.render(f'{player.score}','AA','White')
+        playerScore.rect = playerScore.image.get_rect(bottomleft = (30, 50+(177*i)))
+        player_score.append(playerScore)
+
         player_list.append(player)
         allplayer += 1
-    return allplayer, player_list, cha, bg_player, player_name
+    return allplayer, player_list, cha, bg_player, player_name, player_score
 
 def get_tokens(allsprites, allplayer):
     tok_col = ['white', 'blue', 'green', 'red', 'black']
@@ -252,7 +199,7 @@ def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], card_counter
 def update_card_qty(card_counter, card_list, card_qty_list, allsprites):
     for i, c_list in enumerate(card_list):
         remaining = len(c_list) - (card_counter[i]+1)
-        card_qty_list[i].image = test_font.render(f'{remaining}', True, 'white')
+        card_qty_list[i].image = Deck_font.render(f'{remaining}', True, 'white')
         card_qty_list[i].dirty = 1
         if remaining <= 0:
             empty_card = pygame.sprite.DirtySprite()
@@ -348,10 +295,12 @@ def endgame(turn,player_list,End) :
         End = 1
     return End
 
-def gameBoard(name_user, act_user): 
+def gameBoard(name_user, act_user,result_player_list): 
+    result_player_list = []
     clock = pygame.time.Clock()
+    score_font = pygame.font.Font("Font\Roboto\Roboto-Bold.ttf",30)
     # Run until the user asks to quit
-    running = True
+    run = True
     turn = 0
     count_turn = 0
     End = 0
@@ -362,7 +311,7 @@ def gameBoard(name_user, act_user):
     Now = Pause = 0
     paid_tokens = {}
 
-    allplayer, player_list, cha, bg_player, player_name = getPlayerData(name_user, act_user)
+    allplayer, player_list, cha, bg_player, player_name, player_score = getPlayerData(name_user, act_user)
 
     card_list = [[], [], []]
     read_card_data('CSV\CardData.csv', card_list)
@@ -395,7 +344,7 @@ def gameBoard(name_user, act_user):
     for i in range(3):
         remaining = len(card_list[i]) - (card_counter[i]+1)
         qty_text = pygame.sprite.DirtySprite()        
-        qty_text.image = test_font.render(f'{remaining}', True, 'white') 
+        qty_text.image = Deck_font.render(f'{remaining}', True, 'white') 
         qty_text.rect = qty_text.image.get_rect(topleft = (611,675-(177*i)))
         card_qty_list.append(qty_text)
         allsprites.add(qty_text) 
@@ -404,18 +353,19 @@ def gameBoard(name_user, act_user):
         allsprites.add(cha_spr)
     for name_spr in player_name:  
         allsprites.add(name_spr)
+    for score_spr in player_score:
+        allsprites.add(score_spr)
 
     # create buttons
-    btn_cancel = ButtonDirty((474, 66), (100, 50), 'cancle', 25, 'Image\Button\ButtonNewUnhover.png', 'black')
-    btn_confirm = ButtonDirty((614, 66), (100, 50), 'confirm', 25, 'Image\Button\ButtonNewUnhover.png', 'black')
-    btn_show_hold = ButtonDirty((500, 500), (130, 50), 'show hold', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
-    btn_cancel.visible = btn_confirm.visible = btn_show_hold.visible = 0
-    allsprites.add(btn_cancel, btn_confirm, btn_show_hold)  
+    btn_cancel = ButtonDirty((474, 66), (100, 50), 'cancel', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
+    btn_confirm = ButtonDirty((614, 66), (100, 50), 'confirm', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
+    btn_cancel.visible = btn_confirm.visible = 0
+    allsprites.add(btn_cancel, btn_confirm)  
     allsprites.change_layer(btn_cancel, 2)
     allsprites.change_layer(btn_confirm, 2)
     btn_sel_list = []
     for i in range(noble_qty):
-        btn_select = ButtonDirty((500, 500), (60, 30), 'select', 20, 'Image\Button\ButtonNewUnhover.png', 'black')
+        btn_select = ButtonDirty((500, 500), (60, 30), 'select', 15, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
         btn_sel_list.append(btn_select)  
     place_nobles(noble_list, allsprites, noble_order, btn_sel_list) 
 
@@ -433,8 +383,18 @@ def gameBoard(name_user, act_user):
     hold_pane.image = pygame.transform.smoothscale(hold_pane.image, (800, 370))
     hold_pane.rect = hold_pane.image.get_rect(center = (res[0]/2+200, res[1]/2))
     hold_pane._layer = 3
-    btn_close = ButtonDirty((hold_pane.rect.centerx, hold_pane.rect.bottom-70), (100, 50), 'close', 25, 'Image\Button\ButtonNewUnhover.png', 'black')
+    btn_close = ButtonDirty((hold_pane.rect.centerx, hold_pane.rect.bottom-70), (100, 50), 'close', 25, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
     btn_close._layer = 3
+
+    msg_font = pygame.font.Font('Font\Roboto\Roboto-Regular.ttf', 15)
+    msg_text = 'You have more than 10 Tokens! \nplease click on your token to return.'
+    msg_box = pygame.sprite.DirtySprite()
+    msg_box.image = pygame.image.load('Image\Card\\ballon.png').convert_alpha()
+    msg_box.image = pygame.transform.smoothscale(msg_box.image, (325, 80))
+    RuleDirtyButton.text_block(msg_font, msg_text, 'Black', (25,15), 325, msg_box.image, 10)
+    msg_box.rect = msg_box.image.get_rect(bottomleft = (95, 160))
+    msg_box.visible = 0
+    allsprites.add(msg_box)
 
     bgimage = pygame.image.load("Image/Card/bg-01.png")
     bgimage = pygame.transform.scale(bgimage, (1280, 720))
@@ -448,7 +408,7 @@ def gameBoard(name_user, act_user):
     background = pygame.Surface(screen.get_size()).convert()
     background.blit(bgimage, (0,0))
     for i, bg in enumerate(bg_player):
-        background.blit(bg, (0, 10+180*i))
+        background.blit(bg, (0, 10+177*i))
     background.blit(Deck1,(558,533))
     background.blit(Deck2,(558,356))
     background.blit(Deck3,(558,179))
@@ -485,7 +445,7 @@ def gameBoard(name_user, act_user):
     #Rule Button
     Next = ButtonDirty((1180,140), (130, 50), 'Next', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     Prev = ButtonDirty((85,140), (140, 50), 'Previous', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
-    Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
+    Back = ButtonDirty((1180,640), (130, 50), 'Back', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     #Set visibility
     btn_Rule.visible = btn_Resume.visible = btn_Back.visible = Next.visible = Prev.visible = Back.visible = 0
     btn_Rule._layer = btn_Resume._layer = btn_Back._layer = Next._layer = Prev._layer = Back._layer = 5
@@ -494,11 +454,11 @@ def gameBoard(name_user, act_user):
 
     ##################################
 
-    while running:
+    while run:
         # Did the user click the window close button?
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
+                run = False
             ########################################## vvvvvvvvv When press key 'ESC'
             if event.type == pygame.KEYDOWN :
                 if event.key == pygame.K_ESCAPE :
@@ -583,15 +543,19 @@ def gameBoard(name_user, act_user):
                                     btn_cancel.visible = btn_confirm.visible = 0
                                     if check_player_token(player_list[turn]):
                                         print('return tokens')
+                                        msg_box.visible = 1
                                         Pause = 4
                                     if Pause == 1:
                                         available_idx = check_noble(noble_list, noble_order, player_list[turn])
                                         if not available_idx:  
-                                            turn,count_turn = endturn(turn,count_turn,allplayer)
-                                            turn_frame.rect.topleft = (0, 10+180*turn)
+                                            turn,count_turn = endturn(turn,count_turn,allplayer)                                            
+                                            turn_frame.rect.topleft = (0, 10+177*turn)
+                                            msg_box.rect.bottomleft = (95, 160+177*turn)
                                             turn_frame.dirty = 1 
                                             Pause = 0  
                                         else:
+                                            for idx in available_idx:
+                                                btn_sel_list[idx].visible = 1
                                             Pause = 5                                                                     
                         # big card is showing
                         elif Pause == 2:
@@ -621,19 +585,30 @@ def gameBoard(name_user, act_user):
                                         big_card.kill()
                                         if new_card != None:
                                             allsprites.add(new_card)
-                                        Pause = 0
                                         #####################################################
-                                        turn,count_turn = endturn(turn,count_turn,allplayer)
+                                        available_idx = check_noble(noble_list, noble_order, player_list[turn])
+                                        if not available_idx:  
+                                            turn,count_turn = endturn(turn,count_turn,allplayer)
+                                            turn_frame.rect.topleft = (0, 10+177*turn)
+                                            msg_box.rect.bottomleft = (95, 160+177*turn)
+                                            turn_frame.dirty = 1 
+                                            Pause = 0  
+                                        else:
+                                            for idx in available_idx:
+                                                btn_sel_list[idx].visible = 1
+                                            Pause = 5
                                         #################################################################################################
-                                        turn_frame.rect.topleft = (0, 10+180*turn)
+                                        turn_frame.rect.topleft = (0, 10+177*turn)
+                                        msg_box.rect.bottomleft = (95, 160+177*turn)
                                         turn_frame.dirty = 1                                    
                             # buy a card
-                            if big_card.btn_buy.is_collide_mouse(pos_check):
-                                # print('click buy')
+                            if big_card.btn_buy.is_collide_mouse(pos_check):                                
                                 # check if player can buy a card
                                 if big_card.selected_card.check_req(player_list[turn].tokens, player_list[turn].cards):
                                     print(f'can buy c{big_card.selected_card.card_id}')
                                     paid_tokens = pay_tokens(big_card.selected_card, player_list[turn])
+                                    player_score[turn].image = score_font.render(f'{player_list[turn].score}','AA','White')
+                                    player_score[turn].dirty = 1
                                     ####################################################################Change player to player_list[turn]
                                     # get new card from card pile if bought card is not held
                                     if not big_card.is_hold:
@@ -665,13 +640,32 @@ def gameBoard(name_user, act_user):
                                         End = endgame(turn,player_list,End)
                                         turn,count_turn = endturn(turn,count_turn,allplayer)
                                         ########################################################################################################
-                                        turn_frame.rect.topleft = (0, 10+180*turn)
+                                        turn_frame.rect.topleft = (0, 10+177*turn)
+                                        msg_box.rect.bottomleft = (95, 160+177*turn)
                                         turn_frame.dirty = 1
                                     else:
+                                        for idx in available_idx:
+                                            btn_sel_list[idx].visible = 1
                                         Pause = 5
                                 else:
                                     print(f'can not buy c{big_card.selected_card.card_id}')  
                             big_card.dirty = 1 
+                        # taking a noble card
+                        elif Pause == 5:
+                            for idx in available_idx:
+                                noble = noble_list[noble_order[idx]]
+                                # btn_sel_list[idx].visible = 1
+                                if btn_sel_list[idx].is_collide_mouse(event.pos):
+                                    take_noble(noble, player_list[turn], btn_sel_list)
+                                    player_score[turn].image = score_font.render(f'{player_list[turn].score}','AA','White')
+                                    player_score[turn].dirty = 1
+                                    End = endgame(turn,player_list,End)
+                                    turn,count_turn = endturn(turn,count_turn,allplayer)
+                                    turn_frame.rect.topleft = (0, 10+177*turn)
+                                    msg_box.rect.bottomleft = (95, 160+177*turn)
+                                    turn_frame.dirty = 1 
+                                    Pause = 0
+                                    break 
                         # hold cards are showing
                         if Pause == 3:
                             # show big card when click on hold card  
@@ -696,29 +690,19 @@ def gameBoard(name_user, act_user):
                             total_token = return_token(allsprites.get_sprites_from_layer(2)[:5], allsprites.sprites()[1], player_list[turn], event.pos)
                             if total_token <= 10:
                                 print('return complete')
+                                msg_box.visible = 0
                                 available_idx = check_noble(noble_list, noble_order, player_list[turn])
                                 if not available_idx: 
                                     turn,count_turn = endturn(turn,count_turn,allplayer)
-                                    turn_frame.rect.topleft = (0, 10+180*turn)
+                                    turn_frame.rect.topleft = (0, 10+177*turn)
+                                    msg_box.rect.bottomleft = (95, 160+177*turn)
                                     turn_frame.dirty = 1 
                                     Pause = 0
                                 else:
                                     Pause = 5
-                        # taking a noble card
-                        if Pause == 5:
-                            for idx in available_idx:
-                                noble = noble_list[noble_order[idx]]
-                                btn_sel_list[idx].visible = 1
-                                if btn_sel_list[idx].is_collide_mouse(event.pos):
-                                    take_noble(noble, player_list[turn], btn_sel_list)
-                                    turn,count_turn = endturn(turn,count_turn,allplayer)
-                                    turn_frame.rect.topleft = (0, 10+180*turn)
-                                    turn_frame.dirty = 1 
-                                    Pause = 0
-                                    break 
                     elif freeze == 1:
                         if btn_Back.rect.collidepoint(pygame.mouse.get_pos()):
-                            print("return 'menu' ")
+                            return 'menu'
                             freeze = 0
                         if btn_Resume.rect.collidepoint(pygame.mouse.get_pos()):
                             freeze = 0
@@ -736,14 +720,13 @@ def gameBoard(name_user, act_user):
                 
         
         if End == 1 and turn == 0 :
-            sort_player_list = sorted(player_list, key=lambda x: (-x.score,sum(x.cards.values().qty)))
+            print("In the  End")
+            result_player_list = sorted(player_list, key=lambda x: (-x.score,x.sum_card()))
+            print("After sort")
+            for player in result_player_list:
+                print(f'{player.name}: {player.score}')
             #for Game Result scence use next line Return; 
-            #Return sort_player_list 
-            print('winner is Player'+' name : '+f'{sort_player_list[0].name}')
-            print('second is Player'+' name : '+f'{sort_player_list[1].name}')
-            if allplayer > 2 :
-                print('third is Player'+' name : '+f'{sort_player_list[2].name}')
-            run = False        
+            return 'result',  result_player_list      
 
         ####### Button Hover #############################################################
         if freeze == 1 :
@@ -782,6 +765,56 @@ def gameBoard(name_user, act_user):
                 Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
             else :
                 Back.unhover()
+        else :
+            if btn_cancel.is_collide_mouse(pygame.mouse.get_pos()):
+                btn_cancel.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else:
+                btn_cancel.unhover()
+
+            if btn_confirm.is_collide_mouse(pygame.mouse.get_pos()):
+                btn_confirm.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            else:
+                btn_confirm.unhover()
+
+            for btn_select in btn_sel_list:
+                if btn_select.is_collide_mouse(pygame.mouse.get_pos()):
+                    btn_select.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                else:
+                    btn_select.unhover()
+                
+            if big_card != None:
+                pos_check = (
+                    pygame.mouse.get_pos()[0] - big_card.rect.topleft[0],
+                    pygame.mouse.get_pos()[1]- big_card.rect.topleft[1]
+                )
+                if big_card.btn_close.is_collide_mouse(pos_check):
+                    big_card.btn_close.hover((153,0,0), 'Image\Button\CloseButtonhover.png')
+                    big_card.update_button()
+                else:
+                    big_card.btn_close.unhover()
+                    big_card.update_button()
+
+                if big_card.btn_buy.is_collide_mouse(pos_check):
+                    big_card.btn_buy.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                    big_card.update_button()
+                else:
+                    big_card.btn_buy.unhover()
+                    big_card.update_button()
+
+                if not big_card.is_hold:
+                    if big_card.btn_hold.is_collide_mouse(pos_check):
+                        big_card.btn_hold.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                        big_card.update_button()
+                    else:
+                        big_card.btn_hold.unhover()
+                        big_card.update_button()
+            
+            if Pause == 4:
+                if msg_box.rect.collidepoint(pygame.mouse.get_pos()):
+                    msg_box.visible = 0
+                else:
+                    msg_box.visible = 1
+            
         #############################################################################^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         clock.tick(FPS)
@@ -816,7 +849,7 @@ def gameBoard(name_user, act_user):
     pygame.quit()
     exit()
 if __name__ == "__main__":
-    gameBoard(name_user, act_user)
+    gameBoard(name_user, act_user,result_player_list)
 
 
 

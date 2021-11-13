@@ -17,12 +17,18 @@ class BigCard(pygame.sprite.DirtySprite):
         card_img_rect = card_img.get_rect(center = self.image.get_rect().center)
 
         self.btn_close = ButtonDirty(card_img_rect.topright, (75, 75), '', 0, 'Image\Button\CloseButton.png')
-        self.btn_buy = ButtonDirty((card_img_rect.right-80, card_img_rect.top + 210), (130, 50), 'Buy', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
-        if not is_hold:
-            self.btn_hold = ButtonDirty((card_img_rect.right-80, card_img_rect.top + 145), (130, 50), 'Hold', 30, 'Image\Button\ButtonNewUnhover.png', 'black')
+        self.btn_buy = ButtonDirty((card_img_rect.right-80, card_img_rect.top + 210), (130, 50), 'Buy', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Bold.ttf')
+        if not self.is_hold:
+            self.btn_hold = ButtonDirty((card_img_rect.right-80, card_img_rect.top + 145), (130, 50), 'Hold', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Bold.ttf')
         
         self.image.blit(card_img, card_img_rect)
         self.image.blit(self.btn_close.image, self.btn_close.rect)
         self.image.blit(self.btn_buy.image, self.btn_buy.rect)
         if not is_hold:
+            self.image.blit(self.btn_hold.image, self.btn_hold.rect)
+
+    def update_button(self):
+        self.image.blit(self.btn_close.image, self.btn_close.rect)
+        self.image.blit(self.btn_buy.image, self.btn_buy.rect)
+        if not self.is_hold:
             self.image.blit(self.btn_hold.image, self.btn_hold.rect)

@@ -23,6 +23,7 @@ class Player():
         self.chr_id = chr_id
         self.name = name
         self.score = 0
+        self.card_qty = 0
         self.hold_cards = []
         # self.tokens = {
         #     "white": 0,
@@ -53,13 +54,14 @@ class Player():
             "green": Token((680, 130), (50, 70), 'Image\Card\greenBG.png', "green", 0),
             "red": Token((760, 130), (50, 70), 'Image\Card\\redBG.png', "red", 0),
             "black": Token((840, 130), (50, 70), 'Image\Card\\blackBG.png', "black", 0),
-            "hold": Token((440, 130), (50, 70), 'Image\Card\holdBG.png', "hold", 0)
+            "hold": Token((440, 130), (50, 70), 'Image\Card\HoldCard.png', "hold", 0, 'white')
         }
 
         for token in self.tokens.values():
             token.visible = 0  
 
         for card in self.cards.values():
+            card._layer = 0
             card.visible = 0          
 
     # reposition tokens
@@ -83,3 +85,7 @@ class Player():
         else:
             return True
         
+    def sum_card(self):
+        for card in self.cards.values():
+            self.card_qty += card.qty
+        return self.card_qty

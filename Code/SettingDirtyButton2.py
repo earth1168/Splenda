@@ -82,7 +82,7 @@ def setting(screen, FPS, res, isFullscreen, volume) :
                             Mode.update_text(window_mode[0])
                         res = change_resolution(screen, res, isFullscreen)  
                     if Back.rect.collidepoint(pygame.mouse.get_pos()):
-                        return "menu", isFullscreen, volume  
+                        return 'menu', isFullscreen, volume  
                     if slide_rect.collidepoint(pygame.mouse.get_pos()):
                         volume = (pygame.mouse.get_pos()[0]-490)/300  
                         change_volume = 1
