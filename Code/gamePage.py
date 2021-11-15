@@ -766,21 +766,29 @@ def gameBoard(name_user, act_user,result_player_list):
             else :
                 Back.unhover()
         else :
-            if btn_cancel.is_collide_mouse(pygame.mouse.get_pos()):
-                btn_cancel.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
-            else:
-                btn_cancel.unhover()
-
-            if btn_confirm.is_collide_mouse(pygame.mouse.get_pos()):
-                btn_confirm.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
-            else:
-                btn_confirm.unhover()
-
-            for btn_select in btn_sel_list:
-                if btn_select.is_collide_mouse(pygame.mouse.get_pos()):
-                    btn_select.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+            if Pause == 1:
+                if btn_cancel.is_collide_mouse(pygame.mouse.get_pos()):
+                    btn_cancel.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
                 else:
-                    btn_select.unhover()
+                    btn_cancel.unhover()
+
+                if btn_confirm.is_collide_mouse(pygame.mouse.get_pos()):
+                    btn_confirm.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                else:
+                    btn_confirm.unhover()                    
+
+            if Pause == 5:
+                for btn_select in btn_sel_list:
+                    if btn_select.is_collide_mouse(pygame.mouse.get_pos()):
+                        btn_select.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                    else:
+                        btn_select.unhover()
+
+            if Pause == 3:
+                if btn_close.is_collide_mouse(pygame.mouse.get_pos()):
+                    btn_close.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
+                else:
+                    btn_close.unhover()
                 
             if big_card != None:
                 pos_check = (
