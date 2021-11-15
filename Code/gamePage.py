@@ -702,7 +702,7 @@ def gameBoard(name_user, act_user,result_player_list):
                                     Pause = 5
                     elif freeze == 1:
                         if btn_Back.rect.collidepoint(pygame.mouse.get_pos()):
-                            return 'menu'
+                            return 'menu', []
                             freeze = 0
                         if btn_Resume.rect.collidepoint(pygame.mouse.get_pos()):
                             freeze = 0
