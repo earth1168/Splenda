@@ -49,7 +49,7 @@ class Player():
         #     "black": 0
         # }  
         self.cards = {
-            "white": Token((520, 130), (50, 70), 'Image\Card\yellowBG.png', "white", 0),
+            "white": Token((520, 130), (50, 70), 'Image\Card\whiteBG.png', "white", 0),
             "blue": Token((600, 130), (50, 70), 'Image\Card\\blueBG.png', "blue", 0),
             "green": Token((680, 130), (50, 70), 'Image\Card\greenBG.png', "green", 0),
             "red": Token((760, 130), (50, 70), 'Image\Card\\redBG.png', "red", 0),

@@ -21,7 +21,7 @@ name_user = ['testB01','testB02']
 act_user = [0, 1]
 result_player_list = []
 
-# read cards' data from csv file
+# read card data from csv file
 def read_card_data(data_path, card_list):
     with open(data_path, mode='r') as data_file:
         data_reader = csv.DictReader(data_file, delimiter=',')
@@ -31,6 +31,7 @@ def read_card_data(data_path, card_list):
                 card.requirements[colors] = int(row[colors])
             card_list[card.level-1].append(card)
 
+# read noble card data from csv file 
 def read_noble_data(data_path, noble_list):
     with open(data_path, mode='r') as data_file:
         data_reader = csv.DictReader(data_file, delimiter=',')
@@ -40,6 +41,7 @@ def read_noble_data(data_path, noble_list):
                 noble.requirements[colors] = int(row[colors])
             noble_list.append(noble)
 
+# Create list of Player object from 
 def getPlayerData(name_user, act_user):
     allplayer = 0
     name_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",20)
@@ -76,7 +78,7 @@ def getPlayerData(name_user, act_user):
         playerName.rect = playerName.image.get_rect(bottomleft = (10, 177+(177*i)))
         player_name.append(playerName)               
         # player score sprite
-        playerScore = pygame.sprite.DirtySprite()
+        playerScore = pygame.sprite.DirtySprite()        
         playerScore.image = score_font.render(f'{player.score}','AA','White')
         playerScore.rect = playerScore.image.get_rect(bottomleft = (30, 50+(177*i)))
         player_score.append(playerScore)
@@ -107,7 +109,7 @@ def place_cards(card_list: List[List[CardDirty]], allsprites, order: List[List[i
     for i in range(3):
         for card_counter[i] in range(4):
             card = card_list[i][order[i][card_counter[i]]]  
-            card.reposition(751+132*card_counter[i], 262+((2-i)*177))    
+            card.reposition(751+132*card_counter[i], 262+((2-i)*177))
             allsprites.add(card)
     return card_counter
 
@@ -357,7 +359,7 @@ def gameBoard(name_user, act_user,result_player_list):
         allsprites.add(score_spr)
 
     # create buttons
-    btn_cancel = ButtonDirty((474, 66), (100, 50), 'cancel', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
+    btn_cancel = ButtonDirty((494, 66), (100, 50), 'cancel', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
     btn_confirm = ButtonDirty((614, 66), (100, 50), 'confirm', 20, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font\Roboto\Roboto-Regular.ttf')
     btn_cancel.visible = btn_confirm.visible = 0
     allsprites.add(btn_cancel, btn_confirm)  
@@ -371,8 +373,8 @@ def gameBoard(name_user, act_user,result_player_list):
 
     select_popup = pygame.sprite.DirtySprite()
     select_popup.image = pygame.image.load('Image\Card\selectCoin.png').convert_alpha()
-    select_popup.image = pygame.transform.smoothscale(select_popup.image, (290, 700))
-    select_popup.rect = select_popup.image.get_rect(topleft = (400, 10))
+    select_popup.image = pygame.transform.smoothscale(select_popup.image, (265, 700))
+    select_popup.rect = select_popup.image.get_rect(topleft = (420, 10))
     select_popup.visible = 0
     allsprites.add(select_popup)
     allsprites.change_layer(select_popup, 1)
@@ -608,6 +610,7 @@ def gameBoard(name_user, act_user,result_player_list):
                                     print(f'can buy c{big_card.selected_card.card_id}')
                                     paid_tokens = pay_tokens(big_card.selected_card, player_list[turn])
                                     player_score[turn].image = score_font.render(f'{player_list[turn].score}','AA','White')
+                                    player_score[turn].rect = player_score[turn].image.get_rect(bottomleft = player_score[turn].rect.bottomleft)
                                     player_score[turn].dirty = 1
                                     ####################################################################Change player to player_list[turn]
                                     # get new card from card pile if bought card is not held
@@ -620,6 +623,10 @@ def gameBoard(name_user, act_user,result_player_list):
                                             token.qty += paid_tokens[token.colors]
                                             token.update_text(f'{token.qty}')                                    
                                             token.visible = 1
+                                    gold_token = allsprites.sprites()[1]
+                                    gold_token.qty += paid_tokens['gold']
+                                    gold_token.update_text(f'{gold_token.qty}')
+                                    gold_token.out_of_stock()
                                     # remove card from player's hold card list, if any
                                     if big_card.selected_card in player_list[turn].hold_cards:
                                         player_list[turn].hold_cards.remove(big_card.selected_card)
@@ -657,7 +664,8 @@ def gameBoard(name_user, act_user,result_player_list):
                                 # btn_sel_list[idx].visible = 1
                                 if btn_sel_list[idx].is_collide_mouse(event.pos):
                                     take_noble(noble, player_list[turn], btn_sel_list)
-                                    player_score[turn].image = score_font.render(f'{player_list[turn].score}','AA','White')
+                                    player_score[turn].image = score_font.render(f'{player_list[turn].score}','AA','White')                                    
+                                    player_score[turn].rect = player_score[turn].image.get_rect(bottomleft = player_score[turn].rect.bottomleft)
                                     player_score[turn].dirty = 1
                                     End = endgame(turn,player_list,End)
                                     turn,count_turn = endturn(turn,count_turn,allplayer)
