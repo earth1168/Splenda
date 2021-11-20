@@ -3,12 +3,30 @@ from typing import Tuple
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty
 
+'''
+    BigCard class
+    An object for display a bigger picture of a card that selected by player.
+    Player can buy or hold a card if it's not held yet.
+    Inherit from DirtySprite class.
+
+    Arguments:
+        card            -- CardDirty object that selected by player
+        position        -- Position of this object 
+        is_hold         -- Boolean that tell if this card is held
+
+    Attributes:  
+        selected_card   -- CardDirty object that selected by player
+        is_hold         -- Boolean that tell if this card is held
+        btn_close       -- Button for closing this object
+        btn_buy         -- Button for buying a selected card
+        btn_hold        -- Button for holding a selected card
+'''
 class BigCard(pygame.sprite.DirtySprite):
     def __init__(self, card: CardDirty, position: Tuple[int, int], is_hold: bool = False):
         super().__init__()
         self.selected_card = card
         self.is_hold = is_hold
-        self._layer = 4        
+        self._layer = 4
         self.image = pygame.Surface((card.size[0]*3+100, card.size[1]*3+100), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = position)
 
@@ -27,6 +45,8 @@ class BigCard(pygame.sprite.DirtySprite):
         if not is_hold:
             self.image.blit(self.btn_hold.image, self.btn_hold.rect)
 
+     
+    # Update buttons' image when their image is changed.    
     def update_button(self):
         self.image.blit(self.btn_close.image, self.btn_close.rect)
         self.image.blit(self.btn_buy.image, self.btn_buy.rect)

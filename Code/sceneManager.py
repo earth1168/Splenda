@@ -1,16 +1,15 @@
 # Written by Walan 1057
-# This script handles scene management.
+# handles scene management.
 # Run code at this script.
 
 import pygame
 
-# import scene
 import choosecharacter
 import gamePage
 import result
 import MainMenu
 import RuleDirtyButton
-import SettingDirtyButton2
+import Setting
 
 # This class will call scene that should run next when current scene end.
 # variables:
@@ -57,7 +56,7 @@ class GameState():
     def setting(self):
         pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
         pygame.mixer.music.play(-1)
-        self.scene, self.isFullscreen, self.volume   = SettingDirtyButton2.setting(screen, FPS, res, self.isFullscreen, self.volume)
+        self.scene, self.isFullscreen, self.volume   = Setting.setting(screen, FPS, res, self.isFullscreen, self.volume)
 
     def result(self):
         pygame.mixer.music.load("Music\Dreams of Glory.wav")
@@ -88,16 +87,10 @@ class GameState():
 pygame.init()
 game_state = GameState()
 FPS = 25
-#Music
 
 # game resolution (width, height)
 res = (1280, 720)
 screen = pygame.display.set_mode(res)
-
-# In-game variables
-# I don't know if this is appropiate or not
-# contain character ID that selected by players
-chr_list = []
 
 while True:
     game_state.scene_manager()

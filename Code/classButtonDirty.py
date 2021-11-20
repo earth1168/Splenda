@@ -1,24 +1,21 @@
-# Written by Walan 1057
-# This script contains 1 class:
-#   - Button
-
 from typing import Optional, Tuple, Union
 import pygame
 
-# Button class:
-# create button object with customizable background, size, and text
-# inherit from Sprite class in pygame
-#  attributes:
-#   - position: tuple(x, y) -- position of the button
-#   - btn_size: tuple(height, width) -- size of the button
-#   - text: text -- text on the button
-#   - t_size: int -- size of text
-#   - bg_path: text -- path of button's background image 
-#       default - transparent background
-#   - t_colors: text or tuple(r, g, b) -- text's color
-#       default - white color
-#   - t_font: text -- text's font
-#       default: pygame default font
+'''
+    Button class
+    An object for button with customizable background, size, and text
+    Inherit from DirtySprite class.
+
+    Attributes:
+        position    -- Position of the button
+        btn_size    -- Size of the button
+        text        -- Text on the button
+        t_size      -- Size of text
+        bg_path     -- Path of button's background image 
+        t_colors    -- Text's color
+        t_font      -- Path of text's font
+'''
+
 class ButtonDirty(pygame.sprite.DirtySprite):
     def __init__(self, 
                 position: Tuple[int, int], 
@@ -128,11 +125,3 @@ class ButtonDirty(pygame.sprite.DirtySprite):
     # is mouse collide with the button?
     def is_collide_mouse(self, mouse):
         return self.rect.collidepoint(mouse)
-
-    # update button
-    # def update(self):
-    #     # if self.to_draw:
-    #     # self.draw_button()
-    #     # self.to_draw = False
-    #     # self.dirty = 1
-    #     pass

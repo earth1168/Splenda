@@ -25,14 +25,6 @@ class Player():
         self.score = 0
         self.card_qty = 0
         self.hold_cards = []
-        # self.tokens = {
-        #     "white": 0,
-        #     "blue": 0,
-        #     "green": 0,
-        #     "red": 0,
-        #     "black": 0,
-        #     "gold": 0
-        # }
         self.tokens = {
             "white": Token((520, 60), (50, 50), 'Image\Coin\whiteCoin-01.png', "white", 0),
             "blue": Token((600, 60), (50, 50), 'Image\Coin\\blueCoin-01.png', "blue", 0),
@@ -40,14 +32,7 @@ class Player():
             "red": Token((760, 60), (50, 50), 'Image\Coin\\redCoin-01.png', "red", 0),
             "black": Token((840, 60), (50, 50), 'Image\Coin\\blackCoin-01.png', "black", 0),
             "gold": Token((440, 60), (50, 50), 'Image\Coin\goldCoin-01.png', "gold", 0)
-        }
-        # self.cards = {
-        #     "white": 0,
-        #     "blue": 0,
-        #     "green": 0,
-        #     "red": 0,
-        #     "black": 0
-        # }  
+        }  
         self.cards = {
             "white": Token((520, 130), (50, 70), 'Image\Card\whiteBG.png', "white", 0),
             "blue": Token((600, 130), (50, 70), 'Image\Card\\blueBG.png', "blue", 0),

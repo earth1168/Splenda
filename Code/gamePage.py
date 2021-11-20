@@ -42,7 +42,8 @@ def read_noble_data(data_path, noble_list):
             noble_list.append(noble)
 
 # Create list of Player object from 
-def getPlayerData(name_user, act_user):
+def getPlayerData(name_user: List[int], 
+                  act_user: List[int]):
     allplayer = 0
     name_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",20)
     score_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",30)
@@ -513,9 +514,10 @@ def gameBoard(name_user, act_user,result_player_list):
                                     break
                             # reduce quantity of selected token when click on it
                             for i, sel_token in enumerate(allsprites.get_sprites_from_layer(2)[5:10], start=5):
-                                if not token.visible:
+                                if not sel_token.visible:
                                     continue
-                                if sel_token.is_collide_mouse(event.pos) and sel_token.qty > 0:
+                                print(sel_token.colors)
+                                if sel_token.is_collide_mouse(event.pos):
                                     print(f'hit showed {sel_token.colors}')
                                     sel_qty, can_select = get_token_back(allsprites.get_sprites_from_layer(2)[i-5], sel_token, sel_qty, can_select)
                                     if sel_qty == 0:
@@ -547,7 +549,7 @@ def gameBoard(name_user, act_user,result_player_list):
                                         print('return tokens')
                                         msg_box.visible = 1
                                         Pause = 4
-                                    if Pause == 1:
+                                    else:
                                         available_idx = check_noble(noble_list, noble_order, player_list[turn])
                                         if not available_idx:  
                                             turn,count_turn = endturn(turn,count_turn,allplayer)                                            
@@ -580,7 +582,7 @@ def gameBoard(name_user, act_user,result_player_list):
                                         hold_card(big_card.selected_card, player_list[turn], allsprites.sprites()[1])
                                         player_list[turn].cards['hold'].qty = len(player_list[turn].hold_cards)
                                         player_list[turn].cards['hold'].update_text(f'{player_list[turn].cards["hold"].qty}')
-                                        player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()
+                                        player_list[turn].cards['hold'].visible = player_list[turn].is_hold_card()                                        
                                         ####################################################################Change player to player_list[turn]
                                         new_card = get_new_card(big_card.selected_card, card_list, card_counter, random_order)
                                         update_card_qty(card_counter, card_list, card_qty_list, allsprites)
@@ -588,21 +590,26 @@ def gameBoard(name_user, act_user,result_player_list):
                                         if new_card != None:
                                             allsprites.add(new_card)
                                         #####################################################
-                                        available_idx = check_noble(noble_list, noble_order, player_list[turn])
-                                        if not available_idx:  
-                                            turn,count_turn = endturn(turn,count_turn,allplayer)
+                                        if check_player_token(player_list[turn]):
+                                            print('return tokens')
+                                            msg_box.visible = 1
+                                            Pause = 4
+                                        else:
+                                            available_idx = check_noble(noble_list, noble_order, player_list[turn])
+                                            if not available_idx:  
+                                                turn,count_turn = endturn(turn,count_turn,allplayer)
+                                                turn_frame.rect.topleft = (0, 10+177*turn)
+                                                msg_box.rect.bottomleft = (95, 160+177*turn)
+                                                turn_frame.dirty = 1 
+                                                Pause = 0
+                                            else:
+                                                for idx in available_idx:
+                                                    btn_sel_list[idx].visible = 1
+                                                Pause = 5
+                                            #################################################################################################
                                             turn_frame.rect.topleft = (0, 10+177*turn)
                                             msg_box.rect.bottomleft = (95, 160+177*turn)
-                                            turn_frame.dirty = 1 
-                                            Pause = 0  
-                                        else:
-                                            for idx in available_idx:
-                                                btn_sel_list[idx].visible = 1
-                                            Pause = 5
-                                        #################################################################################################
-                                        turn_frame.rect.topleft = (0, 10+177*turn)
-                                        msg_box.rect.bottomleft = (95, 160+177*turn)
-                                        turn_frame.dirty = 1                                    
+                                            turn_frame.dirty = 1                                    
                             # buy a card
                             if big_card.btn_buy.is_collide_mouse(pos_check):                                
                                 # check if player can buy a card
