@@ -1,33 +1,37 @@
 from typing import Optional, Tuple, Union
 import pygame
-
 '''
-    Button class
-    An object for button with customizable background, size, and text
+    ButtonDirty class
+    An object for button with customizable background, size, and text.
     Inherit from DirtySprite class.
 
+    Argument:
+      * position    -- Position of the button
+      * size        -- Size of the button
+      * text        -- Text on the button
+      * t_size      -- Size of text
+      * bg_path     -- Path of button image 
+      * t_colors    -- Text's color
+      * t_font      -- Path of text's font
+    * -> that argument is also an attribute.
+
     Attributes:
-        position    -- Position of the button
-        btn_size    -- Size of the button
-        text        -- Text on the button
-        t_size      -- Size of text
-        bg_path     -- Path of button's background image 
-        t_colors    -- Text's color
-        t_font      -- Path of text's font
+        bg_hover_path   -- Path of button image when the mouse is hovering on this button
+        is_hover        -- Boolean that tell if the mouse is hovering on this button
 '''
 
 class ButtonDirty(pygame.sprite.DirtySprite):
     def __init__(self, 
                 position: Tuple[int, int], 
-                btn_size: Tuple[int, int],
+                size: Tuple[int, int],
                 text: str,
                 t_size: int,
-                bg_path: str='',
-                t_colors: Union[str, Tuple[int, int, int]]='',
+                bg_path: str = '',
+                t_colors: Union[str, Tuple[int, int, int]] = '',
                 t_font: Optional[str] = None):
         super().__init__()
         self.position = position
-        self.size = btn_size
+        self.size = size
         self.text = text
         self.t_size = t_size
         self.bg_path = bg_path        
@@ -40,13 +44,10 @@ class ButtonDirty(pygame.sprite.DirtySprite):
         self._layer = 0
         self.bg_hover_path = ''
         self.is_hover = False
-        # Create surface to draw button on
-        self.image = pygame.Surface(btn_size, pygame.SRCALPHA)
-        self.rect = self.image.get_rect(center = position)
 
         self.draw_button()
 
-    # draw button
+    # Draw button on this object's surface
     def draw_button(self):
         self.font = pygame.font.Font(self.font, self.t_size)
         # Create surface to draw button on
@@ -55,23 +56,20 @@ class ButtonDirty(pygame.sprite.DirtySprite):
         # Text on the button
         self.t_render = self.font.render(self.text, True, self.t_colors)
         self.t_rect = self.t_render.get_rect(center = self.image.get_rect().center)
-        # if specify an image, then use image as button's background
-        # if not specify an image, then background is transparent
+        # if specify an image, then use image as button image
+        # if not specify an image, then button image is transparent
         if self.bg_path != '':
             self.bg = pygame.image.load(self.bg_path).convert_alpha()
             self.bg = pygame.transform.smoothscale(self.bg, self.size)
-            self.bg_rect = self.bg.get_rect(center = self.image.get_rect().center)
-            # Draw button background on the surface
-            self.image.blit(self.bg, self.bg_rect)
-        # Draw text on the surface        
-        self.image.blit(self.t_render, self.t_rect)
+            self.bg_rect = self.bg.get_rect(center = self.image.get_rect().center)            
+            self.image.blit(self.bg, self.bg_rect) # Draw button image on the surface                
+        self.image.blit(self.t_render, self.t_rect) # Draw text on the surface
 
-    # When mouse is hovering on button. change text's color and/or button background image
-    # only update in the first frame that mouse hover on the button
-    #   - colors_new: text | tuple(r, g, b) -- text's color when hovering
-    #       default: text's color is not changed
-    #   - bg_new: text --  path of button's background image when hovering
-    #       default: button's background image is not changed
+    # When mouse is hovering on button. change text's color and/or button image
+    # Only update in the first frame that mouse hover on the button
+    # Argument:
+    #   colors_new    -- text's color when the mouse is hovering on this button
+    #   bg_new        -- path of button image when the mouse is hovering onthis button
     def hover(self,
                 colors_new: Union[str, Tuple[int, int, int]]='',
                 bg_new: str=''):
@@ -85,12 +83,11 @@ class ButtonDirty(pygame.sprite.DirtySprite):
             if colors_new != '':
                 self.t_hover_render = self.font.render(self.text, True, colors_new)
                 self.image.blit(self.t_hover_render, self.t_rect)
-            self.is_hover = True
-            # set dirty to 1. tell program to update image
-            self.dirty = 1
+            self.is_hover = True            
+            self.dirty = 1 # update button image
 
-    # when mouse is not hovering on the button. change back to normal
-    # only update in the first frame that mouse not hover on the button
+    # When mouse is not hovering on the button. change back to normal
+    # Only update in the first frame that mouse doesn't hover on the button
     def unhover(self):
         if self.is_hover:
             self.image.blit(self.bg, self.bg_rect)
@@ -98,7 +95,9 @@ class ButtonDirty(pygame.sprite.DirtySprite):
             self.is_hover = False
             self.dirty = 1
 
-    # change the text on the button
+    # Change the text on the button
+    # Argument:
+    #   text_new    -- new button text
     def update_text(self, text_new):
         self.text = text_new
         self.t_render = self.font.render(self.text, True, self.t_colors)
@@ -106,22 +105,16 @@ class ButtonDirty(pygame.sprite.DirtySprite):
         self.image.blit(self.t_render, self.t_rect)
         self.dirty = 1
 
-    # change position of button
-    #   - pos_new: x, y -- new position to put button on
+    # Change position of button
+    # Argument:
+    #   x -- new position on x axis
+    #   y -- new position on y axis
     def reposition(self, x: int, y: int):
         self.position = (x, y)
         self.rect.center = self.position
 
-    # chage size of button
-    #   - size_new: tuple(width, height) -- new button's size 
+    # Chage size of button
+    # Argument:
+    #   - size_new  -- new button size 
     def resize(self, size_new: Tuple[int, int]):
         self.size = size_new
-
-    # change size of button's text
-    #   - t_size_new: int -- new text's size
-    def resize_text(self, t_size_new: int):
-        self.t_size = t_size_new
-
-    # is mouse collide with the button?
-    def is_collide_mouse(self, mouse):
-        return self.rect.collidepoint(mouse)

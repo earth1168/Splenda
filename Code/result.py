@@ -16,9 +16,6 @@ player4 = Player(0, 5, 'testB0i4saa')
 result_player_list = [player1,player2]
 
 def result(screen,result_player_list):
-    print("In result")
-    for player in result_player_list:
-        print(f'{player.name}: {player.score}')
     char = []
     char_scale = [(200, 242), (200, 237), (200, 238), (180, 238), (197, 242), (185, 238)]
     #Text setting
@@ -80,23 +77,14 @@ def result(screen,result_player_list):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                print(event.pos)
+                if event.button == 1 :
+                    if b_main.rect.collidepoint(pygame.mouse.get_pos()) :
+                        return 'menu'
             if event.type == pygame.MOUSEMOTION:
-                if b_main.is_collide_mouse(event.pos):
+                if b_main.rect.collidepoint(event.pos):
                     b_main.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
                 else:
                     b_main.unhover()
-
-
-        mouse_pos = pygame.mouse.get_pos()
-        if b_main.rect.collidepoint(mouse_pos):
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_presses = pygame.mouse.get_pressed()
-                if mouse_presses[0]:
-                    return 'menu'
-        else:
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         rect = button.draw(screen)
         pygame.display.update(rect)

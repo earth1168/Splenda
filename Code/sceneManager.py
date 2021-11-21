@@ -10,7 +10,7 @@ import result
 import MainMenu
 import Rule
 import Setting
-
+pygame.init()
 # This class will call scene that should run next when current scene end.
 # variables:
 #   self.scene -- tell what scene that running now.
@@ -19,6 +19,11 @@ class GameState():
     #Frist open setup
     # Screen Setup
     isFullscreen = False
+    #Set name of screen caption
+    pygame.display.set_caption("SPLENDA")
+    #Set game icon of screen caption
+    icon = pygame.image.load('Character/splenda.png')
+    pygame.display.set_icon(icon)
     # music volume setup
     volume = 0.5
     pygame.mixer.music.set_volume(volume)
@@ -31,7 +36,6 @@ class GameState():
         self.result_player_list = []
 
     def menu(self):
-        # self.scene = menuDummy.menu_screen(screen, res, FPS)
         pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
         pygame.mixer.music.play(-1)
         self.name_user = []
@@ -61,7 +65,6 @@ class GameState():
     def result(self):
         pygame.mixer.music.load("Music\Dreams of Glory.wav")
         pygame.mixer.music.play(-1)
-        print("In SM result")
         self.scene = result.result(screen,self.result_player_list)
     
     def scene_manager(self):
@@ -88,8 +91,7 @@ pygame.init()
 game_state = GameState()
 FPS = 25
 
-# game resolution (width, height)
-res = (1280, 720)
+res = (1280, 720) # game resolution (width, height)
 screen = pygame.display.set_mode(res)
 
 while True:

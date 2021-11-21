@@ -50,7 +50,6 @@ def setting(screen, FPS, res, isFullscreen, volume) :
     # button for going back to mainmenu
     Back = ButtonDirty((1180,640), (130, 50), 'Menu', 30, 'Image\Button\ButtonNewUnhover.png', 'black', 'Font/Roboto/Roboto-Regular.ttf')
     button_group.add(Mode,Back)
-    Bhover = [0,0]
     button_group.clear(screen, BACKGROUND)
 
     #Music slider ####################################################################################################
@@ -72,7 +71,6 @@ def setting(screen, FPS, res, isFullscreen, volume) :
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 :
-                    print(event.pos)
                     if Mode.rect.collidepoint(pygame.mouse.get_pos()):
                         isFullscreen = not isFullscreen
                         # change text on the button
@@ -100,23 +98,13 @@ def setting(screen, FPS, res, isFullscreen, volume) :
 
         if Mode.rect.collidepoint(pygame.mouse.get_pos()):
             Mode.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
-            Bhover[0] = 1
         else : 
             Mode.unhover()
-            Bhover[0] = 0
         
         if Back.rect.collidepoint(pygame.mouse.get_pos()):
             Back.hover((153,0,0), 'Image\Button\ButtonNewhover.png')
-            Bhover[1] = 1
         else : 
             Back.unhover()
-            Bhover[1] = 0
-        
-        #if any button are hover, mouse cursor will turn to hand 
-        if 1 in Bhover :
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-        else :
-            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
         #FPS of the game
         clock.tick(FPS)

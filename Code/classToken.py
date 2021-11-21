@@ -1,5 +1,19 @@
-import pygame
 from classButtonDirty import ButtonDirty
+
+'''
+    Token class:
+    An object for tokens use in the game.
+    Inherit from ButtonDirty class.
+
+    Argument:
+      * position  -- Position of the button
+      * size      -- Size of the button
+      * img_path  -- Path of button image
+      * colors    -- Token's color
+      * qty       -- Quantity of this token
+      * t_colors  -- Text's color
+    * -> that argument is also an attribute.
+'''
 
 class Token(ButtonDirty):
     def __init__(self, position, size, img_path, colors, qty, t_colors='black'):
@@ -8,8 +22,8 @@ class Token(ButtonDirty):
         self.qty = qty
         self._layer = 2
 
-    # not draw the token when there is no token
-    def out_of_stock(self):
+    # Set this token's visibility depend on its quantity
+    def show_token(self):
         if self.qty == 0:
             self.visible = 0
         else:

@@ -1,24 +1,18 @@
-# Written by Walan 1057
-# This script contains 1 class:
-#   - Button
-
-from typing import Optional, Tuple, Union
 import pygame
+from typing import Optional, Tuple, Union
 
-# Button class:
-# create button object with customizable background, size, and text
-# inherit from Sprite class in pygame
-#  attributes:
-#   - position: tuple(x, y) -- position of the button
-#   - btn_size: tuple(height, width) -- size of the button
-#   - text: text -- text on the button
-#   - t_size: int -- size of text
-#   - bg_path: text -- path of button's background image 
-#       default - transparent background
-#   - colors: text or tuple(r, g, b) -- text's color
-#       default - white color
-#   - t_font: text -- text's font
-#       default: pygame default font
+'''
+    TButton class
+    An object for using text as button.
+
+    Argument:
+      * position    -- Position of the button
+      * text        -- Text on the button
+      * t_size      -- Size of text
+      * colors    -- Text's color
+      * t_font      -- Path of text's font
+
+'''
 class TButton(pygame.sprite.Sprite):
     def __init__(self, 
                 position: Tuple[int, int], 
@@ -36,9 +30,10 @@ class TButton(pygame.sprite.Sprite):
         else:
             self.colors = colors
         self.font = t_font
-        # Create surface to draw button on
         font = pygame.font.Font(t_font, t_size)
+        # Create surface to draw button on
         word_surface = font.render(text, True, colors).convert_alpha()
+        # Get size of all the text from the surface
         self.size = word_surface.get_size()
         self.image = pygame.Surface(word_surface.get_size(), pygame.SRCALPHA)
         self.rect = self.image.get_rect(topleft = position)
@@ -55,28 +50,13 @@ class TButton(pygame.sprite.Sprite):
         # Draw text on the surface        
         self.image.blit(text, t_rect)
 
-    # When mouse is hovering on button. change text's color and/or button background image
+    # When mouse is hovering on button. change text's color
     #   - colors_new: text | tuple(r, g, b) -- text's color when hovering
     #       default: text's color is not changed
-    #   - bg_new: text --  path of button's background image when hovering
-    #       default: button's background image is not changed
     def hover(self,
                 colors_new: Union[str, Tuple[int, int, int]]=''):
         if colors_new != '':
             self.colors = colors_new
-
-    # change position of button
-    #   - pos_new: tuple(x, y) -- new position to put button on
-    def reposition(self, pos_new: Tuple[int, int]):
-        self.position = pos_new
-
-    # change size of button's text
-    #   - t_size_new: int -- new text's size
-    def resize_text(self, t_size_new: int):
-        self.t_size = t_size_new
-        font = pygame.font.Font(self.font, t_size_new)
-        word_surface = font.render(self.text, True, self.colors).convert_alpha()
-        self.size = word_surface.get_size()
 
     # update button
     def update(self):

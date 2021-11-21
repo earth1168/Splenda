@@ -1,79 +1,22 @@
-# Written by Walan 1057
-# This script contains 2 classes:
-#   - bonusCard
-#   - Card
-
 from typing import Dict, List, Tuple
-import pygame
 from classToken import Token
-from classButtonDirty import ButtonDirty
+from classNobleCardDirty import NobleCardDirty
 
-# BonusCard class:
-# create bonus card object
-# inherit from Button class
-#  attributes:
-#   - card_id: int -- id of bonus card
-#   - point: int -- point of bonus card
-#   - card_size: Tuple[width, height] -- size of bonus card
-#   - img_path: text -- path of bonus card's image
-#   - status: test -- status of bonus card
-#                       - 'in_deck', 'on_board', 'taken'
-#   - player_id: int -- id of player who take this bonus card
-#   - requirements: Dict[color name, int] -- number of card required to get this bonus card
-#   - position: Tuple[x, y] -- position of bonus card
-class BonusCardDirty(ButtonDirty):
-    def __init__(self, 
-                card_id: int, 
-                point: int, 
-                card_size: Tuple[int, int],
-                img_path: str):
-        super().__init__((0, 0), card_size, '', 30, img_path)       
-        self.card_id = card_id
-        self.point = point
-        self.image_path = img_path
-        self.status = 'in_deck'
-        self.player_id = -1
-        self._layer = 1
-        self.requirements = {
-            "white": 0,
-            "blue": 0,
-            "green": 0,
-            "red": 0,
-            "black": 0
-        }
-
-    # set requirements of bonus card
-    def set_req(self, req_list: List[int]):
-        i = 0
-        for colors in self.requirements.keys():
-            self.requirements[colors] = req_list[i]
-            i+=1
-
-    # check if player can take this bonus card
-    def check_req(self, p_cards: Dict[str, Token]) -> bool:
-        is_enough = True
-        for colors in self.requirements.keys():
-            if p_cards[colors].qty < self.requirements[colors]:
-                is_enough = False
-            if not is_enough:
-                return is_enough
-        return is_enough
-
-# Card class:
-# create card object
-# inherit from BonusCard class
-#  attributes:
-#   - card_id: int -- id of card
-#   - point: int -- point of card
-#   - card_size: Tuple[width, height] -- size of card
-#   - img_path: text -- path of card's image
-#   - colors: text -- color of this card
-#   - status: test -- status of card
-#                       - 'in_deck', 'on_board', 'taken'
-#   - player_id: int -- id of player who take this card
-#   - requirements: Dict[color name, int] -- number of card required to get this card
-#   - position: Tuple[x, y] -- position of card
-class CardDirty(BonusCardDirty):
+""" 
+    CardDirty class:
+    An object for development cards use in the game.
+    inherit from NobleCardDirty class
+    
+    Argument:
+      * card_id     -- Card's ID
+      * point       -- Card's point
+      * card_size   -- Card's size
+      * img_path    -- Path of card image
+      * level       -- Card's level
+      * colors      -- Card's color
+    * -> that argument is also an attribute.
+# """
+class CardDirty(NobleCardDirty):
     def __init__(self, 
                 card_id: int, 
                 point: int, 
@@ -85,7 +28,12 @@ class CardDirty(BonusCardDirty):
         self.level = level
         self.colors = colors
 
-    # check if player can take this card
+    # Check if player can take this noble card
+    # Argument:
+    #   p_tokens     -- Dictionary of Token objects. Show number of earch color token that player has
+    #   p_cards     -- Dictionary of Token objects. Show number of earch color card that player has
+    # Return:
+    #   boolean value
     def check_req(self, p_tokens: Dict[str, Token], p_cards: Dict[str, Token]) -> bool:
         is_enough = True
         remain_gold = p_tokens['gold'].qty
@@ -101,8 +49,12 @@ class CardDirty(BonusCardDirty):
             is_enough = False
         return is_enough
 
-    # reduce tokens that are required in this card from player
-    # return: Dictionary of tokens that reduce from player
+    # Reduce tokens that are required in this card from player
+    # Argument:
+    #   p_tokens     -- Dictionary of Token objects. Show number of earch color token that player has
+    #   p_cards     -- Dictionary of Token objects. Show number of earch color card that player has
+    # Return: 
+    #   Dictionary of tokens that reduce from player
     def pay_tokens(self, p_tokens: Dict[str, Token], p_cards: Dict[str, Token]):
         paid_tokens = {
             "white": 0,
@@ -113,11 +65,9 @@ class CardDirty(BonusCardDirty):
             "gold": 0
         }
         for colors in self.requirements.keys():
-            # print(f'tokens: {p_tokens}')
             col_diff = self.requirements[colors] - p_cards[colors].qty
             if col_diff > 0:
                 p_tokens[colors].qty = p_tokens[colors].qty - col_diff
-                # paid_tokens.update({colors: col_diff})
                 paid_tokens[colors] = col_diff
                 if p_tokens[colors].qty < 0:
                     p_tokens['gold'].qty = p_tokens['gold'].qty + p_tokens[colors].qty
