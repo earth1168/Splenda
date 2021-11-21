@@ -8,7 +8,7 @@ import choosecharacter
 import gamePage
 import result
 import MainMenu
-import RuleDirtyButton
+import Rule
 import Setting
 
 # This class will call scene that should run next when current scene end.
@@ -51,7 +51,7 @@ class GameState():
     def rule_book(self):
         pygame.mixer.music.load("Music\Mystical  Loop #1.wav")
         pygame.mixer.music.play(-1)
-        self.scene = RuleDirtyButton.rulebook(screen, FPS)
+        self.scene = Rule.rulebook(screen, FPS)
 
     def setting(self):
         pygame.mixer.music.load("Music\Mystical  Loop #1.wav")

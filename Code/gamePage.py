@@ -2,7 +2,7 @@
 import pygame
 import csv
 import random
-import RuleDirtyButton 
+import RuleText
 from typing import List
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty, BonusCardDirty
@@ -394,7 +394,7 @@ def gameBoard(name_user, act_user,result_player_list):
     msg_box = pygame.sprite.DirtySprite()
     msg_box.image = pygame.image.load('Image\Card\\ballon.png').convert_alpha()
     msg_box.image = pygame.transform.smoothscale(msg_box.image, (325, 80))
-    RuleDirtyButton.text_block(msg_font, msg_text, 'Black', (25,15), 325, msg_box.image, 10)
+    RuleText.text_block(msg_font, msg_text, 'Black', (25,15), 325, msg_box.image, 10)
     msg_box.rect = msg_box.image.get_rect(bottomleft = (95, 160))
     msg_box.visible = 0
     allsprites.add(msg_box)
@@ -865,7 +865,7 @@ def gameBoard(name_user, act_user,result_player_list):
         if freeze == 2 :
             Page_surface = text_font_regular.render('Page '+str(page)+'/'+str(allpage),True,'Black')
             screen.blit(Page_surface,(25,640))
-            RuleDirtyButton.ruletext (page,text_font_bold,text_font_regular,screen)
+            RuleText.ruletext (page,text_font_bold,text_font_regular,screen)
         
         pygame.display.update(rects)
     # Done! Time to quit.
