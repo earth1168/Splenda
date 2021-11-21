@@ -1,14 +1,8 @@
-#Written by Pojnarin 62070501041
 import pygame
 import RuleText
 from sys import exit
 from classButtonDirty import ButtonDirty
 pygame.init()
-#Set variable for window size
-WIDTH, HEIGHT = 1280,720
-screen = pygame.display.set_mode((WIDTH,HEIGHT))
-#Set FPS of the game
-FPS = 25
 
 def rulebook(screen, FPS) :
     clock = pygame.time.Clock()
