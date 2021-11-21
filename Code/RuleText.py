@@ -34,71 +34,73 @@ def text_block(font, text, color, pos, block_width, screen, row_height) :
 
 #Contain body of text and return the information in the page number
 def Textpage (page) :
-    components = "7 \b green tokens\n" \
-        "7 \b white tokens\n" \
-        "7 \b blue tokens\n" \
-        "7 \b black tokens\n" \
-        "7 \b red tokens\n" \
-        "5 \b Gold tokens\n" \
+    components = "7 \b Emerald tokens (green)\n" \
+        "7 \b Diamond tokens (white)\n" \
+        "7 \b Sapphire tokens (blue)\n" \
+        "7 \b Onyx tokens(black)\n" \
+        "7 \b Ruby tokens (red)\n" \
+        "5 \b Gold Joker tokens (yellow)\n" \
         "90 Development cards\n" \
         "10 Noble tiles"
     
-    EndGame = "- \t When a player reaches 15 points," \
+    EndGame = "- \t When a player reaches 15 prestige points," \
         " complete the current round so that each player has played the same number of turns.\n" \
-        "- \t The player who then has the highest number of points is declared the winner.\n" \
+        "- \t The player who then has the highest number of prestige points is declared the winner (don't forget to count your nobles).\n" \
         "- \t In case of a tie, the player who has purchased the fewest development cards wins."
     
     Game2Player = "- \t Remove 3 tokens of each gem color \n \t (there should be only 4 of each remaining).\n" \
+        "- \t Don't touch the gold.\n" \
         "- \t Reveal 3 noble tiles."
 
     Game3Player = "- \t Remove 2 tokens of each gem color \n \t (there should be only 5 of each remaining).\n" \
+        "- \t Don't touch the gold.\n" \
         "- \t Reveal 4 noble tiles."
 
     Setup1 = "- \t Development card decks are place in a column in the middle of the screen in increasing order from bottom to top.\n" \
         "- \t 4 cards from each development card deck level are reveal next to the decks at right.\n" \
         "- \t the noble tiles are reveal as many of them as there are players plus one.\n"
     
-    Setup2 = "- \t The tokens are place in 6 distinct piles next to the decks at left."
+    Setup2 = "- \t The tokens are place in 6 distinct piles (sort them by color) next to the decks at left."
 
-    DevCard = "- \t To win points, the players must purchase development cards.\n" \
-        "- \t These cards are visible in the middle-right of the screen and may be purchased by all players during the game.\n" \
-        "- \t The developments in hold slot are the cards which the players reserve throughout the game.\n" \
-        "- \t Developments in hold slot may only be purchased by the players holding them."
+    DevCard = "- \t To win prestige points, the players must purchase development cards.\n" \
+        "- \t These cards are visible in the middle of the table and may be purchased by all players during the game.\n" \
+        "- \t The developments in hand are the cards which the players reserve throughout the game.\n" \
+        "- \t Developments in hand may only be purchased by the players holding them."
 
-    NobleCard = "- \t The noble tiles are visible in the top of the screen.\n" \
+    NobleCard = "- \t The noble tiles are visible in the middle of the table.\n" \
         "- \t At the end of their turn, a player automatically receives the visit from a noble if that player has the amount of bonuses (and only bonuses) required, and they get the corresponding tile.\n" \
         "- \t A player cannot refuse a visit from a noble.\n" \
-        "- \t Receiving a noble isn't considered to be an action. Each noble tile is worth 3 points, but players can only get a single one per turn."
+        "- \t Receiving a noble isn't considered to be an action. Each noble tile is worth 3 prestige points, but players can only get a single one per turn."
 
-    Gameplay1 = "The turn order is chosen from order when players choose character.\n" \
+    Gameplay1 = "The turn order is chosen randomly at the start.\n" \
         "On their turn, a player must choose to perform only one of the following four actions:\n" \
-        "\t - \t Take 3 tokens of different colors.\n" \
-        "\t - \t Take 2 tokens of the same color.\n" \
+        "\t - \t Take 3 gem tokens of different colors.\n" \
+        "\t - \t Take 2 gem tokens of the same color.\n" \
         "\t This action is only possible if there are at least 4 tokens of the chosen color left when the player takes them."
     
-    Gameplay2 = "\t - \t Reserve 1 development card and take 1 gold token.\n" \
-        "\t - \t Purchase 1 face-up development card from the middle-right of the screen or a previously reserved one."
+    Gameplay2 = "\t - \t Reserve 1 development card and take 1 gold token (joker).\n" \
+        "\t - \t Purchase 1 face-up development card from the middle of the table or a previously reserved one."
 
-    Selecttoken = "- \t A player can never have more than 10 tokens at the end of their turn (including golds).\n" \
+    Selecttoken = "- \t A player can never have more than 10 tokens at the end of their turn (including jokers).\n" \
         "- \t If this happens, they must return tokens until they only have 10 left.\n \n" \
         "Note : players may not take 2 tokens of the same color if there are less than 4 tokens available of that color."
 
-    Reserve1 = "- \t To reserve a card, a player simply needs to click 'hold' the development card from the middle-right of the screen.\n" \
-        "- \t The reserved cards are kept in hold slot and cannot be discarded.\n" \
+    Reserve1 = "- \t To reserve a card, a player simply needs to take a face-up development from the middle of the table or (if you're feeling lucky) draw the first card from one of the three decks (level 1; level 2 ; level 3) without showing it to the other players.\n" \
+        "- \t The reserved cards are kept in hand and cannot be discarded.\n" \
     
-    Reserve2 = "- \t Players may not have more than three reserved cards in hold slot, and the only way to get rid of a card is to buy it.\n" \
-        "- \t Reserving a card is also the only way to get a gold token.\n" \
+    Reserve2 = "- \t Players may not have more than three reserved cards in hand, and the only way to get rid of a card is to buy it.\n" \
+        "- \t Reserving a card is also the only way to get a gold token (joker).\n" \
         "- \t If there is no gold left, you can still reserve a card, but you won't get any gold."
 
     Buying1 = "- \t To purchase a card, a player must spend the number of tokens indicated on the card.\n"\
-        "- \t A gold token can replace any color.\n" \
-        "- \t The spent tokens are returned to the middle of the screen.\n" \
-        "- \t A player may purchase one of the face-up development cards in the middle-right of the screen or a card in their hold slot that was reserved on a previous turn.\n" \
+        "- \t A joker token can replace any color.\n" \
+        "- \t The spent tokens (including any jokers) are returned to the middle of the table.\n" \
+        "- \t A player may purchase one of the face-up development cards in the middle of the table or a card in his hand that was reserved on a previous turn.\n" \
 
-    Buying2 = "- \t Each player makes distinct columns with the acquired development cards by sorting them by color and their bonuses are visible.\n" \
-        "- \t The bonuses and points granted by each card must be visible to all at all times.\n" \
+    Buying2 = "- \t Each player makes distinct rows with the acquired development cards by sorting them by color, and staggering them vertically so that their bonuses and prestige point values are visible.\n" \
+        "- \t The bonuses and prestige points granted by each card must be visible to all at all times.\n" \
 
-    Buying3 =  "Note: when a development card from the middle-right of the screen is acquired or reserved, it must immediately be replaced by a card of the same level.\n" \
+    Buying3 =  "Note: when a development card from the middle of the table is acquired or reserved, it must immediately be replaced by a card of the same level.\n" \
     "\t At all times during the game, there must be 4 face-up cards of each level (unless the deck in question is empty, in which case the empty spaces also remain empty)."
 
     Bonus1 = "- \t The bonuses a player has from development cards acquired on previous turns provide discounts on the purchase of new cards.\n" \
@@ -111,7 +113,7 @@ def Textpage (page) :
         "- \t It is impossible to refuse the visit from a noble, which is not considered to be an action.\n" \
 
     Noble2 = "- \t If a player has enough bonuses to be visited by more than one noble at the end of their turn, that player chooses the noble to be received.\n" \
-        "- \t The tile obtained is placed to the player in question."
+        "- \t The tile obtained is placed face-up in front of the player in question."
 
     #return text for the page
     if page == 1 :
