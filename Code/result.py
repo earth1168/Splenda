@@ -5,9 +5,6 @@ pygame.init()
 
 WIDTH, HEIGHT = 1280, 720
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("SPLENDA")
-icon = pygame.image.load('Character/splenda.png')
-pygame.display.set_icon(icon)
 
 player1 = Player(0, 0, 't')
 player2 = Player(0, 2, '0123456789')

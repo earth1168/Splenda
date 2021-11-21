@@ -1,7 +1,21 @@
-#Written by Pojnarin 62070501041
-
-#Input with a paragraph of text and render it on screen
-def text_block(font, text, color, pos, block_width, screen, row_height) :
+from typing import Optional, Tuple, Union
+import pygame
+#Input with a paragraph of text and render it on screen within block size
+# Argument:
+#   font        -- pygame.font that will use to render text
+#   text        -- String of text
+#   color       -- color of text
+#   pos         -- start position of text
+#   block_width -- width of block that contain text in screen' surface
+#   screen      -- screen surface 
+#   row_height  -- space between row of text
+def text_block(font: pygame.font, 
+                text: str, 
+                color: Union[str, Tuple[int, int, int]], 
+                pos: Tuple[int, int], 
+                block_width: Tuple[int, int], 
+                screen: pygame.surface, 
+                row_height: int) :
     # 2D array where each row is a list of words
     words = [word.split(' ') for word in text.splitlines()]
     # The width of a space
@@ -33,7 +47,12 @@ def text_block(font, text, color, pos, block_width, screen, row_height) :
         y += word_height+row_height
 
 #Contain body of text and return the information in the page number
+# Argument:
+#   page      -- page number
+# Return
+#   str         -- string of body text corresponding to that page number
 def Textpage (page) :
+    #Body text
     components = "7 \b green tokens\n" \
         "7 \b white tokens\n" \
         "7 \b blue tokens\n" \
@@ -155,8 +174,13 @@ def Textpage (page) :
     if page == 20 :
         return EndGame
     
-#setup and render text
-def ruletext (page,text_font_bold,text_font_regular,screen) :
+#setup and render title and body text of that page
+# Argument:
+#   page      -- page number
+#   text_font_bold    -- pygame.font for bold text
+#   text_font_regular -- pygame.font for regular text
+#   screen    -- screen surface 
+def ruletext (page: int, text_font_bold: pygame.font, text_font_regular: pygame.font, screen: pygame.surface) :
     #Components Text render 
         if page == 1 :
             text_block(text_font_bold , "Components", 'Black', (530,150), 1030, screen, 10)

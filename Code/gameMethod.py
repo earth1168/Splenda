@@ -1,6 +1,6 @@
 import pygame
 import csv
-from typing import List
+from typing import List, Tuple
 from classButtonDirty import ButtonDirty
 from classCardDirty import CardDirty
 from classNobleCardDirty import NobleCardDirty
@@ -13,7 +13,7 @@ from classBigCard import BigCard
 #   data_path   -- path of card data csv file
 # Return:
 #   card_list   -- list of CardDirty objects that read from csv file 
-def read_card_data(data_path):
+def read_card_data(data_path: str):
     card_list = [[], [], []]
     with open(data_path, mode='r') as data_file:
         data_reader = csv.DictReader(data_file, delimiter=',')
@@ -29,7 +29,7 @@ def read_card_data(data_path):
 #   data_path   -- Path of noble card data csv file
 # Return:
 #   noble_list  -- list of NobleCardDirty objects that read from csv file 
-def read_noble_data(data_path):
+def read_noble_data(data_path: str):
     noble_list = []
     with open(data_path, mode='r') as data_file:
         data_reader = csv.DictReader(data_file, delimiter=',')
@@ -99,7 +99,7 @@ def getPlayerData(name_user: List[str],
 # Argument:
 #   allsprites  -- group of Sprite object
 #   allplaye    -- number of player in the game
-def get_tokens(allsprites, allplayer):
+def get_tokens(allsprites: pygame.sprite.LayeredDirty, allplayer: int):
     tok_col = ['white', 'blue', 'green', 'red', 'black']
     # token pile
     for i in range(5):
@@ -121,7 +121,7 @@ def get_tokens(allsprites, allplayer):
 #   order       -- list of card order for each level
 # Return:
 #   card_counter    -- list of card counter for each level
-def place_cards(card_list: List[List[CardDirty]], allsprites, order: List[List[int]]):
+def place_cards(card_list: List[List[CardDirty]], allsprites: pygame.sprite.LayeredDirty, order: List[List[int]]):
     card_counter = [0, 0, 0]
     for i in range(3):
         for card_counter[i] in range(4):
@@ -132,11 +132,12 @@ def place_cards(card_list: List[List[CardDirty]], allsprites, order: List[List[i
 
 # Set noble cards on game board
 # Argument:
-#   noble_list  -- list of CardDirty objects
+#   noble_list  -- list of NobleCardDirty objects
 #   allsprites  -- group of Sprite object
 #   order       -- list of card order
 #   btn_list    -- list of button use for select a noble card
-def place_nobles(noble_list: List[NobleCardDirty], allsprites, order: List[int], btn_list: List[ButtonDirty]):
+def place_nobles(noble_list: List[NobleCardDirty], allsprites: pygame.sprite.LayeredDirty, 
+                 order: List[int], btn_list: List[ButtonDirty]):
     for i, idx in enumerate(order):
         noble = noble_list[idx]
         noble.reposition(619+(132*i), 90)
@@ -149,7 +150,7 @@ def place_nobles(noble_list: List[NobleCardDirty], allsprites, order: List[int],
 # Argument:
 #   player_list -- list of Player objects
 #   allsprites  -- group of Sprite object
-def place_player_tokens(player_list, allsprites):
+def place_player_tokens(player_list: List[Player], allsprites: pygame.sprite.LayeredDirty):
     for i, player in enumerate(player_list):
         for token in player.tokens.values():
             player.repos_tokens(138, 50+(177*i))
@@ -159,7 +160,7 @@ def place_player_tokens(player_list, allsprites):
 # Argument:
 #   player_list -- list of Player objects
 #   allsprites  -- group of Sprite object
-def place_own_cards(player_list, allsprites):
+def place_own_cards(player_list: List[Player], allsprites: pygame.sprite.LayeredDirty):
     for i, player in enumerate(player_list):
         for card in player.cards.values():
             player.repos_cards(138, 120+(177*i))
@@ -198,7 +199,7 @@ def select_token(sel_token: Token, show_token: Token, sel_qty: int, can_select: 
 # Return:
 #   sel_qty     -- number of token that player has choosen
 #   can_select  -- boolean that tell if player can select token
-def get_token_back(token: Token, show_token: Token, sel_qty, can_select):
+def get_token_back(token: Token, show_token: Token, sel_qty: int, can_select: bool):
     token.qty += 1
     show_token.qty -= 1
     sel_qty -= 1
@@ -227,7 +228,7 @@ def cancel_token(token_list: List[Token], show_token_list: List[Token]):
 # Argument:
 #   token_list  -- list of token selected by player
 #   player      -- a Player object
-def take_tokens(token_list, player: Player):
+def take_tokens(token_list: List[Token], player: Player):
     for token in token_list:
         player.tokens[token.colors].qty += token.qty
         player.tokens[token.colors].update_text(f'{player.tokens[token.colors].qty}')
@@ -238,13 +239,14 @@ def take_tokens(token_list, player: Player):
 
 # Get a card from draw pile after buy or hold a card
 # Argument:
-#   card            -- CardDirty object 
-#   card_list       -- 
+#   card            -- development card that just be bought or held
+#   card_list       -- list of CardDirty objects
 #   card_counter    -- list of card counter for each level
-#   order           -- list of card order
+#   order           -- list of card order for each level
 # Return:
 #   new_card    -- new development card from deck or None if there is no card left
-def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], card_counter, order):
+def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], 
+                 card_counter: List[int], order: List[List[int]]):
     card_counter[card.level-1] += 1
     if card_counter[card.level-1] >= len(card_list[card.level-1]):
         return None
@@ -255,20 +257,34 @@ def get_new_card(card: CardDirty, card_list: List[List[CardDirty]], card_counter
         new_card.t_colors = 'black'  
         return new_card
 
-def update_card_qty(card_counter, card_list, card_qty_list, allsprites):
+# Update number of card left
+# Argument:
+#   card_counter    -- list of card counter for each level
+#   card_list       -- list of CardDirty objects
+#   card_qty_list   -- list of card quantity sprite
+#   card_level      -- level of card deck that has to update
+#   allsprites      -- group of Sprite object
+def update_card_qty(card_counter: List[int], 
+                    card_list: List[List[CardDirty]], 
+                    card_qty_list: List[int], card_level: int, 
+                    allsprites: pygame.sprite.LayeredDirty):
     Deck_font = pygame.font.Font("Font/Roboto/Roboto-Bold.ttf",20)
-    for i, c_list in enumerate(card_list):
-        remaining = len(c_list) - (card_counter[i]+1)
-        card_qty_list[i].image = Deck_font.render(f'{remaining}', True, 'white')
-        card_qty_list[i].dirty = 1
-        if remaining <= 0:
-            empty_card = pygame.sprite.DirtySprite()
-            empty_card.image = pygame.image.load('Image\Card\emptyCard.png').convert_alpha()
-            empty_card.image = pygame.transform.smoothscale (empty_card.image, (122, 167))
-            empty_card.rect = empty_card.image.get_rect(topleft = (558, 179+(177*(2-i))))
-            allsprites.add(empty_card)
+    remaining = len(card_list[card_level-1]) - (card_counter[card_level-1]+1)
+    card_qty_list[card_level-1].image = Deck_font.render(f'{remaining}', True, 'white')
+    card_qty_list[card_level-1].dirty = 1
+    if remaining <= 0:
+        empty_card = pygame.sprite.DirtySprite()
+        empty_card.image = pygame.image.load('Image\Card\emptyCard.png').convert_alpha()
+        empty_card.image = pygame.transform.smoothscale (empty_card.image, (122, 167))
+        empty_card.rect = empty_card.image.get_rect(topleft = (558, 179+(177*(3-card_level))))
+        allsprites.add(empty_card)
 
-# reduce player's token and add point to player
+# Reduce player's token and update player score
+# Argument:
+#   card    -- a card bought by player
+#   player  -- a Player object
+# Return:
+#   paid_token  -- dictionary of tokens that reduce from player
 def pay_tokens(card: CardDirty, player: Player):
     paid_tokens = card.pay_tokens(player.tokens, player.cards)
     player.score += card.point
@@ -281,7 +297,11 @@ def pay_tokens(card: CardDirty, player: Player):
     card.kill()
     return paid_tokens
 
-# add card to player's hold card list and give gold token to player
+# Add card to player's hold slot and give gold token to player
+# Argument:
+#   card        -- a card bought by player
+#   player      -- a Player object
+#   token_gold  -- gold token pile
 def hold_card(card: CardDirty, player: Player, token_gold: Token):
     player.hold_cards.append(card)
     if player.tokens['gold'].qty < 3 and token_gold.qty > 0:
@@ -293,13 +313,26 @@ def hold_card(card: CardDirty, player: Player, token_gold: Token):
         token_gold.show_token()
     card.kill()
 
+# Check if player has more than 10 tokens
+# Argument:
+#   player  -- a Player object
+# Return:
+#   boolean value
 def check_player_token(player: Player):
     total_token = 0
     for p_token in player.tokens.values():
         total_token += p_token.qty   
     return total_token > 10
 
-def return_token(token_list: List[Token], token_gold: Token, player: Player, m_pos):
+# Return a token from token that player has to token pile
+# Argument:
+#   token_list  -- token pile
+#   token_gold  -- gold token pile
+#   player      -- a Player object
+#   m_pos       -- mouse position
+# Return:
+#   total_token     -- number of token that player currently has
+def return_token(token_list: List[Token], token_gold: Token, player: Player, m_pos: Tuple[int, int]):
     total_token = 0
     for p_token in player.tokens.values():
         total_token += p_token.qty
@@ -320,7 +353,14 @@ def return_token(token_list: List[Token], token_gold: Token, player: Player, m_p
                 total_token -= 1
     return total_token
 
-def check_noble(noble_list, noble_order, player):
+# Check if player can take any noble card
+# Argument:
+#   noble_list  -- list of NobleCardDirty objects
+#   noble_order -- noble card order
+#   player      -- a Player object
+# Return:
+#   available_idx   -- index of noble card that player can take
+def check_noble(noble_list: List[NobleCardDirty], noble_order: List[int], player: Player):
     available_idx = []  
     for i in range(len(noble_order)):
         noble = noble_list[noble_order[i]]
@@ -328,21 +368,38 @@ def check_noble(noble_list, noble_order, player):
             available_idx.append(i)
     return available_idx
 
+# Take noble card and update player score
+# Argument:
+#   noble           -- the selected noble card
+#   player          -- a Player object
+#   btn_sel_list    -- list of button use for select a noble card
 def take_noble(noble: NobleCardDirty, player: Player, btn_sel_list: List[ButtonDirty]):
     player.score += noble.point
     noble.player_id = player.id 
     noble.visible = 0
     for i in range(len(btn_sel_list)):
         btn_sel_list[i].visible = 0
-
-#EndTurn #############################################################################################################   
-def endturn(turn,count_turn,allplayer) :
+ 
+# Change player turn to next player
+# Argument:
+#   turn      -- turn number indicate which player turn
+#   allplayer -- number of player in the game
+# Return:
+#   turn     -- turn number of next player
+def endturn(turn: int, allplayer: int) :
+    # change turn number within allplayer number
     turn = (turn+1)%allplayer
-    count_turn = count_turn + 1
-    return turn, count_turn
+    return turn
 
-#EndGame ############################################################################################################# 
-def endgame(turn,player_list,End) :
+# check the game if the condition of End game are met or not 
+# Argument:
+#   turn      -- turn number indicate which player turn
+#   player_list -- a list of player object
+#   End      -- variable indicate End game
+# Return:
+#   End     -- variable indicate if the game in End game when = 1 and not in End game when = 0
+def endgame(turn: int, player_list: List[Player], End: int) :
+    #if player score is >= 15 and the game is not in the End game then End = 1
     if End == 0 and player_list[turn].score >= 15:
         End = 1
     return End

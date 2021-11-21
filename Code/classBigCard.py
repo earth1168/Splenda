@@ -10,28 +10,27 @@ from classCardDirty import CardDirty
     Inherit from DirtySprite class.
 
     Argument:
-        card            -- CardDirty object that selected by player
+      * selected_card   -- CardDirty object that selected by player
         position        -- Position of this object 
       * is_hold         -- Boolean that tell if this card is held
     * -> that argument is also an attribute.
 
     Attributes:  
-        selected_card   -- CardDirty object that selected by player
         btn_close       -- Button for closing this object
         btn_buy         -- Button for buying a selected card
         btn_hold        -- Button for holding a selected card
 '''
 class BigCard(pygame.sprite.DirtySprite):
-    def __init__(self, card: CardDirty, position: Tuple[int, int], is_hold: bool = False):
+    def __init__(self, selected_card: CardDirty, position: Tuple[int, int], is_hold: bool = False):
         super().__init__()
-        self.selected_card = card
+        self.selected_card = selected_card
         self.is_hold = is_hold
         self._layer = 4
-        self.image = pygame.Surface((card.size[0]*3+100, card.size[1]*3+100), pygame.SRCALPHA)
+        self.image = pygame.Surface((selected_card.size[0]*3+100, selected_card.size[1]*3+100), pygame.SRCALPHA)
         self.rect = self.image.get_rect(center = position)
 
-        card_img = pygame.image.load(card.img_path).convert_alpha()
-        card_img = pygame.transform.smoothscale(card_img, (card.size[0]*3, card.size[1]*3))
+        card_img = pygame.image.load(selected_card.img_path).convert_alpha()
+        card_img = pygame.transform.smoothscale(card_img, (selected_card.size[0]*3, selected_card.size[1]*3))
         card_img_rect = card_img.get_rect(center = self.image.get_rect().center)
 
         self.btn_close = ButtonDirty(card_img_rect.topright, (75, 75), '', 0, 'Image\Button\CloseButton.png')
