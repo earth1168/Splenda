@@ -29,19 +29,19 @@ class Player():
         self.card_qty = 0
         self.hold_cards = []
         self.tokens = {
-            "white": Token((520, 60), (50, 50), 'Image\Coin\whiteCoin-01.png', "white", 2),
-            "blue": Token((600, 60), (50, 50), 'Image\Coin\\blueCoin-01.png', "blue", 2),
-            "green": Token((680, 60), (50, 50), 'Image\Coin\greenCoin-01.png', "green", 2),
-            "red": Token((760, 60), (50, 50), 'Image\Coin\\redCoin-01.png', "red", 2),
-            "black": Token((840, 60), (50, 50), 'Image\Coin\\blackCoin-01.png', "black", 2),
+            "white": Token((520, 60), (50, 50), 'Image\Coin\whiteCoin-01.png', "white", 0),
+            "blue": Token((600, 60), (50, 50), 'Image\Coin\\blueCoin-01.png', "blue", 0),
+            "green": Token((680, 60), (50, 50), 'Image\Coin\greenCoin-01.png', "green", 0),
+            "red": Token((760, 60), (50, 50), 'Image\Coin\\redCoin-01.png', "red", 0),
+            "black": Token((840, 60), (50, 50), 'Image\Coin\\blackCoin-01.png', "black", 0),
             "gold": Token((440, 60), (50, 50), 'Image\Coin\goldCoin-01.png', "gold", 0)
         }  
         self.cards = {
-            "white": Token((520, 130), (50, 70), 'Image\Card\whiteBG.png', "white", 3),
-            "blue": Token((600, 130), (50, 70), 'Image\Card\\blueBG.png', "blue", 3),
-            "green": Token((680, 130), (50, 70), 'Image\Card\greenBG.png', "green", 3),
-            "red": Token((760, 130), (50, 70), 'Image\Card\\redBG.png', "red", 3),
-            "black": Token((840, 130), (50, 70), 'Image\Card\\blackBG.png', "black", 3),
+            "white": Token((520, 130), (50, 70), 'Image\Card\whiteBG.png', "white", 0),
+            "blue": Token((600, 130), (50, 70), 'Image\Card\\blueBG.png', "blue", 0),
+            "green": Token((680, 130), (50, 70), 'Image\Card\greenBG.png', "green", 0),
+            "red": Token((760, 130), (50, 70), 'Image\Card\\redBG.png', "red", 0),
+            "black": Token((840, 130), (50, 70), 'Image\Card\\blackBG.png', "black", 0),
             "hold": Token((440, 130), (50, 70), 'Image\Card\HoldCard.png', "hold", 0, 'white')
         }
 
